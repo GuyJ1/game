@@ -16,7 +16,8 @@ public class NodeClick : MonoBehaviour
     public bool objectHighlighted = false;
     public Color32 originalColor;
     bool initial = false;
-
+    public static GameObject clickobj;
+    
     RaycastHit hit;
     Ray ray;
     
@@ -46,7 +47,10 @@ public class NodeClick : MonoBehaviour
                 green = originalColor.g;
                 initial = true;
             }
-
+            if (Input.GetMouseButtonDown(0))
+            {
+                clickobj = obj;
+            }
             if (objectHighlighted == false)
             {
                 objectHighlighted = true;
@@ -54,7 +58,14 @@ public class NodeClick : MonoBehaviour
             }
         }
     }
+    public static GameObject GetClickObj()
+    {
+        //if (clickobj != null)
+        {
+            return clickobj;
+        }
 
+    }
     private void OnMouseExit()
     {
         objectHighlighted = false;
@@ -64,6 +75,8 @@ public class NodeClick : MonoBehaviour
         green = originalColor.g;
         obj.GetComponent<Renderer>().material.color = originalColor;
         highlightIn = true;
+        obj = null;
+        clickobj = null;
 
     }
     IEnumerator highlight()
