@@ -43,7 +43,7 @@ public class crew_system : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             Debug.Log("works ! ");
-            if ()
+            if (true)
             {
 
             }
