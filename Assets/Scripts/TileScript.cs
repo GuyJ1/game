@@ -13,9 +13,14 @@ public class TileScript : MonoBehaviour
     private Ray ray;
     private RaycastHit hit;
 
+    // Position and Flags
+    [SerializeField] public uint x, y;
+
     // Start is called before the first frame update
     void Start()
     {
+        Debug.Log(name + " has been created");
+
         cam = Camera.main;
         rend = GetComponent<Renderer>();
     }
@@ -33,6 +38,7 @@ public class TileScript : MonoBehaviour
             if (Physics.Raycast(ray, out hit, 1000f))
             {
                 rend.sharedMaterial = selected;
+                Debug.Log(name + " has been clicked");
             }
         }
     }
