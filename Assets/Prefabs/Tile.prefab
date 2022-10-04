@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 7548359570799342832}
   - component: {fileID: 8392569847666576386}
   - component: {fileID: 7577591352756845599}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Tile
-  m_TagString: Untagged
+  m_TagString: Tile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -97,9 +97,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58ae368725a714242be086267fdd1130, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unselected: {fileID: 2100000, guid: f0e855c34670ad5459890b16548d4bdc, type: 2}
-  highlighted: {fileID: 2100000, guid: 651c00cb132d0b34e876b1e41a8e1c6c, type: 2}
-  selected: {fileID: 2100000, guid: 5a703cd9ba3a3864eaf48d169dae309f, type: 2}
+  x: 0
+  y: 0
 --- !u!64 &7577591352756845599
 MeshCollider:
   m_ObjectHideFlags: 0
