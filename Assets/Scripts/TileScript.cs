@@ -1,3 +1,8 @@
+/// @author: Bryson Squibb
+/// @date: 10/04/2022
+/// @description: this script is responsible for
+/// holding the data of tile objects
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,18 +10,8 @@ using UnityEngine;
 public class TileScript : MonoBehaviour
 {
     // Position and Flags
-    [SerializeField] public uint x, y;
+    [SerializeField] public Vector2Int position;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        // Debug msg
-        Debug.Log(name + " has been created");
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public GameObject characterOn = null;
+    public bool hasCharacter = false;
 }

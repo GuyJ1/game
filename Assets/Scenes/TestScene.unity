@@ -248,6 +248,10 @@ PrefabInstance:
       propertyPath: highlighted
       value: 
       objectReference: {fileID: 2100000, guid: 651c00cb132d0b34e876b1e41a8e1c6c, type: 2}
+    - target: {fileID: 2223838504842600106, guid: 34e4afe442b789a4f926fd55f48aeefd, type: 3}
+      propertyPath: characterToSpawn
+      value: 
+      objectReference: {fileID: 5537537504233135668, guid: 35e9b644f5a473148bedf512f2340242, type: 3}
     - target: {fileID: 6700519770450222665, guid: 34e4afe442b789a4f926fd55f48aeefd, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -370,11 +374,11 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2054579715}
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 7.88, z: 0}
+  m_LocalRotation: {x: 0.4589907, y: 0, z: 0, w: 0.8884411}
+  m_LocalPosition: {x: -0.63, y: 5.53, z: -5.03}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 54.644, y: 0, z: 0}
