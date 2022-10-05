@@ -62,7 +62,9 @@ public class GridBehavior : MonoBehaviour
         SpawnCharacter(characterToSpawn);
     }
 
-    // Select and move characters using the mouse
+    // --------------------------------------------------------------
+    // @desc: Highlight, selectm and move characters using the mouse
+    // --------------------------------------------------------------
     void Update()
     {
         // Cast ray from screen point to mouse pos
@@ -77,92 +79,108 @@ public class GridBehavior : MonoBehaviour
             var tileScript  = objectHit.GetComponent<TileScript>();
             Vector2Int tilePos = tileScript.position;
 
-            if (tileScript.hasCharacter)
+            // ----------------------------
+            // Character and Tile Selection
+            // ----------------------------
+            if (Input.GetMouseButtonDown(0))
             {
-                // ----------------------------
-                // Character and Tile Selection
-                // ----------------------------
-                if (Input.GetMouseButtonDown(0))
+                if (tileScript.hasCharacter)
                 {
-                    if (tileScript.hasCharacter)
+                    // Case 1: if there's no selected character, then just select this one
+                    if (charSelected == false)
                     {
-                        // Case 1: if there's no selected character, then just select this one
-                        if (charSelected == false)
-                        {
-                            selectRend.material = selected;
-                            selectedCharPos = tilePos;
-                            Debug.Log("Character on " + objectHit.name + " has been selected");
-                            charSelected = true;
-                            charHighlighted = false;
-                        }
-                        // Case 2: if the character is the same as the already selected,
-                        // then unselect it
-                        else if (tilePos == selectedCharPos)
-                        {
-                            selectRend.material = unselected;
-                            Debug.Log("Character on " + objectHit.name + " has been unselected");
-                            charSelected = false;
-                        }
-                        // Case 3: if the character is different than the currently selected character,
-                        // then deselect the current character and select the new one
-                        else
-                        {
-                            // Unselect currently select character
-                            Debug.Log("Unselecting character on " + selectedCharPos.x + " " + selectedCharPos.y);
-                            grid[selectedCharPos.x, selectedCharPos.y].GetComponent<Renderer>().material = unselected;
+                        selectRend.material = selected;
+                        selectedCharPos = tilePos;
+                        Debug.Log("Character on " + objectHit.name + " has been selected");
+                        charSelected = true;
+                        charHighlighted = false;
+                    }
+                    // Case 2: if the character is the same as the already selected,
+                    // then unselect it
+                    else if (tilePos == selectedCharPos)
+                    {
+                        selectRend.material = unselected;
+                        Debug.Log("Character on " + objectHit.name + " has been unselected");
+                        charSelected = false;
+                    }
+                    // Case 3: if the character is different than the currently selected character,
+                    // then deselect the current character and select the new one
+                    else
+                    {
+                        // Unselect currently select character
+                        Debug.Log("Unselecting character on " + selectedCharPos.x + " " + selectedCharPos.y);
+                        grid[selectedCharPos.x, selectedCharPos.y].GetComponent<Renderer>().material = unselected;
 
-                            // Select new one
-                            charHighlighted = false;
-                            selectRend.material = selected;
-                            selectedCharPos = tilePos;
-                            Debug.Log("Character on " + objectHit.name + " has been selected");
-                            charSelected = true;
-                            charHighlighted = false;
-                        }
+                        // Select new one
+                        selectRend.material = selected;
+                        selectedCharPos = tilePos;
+                        Debug.Log("Character on " + objectHit.name + " has been selected");
+                        charSelected = true;
+                        charHighlighted = false;
                     }
                 }
                 else
-                // -------------------------------
-                // Character and Tile Highlighting
-                // -------------------------------
                 {
-                    // Selected tiles cannot be highlighted
-                    bool okayToHighlight = true;
-
-                    if (charSelected && selectedCharPos == tilePos)
+                    if (charSelected && tilePos != selectedCharPos)
                     {
-                        okayToHighlight = false;
-                    }
+                        // Unselect currently select character
+                        Debug.Log("Unselecting character on " + selectedCharPos.x + " " + selectedCharPos.y);
+                        grid[selectedCharPos.x, selectedCharPos.y].GetComponent<Renderer>().material = unselected;
+                        charSelected = false;
+                        charHighlighted = false;
 
-                    if (okayToHighlight)
-                    {
-                        // Case 1: if there's no highlighted character, then just select this one
-                        if (charHighlighted == false)
-                        {
-                            selectRend.material = highlighted;
-                            highlightedCharPos = tilePos;
-                            charHighlighted = true;
-                        }
-                        // Case 2: if there's already a highlighted character, then switch the highlighting
-                        else
-                        {
-                            // Unhighlight currently select character
-                            grid[highlightedCharPos.x, highlightedCharPos.y].GetComponent<Renderer>().material = unselected;
-
-                            // Highlight new one
-                            selectRend.material = highlighted;
-                            highlightedCharPos = tilePos;
-                            charHighlighted = true;
-                        }
+                        // Move character
+                        MoveCharacterOnTile(selectedCharPos, tilePos);
                     }
                 }
             }
-            else {UnhighlightChar();}
+            else
+            // -------------------------------
+            // Character and Tile Highlighting
+            // -------------------------------
+            {
+                // Selected tiles cannot be highlighted
+                bool okayToHighlight = true;
+
+                if (charSelected && selectedCharPos == tilePos)
+                {
+                    okayToHighlight = false;
+                }
+
+                if (charSelected == false && tileScript.hasCharacter == false)
+                {
+                    okayToHighlight = false;
+                }
+
+                if (okayToHighlight)
+                {
+                    // Case 1: if there's no highlighted character, then just select this one
+                    if (charHighlighted == false)
+                    {
+                        selectRend.material = highlighted;
+                        highlightedCharPos = tilePos;
+                        charHighlighted = true;
+                    }
+                    // Case 2: if there's already a highlighted character, then switch the highlighting
+                    else
+                    {
+                        // Unhighlight currently select character
+                        grid[highlightedCharPos.x, highlightedCharPos.y].GetComponent<Renderer>().material = unselected;
+
+                        // Highlight new one
+                        selectRend.material = highlighted;
+                        highlightedCharPos = tilePos;
+                        charHighlighted = true;
+                    }
+                }
+            }
         }
         else {UnhighlightChar();}
     }
 
-    // Create a grid object for every tile position
+    // --------------------------------------------------------------
+    // @desc: Create a grid object for every tile position
+    // --------------------------------------------------------------
     void GenerateGrid()
     {
         for (int x = 0; x < width; x++)
@@ -189,10 +207,13 @@ public class GridBehavior : MonoBehaviour
         availableTiles = width*height;
     }
 
+    // --------------------------------------------------------------
+    // @desc: Create a grid object for every tile position
+    // @arg: character - the character prefab object to spawn
+    // --------------------------------------------------------------
     void SpawnCharacter(GameObject character)
     {
         GameObject spawningTile;
-        GameObject tilesCharacter;
         bool characterSpawned = false;
         int randX;
         int randY;
@@ -210,7 +231,6 @@ public class GridBehavior : MonoBehaviour
 
                 // Get data from tile object
                 var tilesScript = spawningTile.GetComponent<TileScript>();
-                tilesCharacter = tilesScript.characterOn;
 
                 // Check whether the tile already has a character on it
                 if (tilesScript.hasCharacter == false)
@@ -220,7 +240,7 @@ public class GridBehavior : MonoBehaviour
                     Debug.Log("Spawning character as position " + randX + " " + randY);
 
                     // Set tile data
-                    tilesCharacter = Instantiate(character, pos, transform.rotation, this.transform);
+                    tilesScript.characterOn = Instantiate(character, pos, transform.rotation, this.transform);
                     tilesScript.hasCharacter = true;
 
                     // Update flag and # of available tiles
@@ -235,13 +255,16 @@ public class GridBehavior : MonoBehaviour
         }
     }
 
+    // --------------------------------------------------------------
+    // @desc: Create a grid object for every tile position
+    // @arg: character - the character prefab object to spawn
+    // @arg: spawnPos  - the logical grid position to spawn on
+    // --------------------------------------------------------------
     void SpawnCharacter(GameObject character, Vector2Int spawnPos)
     {
         GameObject spawningTile;
-        GameObject tilesCharacter;
         
-        // Warning: potential issue if the grid is full + performance issue if
-        // grid is almost full
+        // Check if there's a tile available
         if (availableTiles > 0)
         {
             // Get the respective tile on the grid
@@ -249,7 +272,6 @@ public class GridBehavior : MonoBehaviour
 
             // Get data from tile object
             var tilesScript = spawningTile.GetComponent<TileScript>();
-            tilesCharacter = tilesScript.characterOn;
 
             // Check whether the tile already has a character on it
             if (tilesScript.hasCharacter == false)
@@ -259,7 +281,7 @@ public class GridBehavior : MonoBehaviour
                 Debug.Log("Spawning character as position " + spawnPos.x + " " + spawnPos.y);
 
                 // Set tile data
-                tilesCharacter = Instantiate(character, pos, transform.rotation, this.transform);
+                tilesScript.characterOn = Instantiate(character, pos, transform.rotation, this.transform);
                 tilesScript.hasCharacter = true;
 
                 // Update flag and # of available tiles
@@ -276,6 +298,7 @@ public class GridBehavior : MonoBehaviour
         }
     }
 
+    // If a character is highlighted, unhighlight it
     private void UnhighlightChar()
     {
         if (charHighlighted)
@@ -283,5 +306,45 @@ public class GridBehavior : MonoBehaviour
             grid[highlightedCharPos.x, highlightedCharPos.y].GetComponent<Renderer>().material = unselected;
             charHighlighted = false;
         }
+    }
+
+    public bool MoveCharacterOnTile(Vector2Int sourcePos, Vector2Int destPos)
+    {
+        GameObject charToMove = null;
+        bool moveSuccess = false;
+
+        // Get tile on source position
+        GameObject sourceTile = grid[sourcePos.x, sourcePos.y];
+        var sourceTileScipt = sourceTile.GetComponent<TileScript>();
+
+        // Get tile on source position
+        GameObject destTile = grid[destPos.x, destPos.y];
+        var destTileScript = destTile.GetComponent<TileScript>();
+
+        // Get character on source tile
+        if (sourceTileScipt.hasCharacter)
+        {
+            charToMove = sourceTileScipt.characterOn;
+
+            // Move character to destPos
+            Vector3 pos = new Vector3(destTile.transform.position.x, destTile.transform.position.y+0.5f, destTile.transform.position.z);
+            charToMove.transform.position = pos;
+
+            // Set source tile data
+            sourceTileScipt.hasCharacter = false;
+            sourceTileScipt.characterOn = null;
+
+            // Set destination tile data
+            destTileScript.hasCharacter = true;
+            destTileScript.characterOn = charToMove;
+
+            moveSuccess = true;
+        }
+        else
+        {
+            Debug.Log("MoveCharacterOnTile: Error! source tile does not have a character");
+        }
+        
+        return moveSuccess;
     }
 }
