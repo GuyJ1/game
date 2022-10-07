@@ -10,8 +10,11 @@ public class CharacterStats : MonoBehaviour
     public int STR;
     public int DEF;
     public int SPD;
+    public int MV;
     public string Name;
 
+    // Character's logical position on the grid
+    public Vector2Int gridPosition;
 
     // Start is called before the first frame update
     void Start()

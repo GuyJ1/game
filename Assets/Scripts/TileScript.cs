@@ -15,4 +15,5 @@ public class TileScript : MonoBehaviour
     public GameObject characterOn = null;
     public bool hasCharacter = false;
     public bool passable = true;
+    public bool highlighted = false;
 }

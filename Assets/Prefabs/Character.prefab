@@ -58,7 +58,9 @@ MonoBehaviour:
   STR: 20
   DEF: 20
   SPD: 20
+  MV: 3
   Name: Dummy
+  gridPosition: {x: 0, y: 0}
 --- !u!23 &8884561808067556798
 MeshRenderer:
   m_ObjectHideFlags: 0
