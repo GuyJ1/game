@@ -395,61 +395,76 @@ public class GridBehavior : MonoBehaviour
     // Highlights available move tiles from a provided position and range
     private void HighlightValidMoves(Vector2Int pos, int range)
     {
-        PathTreeNode pathTree = new PathTreeNode();
-
         ResetAllHighlights();
-
-        GetAllPaths(pathTree, GetTileAtPos(pos), range);
+        GetAllPathsFromTile(GetTileAtPos(pos), range);
     }
 
-    private PathTreeNode GetAllPaths(PathTreeNode parent, GameObject tile, int range)
+    private PathTreeNode GetAllPathsFromTile(GameObject tile, int range)
     {
-        // Create a new path tree node for this tile pos
-        PathTreeNode myNode = new PathTreeNode();
+        // Create root node
+        PathTreeNode root = new PathTreeNode();
+        root.myTile = tile;
+        root.tileRange = range;
 
-        // Set parent
-        myNode.parent = parent;
+        // Temp vars
+        PathTreeNode tempNode;
 
-        // Get data from tile
-        var tileRend = tile.GetComponent<Renderer>();
-        var tileScript = tile.GetComponent<TileScript>();
-        Vector2Int tilePos = tileScript.position;
+        // Create queue
+        Queue<PathTreeNode> queue = new Queue<PathTreeNode>();
+        queue.Enqueue(root);
 
-        // Highlight tile
-        tileRend.material = highlighted;
-        tileScript.highlighted = true;
-
-        if (range > 0)
+        // Populate the tree based on the range value
+        // this must be done in levelorder traversal
+        while (queue.Count != 0)
         {
+            // Highlight all nodes in the queue
+            tempNode = queue.Dequeue();
+
+            // Get data from tile
+            var tileRend = tempNode.myTile.GetComponent<Renderer>();
+            var tileScript = tempNode.myTile.GetComponent<TileScript>();
+            Vector2Int tilePos = tileScript.position;
+
+            // Highlight tile
+            tileRend.material = highlighted;
+            tileScript.highlighted = true;
+
             // Get neighboring tiles
             GameObject upTile = GetTileAtPos(new Vector2Int(tilePos.x, tilePos.y - 1));
             GameObject downTile = GetTileAtPos(new Vector2Int(tilePos.x, tilePos.y + 1));
             GameObject leftTile = GetTileAtPos(new Vector2Int(tilePos.x - 1, tilePos.y));
             GameObject rightTile = GetTileAtPos(new Vector2Int(tilePos.x + 1, tilePos.y));
-
-            // Recurse on neighboring tiles
-            if (ValidHighlightTile(upTile))
+        
+            // Add neighboring tiles to queue if in range
+            if (tempNode.tileRange > 0)
             {
-                myNode.up = GetAllPaths(myNode, upTile, range-1);
-            }
+                if (ValidHighlightTile(upTile))
+                {
+                    tempNode.up = new PathTreeNode(tempNode, upTile, tempNode.tileRange-1);
+                    queue.Enqueue(tempNode.up);
+                }
 
-            if (ValidHighlightTile(downTile))
-            {
-                myNode.down = GetAllPaths(myNode, downTile, range-1);
-            }
+                if (ValidHighlightTile(downTile))
+                {
+                    tempNode.down = new PathTreeNode(tempNode, downTile, tempNode.tileRange-1);
+                    queue.Enqueue(tempNode.down);
+                }
 
-            if (ValidHighlightTile(leftTile))
-            {
-                myNode.left = GetAllPaths(myNode, leftTile, range-1);
-            }
+                if (ValidHighlightTile(leftTile))
+                {
+                    tempNode.left = new PathTreeNode(tempNode, leftTile, tempNode.tileRange-1);
+                    queue.Enqueue(tempNode.left);
+                }
 
-            if (ValidHighlightTile(rightTile))
-            {
-                myNode.right = GetAllPaths(myNode, rightTile, range-1);
+                if (ValidHighlightTile(rightTile))
+                {
+                    tempNode.right = new PathTreeNode(tempNode, rightTile, tempNode.tileRange-1);
+                    queue.Enqueue(tempNode.right);
+                }
             }
         }
 
-        return myNode;
+        return root;
     }
 
     private void ResetAllHighlights()
@@ -519,4 +534,19 @@ public class PathTreeNode
     public PathTreeNode down = null;
     public PathTreeNode left = null;
     public PathTreeNode right = null;
+
+    // My tile
+    public GameObject myTile = null;
+
+    // Tile range
+    public int tileRange;
+
+    public PathTreeNode() {}
+
+    public PathTreeNode(PathTreeNode p, GameObject t, int range)
+    {
+        parent = p;
+        myTile = t;
+        tileRange = range;
+    }
 }
