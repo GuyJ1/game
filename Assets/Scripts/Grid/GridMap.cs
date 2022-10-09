@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class GridMaps
+public class GridMap
 {
-    public static int gridSelected = 0;
+    public int gridSelected = 0;
 
     // ----- Default Grid -----
     public const uint DefaultGridWidth = 8;
@@ -54,7 +54,12 @@ public static class GridMaps
     };
     // ------------------------
 
-    public static void SelectGrid(int gridNumber)
+    // Constructors
+    public GridMap() {}
+    public GridMap(int gridNumber) {gridSelected = gridNumber;}
+
+    // Select a grid map
+    public void SelectGrid(int gridNumber)
     {
         switch (gridNumber)
         {
@@ -71,7 +76,8 @@ public static class GridMaps
         }
     }
 
-    public static uint GetGridWidth()
+    // Get the width of a grid map
+    public uint GetGridWidth()
     {  
         uint widthToReturn = 0;
 
@@ -91,7 +97,8 @@ public static class GridMaps
         return widthToReturn;
     }
 
-    public static uint GetGridHeight()
+    // Get the height of a grid map
+    public uint GetGridHeight()
     {  
         uint heightToReturn = 0;
 
@@ -111,7 +118,8 @@ public static class GridMaps
         return heightToReturn;
     }
 
-    public static bool GetFlagAtPos(Vector2Int pos)
+    // Get the flag at a given grid map position
+    public bool GetFlagAtPos(Vector2Int pos)
     {
         bool flagAtPos = false;
 

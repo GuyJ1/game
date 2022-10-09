@@ -181,14 +181,14 @@ public class GridBehavior : MonoBehaviour
     // --------------------------------------------------------------
     // @desc: Create a grid object for every tile position
     // --------------------------------------------------------------
-    void GenerateGrid(int gridMap = 0)
+    void GenerateGrid(int gridNumber = 0)
     {
         // Set Grid Map
-        GridMaps.SelectGrid(gridMap);
+        GridMap passableTiles = new GridMap(gridNumber);
 
         // Set dimensions
-        width = GridMaps.GetGridWidth();
-        height = GridMaps.GetGridHeight();
+        width = passableTiles.GetGridWidth();
+        height = passableTiles.GetGridHeight();
 
         // Declare the grid to appropriate width and height
         grid = new GameObject[width, height];
@@ -210,7 +210,7 @@ public class GridBehavior : MonoBehaviour
                 newTileScript.position.y = y;
 
                 // Check the grid map for impassible tiles
-                if (GridMaps.GetFlagAtPos(new Vector2Int(x, y)))
+                if (passableTiles.GetFlagAtPos(new Vector2Int(x, y)))
                 {
                     newTileScript.passable = false;
                     newTile.GetComponent<Renderer>().material = impassible;
@@ -328,6 +328,12 @@ public class GridBehavior : MonoBehaviour
         }
     }*/
 
+    // --------------------------------------------------------------
+    // @desc: Move a character on the grid based on tile positions
+    // @arg: sourcePos - logical grid position with a character on it
+    // @arg: destPos   - logical grid position to move the character to
+    // @ret: bool      - whether the move is successful or not
+    // --------------------------------------------------------------
     public bool MoveCharacterOnTile(Vector2Int sourcePos, Vector2Int destPos, bool onlyHighlighted)
     {
         GameObject charToMove = null;
@@ -381,7 +387,11 @@ public class GridBehavior : MonoBehaviour
         return moveSuccess;
     }
 
-    // Checks whether a logical tile position is in the grid
+    // --------------------------------------------------------------
+    // @desc: Checks whether a logical tile position is in the grid
+    // @arg: pos  - the position to check
+    // @ret: bool - whether the position is in the grid
+    // --------------------------------------------------------------
     private bool TilePosInRange(Vector2Int pos)
     {
         bool inRange = false;
@@ -404,6 +414,13 @@ public class GridBehavior : MonoBehaviour
         GetAllPathsFromTile(GetTileAtPos(pos), range);
     }*/
 
+    // --------------------------------------------------------------
+    // @desc: Creates a tree data structure based on what moves a 
+    // character can take from a given tile position
+    // @arg: pos          - the root tile position
+    // @arg: range        - how many tiles the character can move
+    // @ret: PathTreeNode - the constructed tree
+    // --------------------------------------------------------------
     public PathTreeNode GetAllPathsFromTile(GameObject tile, int range)
     {
         // Create root node
@@ -495,6 +512,11 @@ public class GridBehavior : MonoBehaviour
         }
     }*/
 
+    // --------------------------------------------------------------
+    // @desc: Tests whether a tile can be highlighted
+    // @arg: tileToCheck - the tile to check
+    // @ret: bool        - whether the tile can be highlighted
+    // --------------------------------------------------------------
     private bool ValidHighlightTile(GameObject tileToCheck)
     {
         bool valid = false;
@@ -562,8 +584,8 @@ public class PathTreeNode
     // Tile range
     public int tileRange;
 
+    // Constructors
     public PathTreeNode() {}
-
     public PathTreeNode(PathTreeNode p, GameObject t, int range)
     {
         parent = p;
