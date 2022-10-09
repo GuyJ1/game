@@ -448,8 +448,8 @@ public class GridBehavior : MonoBehaviour
             Vector2Int tilePos = tileScript.position;
 
             // Highlight tile
-            //tileRend.material = highlighted;
-            //tileScript.highlighted = true;
+            tileRend.material = highlighted;
+            tileScript.highlighted = true;
 
             // Get neighboring tiles
             GameObject upTile = GetTileAtPos(new Vector2Int(tilePos.x, tilePos.y - 1));

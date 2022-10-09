@@ -231,7 +231,7 @@ public class BattleEngine : MonoBehaviour {
         if(gridTiles.GetCharacterAtPos(pos) != activeUnit) return; //Can't move anywhere unless unit is active
         ResetAllHighlights();
         var root = gridTiles.GetAllPathsFromTile(gridTiles.GetTileAtPos(pos), range);
-        highlightPathTree(root);
+        //highlightPathTree(root);
     }
 
     public void highlightPathTree(PathTreeNode root) {
