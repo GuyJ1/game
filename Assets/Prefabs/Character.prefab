@@ -58,7 +58,7 @@ MonoBehaviour:
   STR: 20
   DEF: 20
   SPD: 20
-  MV: 3
+  MV: 5
   Name: Dummy
   gridPosition: {x: 0, y: 0}
 --- !u!23 &8884561808067556798
