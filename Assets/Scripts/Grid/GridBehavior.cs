@@ -528,6 +528,22 @@ public class GridBehavior : MonoBehaviour
 
         return tileAtPos;
     }
+
+    // Get a character game object from a grid position (if there is one)
+    public GameObject GetCharacterAtPos(Vector2Int pos)
+    {
+        GameObject charaterAtPos = null;
+        GameObject tileAtPos = GetTileAtPos(pos);
+
+        if (tileAtPos != null)
+        {
+            // Get character from tile
+            var tileScript = tileAtPos.GetComponent<TileScript>();
+            charaterAtPos = tileScript.characterOn;
+        }
+
+        return charaterAtPos;
+    }
 }
 
 public class PathTreeNode
