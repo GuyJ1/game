@@ -31,7 +31,7 @@ public class GridBehavior : MonoBehaviour
     private Vector2Int highlightedCharPos;
 
     // Materials
-    [SerializeField] Material unselected, highlighted, selected, impassible;
+    [SerializeField] public Material unselected, highlighted, selected, activeUnselected, activeHighlighted, activeSelected, impassible;
 
     // Temp
     public GameObject characterToSpawn;
@@ -59,10 +59,10 @@ public class GridBehavior : MonoBehaviour
     void Update()
     {
         // Cast ray from screen point to mouse pos
-        ray = cam.ScreenPointToRay(Input.mousePosition);
+        //ray = cam.ScreenPointToRay(Input.mousePosition);
 
         // Use physics to detect a "collision" from a ray
-        if (Physics.Raycast(ray, out hit, 1000f, layerMask) == true)
+        /*if (Physics.Raycast(ray, out hit, 1000f, layerMask) == true)
         {
             // Get data from tile hit
             var objectHit   = hit.transform;
@@ -175,7 +175,7 @@ public class GridBehavior : MonoBehaviour
                 }
             }
         }
-        else {UnhighlightChar();}
+        else {UnhighlightChar();}*/
     }
 
     // --------------------------------------------------------------
@@ -319,14 +319,14 @@ public class GridBehavior : MonoBehaviour
     }
 
     // If a character is highlighted, unhighlight it
-    private void UnhighlightChar()
+    /*private void UnhighlightChar()
     {
         if (charHighlighted)
         {
             grid[highlightedCharPos.x, highlightedCharPos.y].GetComponent<Renderer>().material = unselected;
             charHighlighted = false;
         }
-    }
+    }*/
 
     public bool MoveCharacterOnTile(Vector2Int sourcePos, Vector2Int destPos, bool onlyHighlighted)
     {
@@ -365,7 +365,6 @@ public class GridBehavior : MonoBehaviour
                     destTileScript.hasCharacter = true;
                     destTileScript.characterOn = charToMove;
 
-                    ResetAllHighlights();
                     moveSuccess = true;
                 }
             }
@@ -399,13 +398,13 @@ public class GridBehavior : MonoBehaviour
     }
 
     // Highlights available move tiles from a provided position and range
-    private void HighlightValidMoves(Vector2Int pos, int range)
+    /*public void HighlightValidMoves(Vector2Int pos, int range)
     {
         ResetAllHighlights();
         GetAllPathsFromTile(GetTileAtPos(pos), range);
-    }
+    }*/
 
-    private PathTreeNode GetAllPathsFromTile(GameObject tile, int range)
+    public PathTreeNode GetAllPathsFromTile(GameObject tile, int range)
     {
         // Create root node
         PathTreeNode root = new PathTreeNode();
@@ -432,8 +431,8 @@ public class GridBehavior : MonoBehaviour
             Vector2Int tilePos = tileScript.position;
 
             // Highlight tile
-            tileRend.material = highlighted;
-            tileScript.highlighted = true;
+            //tileRend.material = highlighted;
+            //tileScript.highlighted = true;
 
             // Get neighboring tiles
             GameObject upTile = GetTileAtPos(new Vector2Int(tilePos.x, tilePos.y - 1));
@@ -473,7 +472,7 @@ public class GridBehavior : MonoBehaviour
         return root;
     }
 
-    private void ResetAllHighlights()
+    /*public void ResetAllHighlights()
     {
         GameObject currentTile;
 
@@ -494,7 +493,7 @@ public class GridBehavior : MonoBehaviour
                 }
             }
         }
-    }
+    }*/
 
     private bool ValidHighlightTile(GameObject tileToCheck)
     {
@@ -517,7 +516,7 @@ public class GridBehavior : MonoBehaviour
     }
 
     // Get a tile game object from a grid position
-    private GameObject GetTileAtPos(Vector2Int pos)
+    public GameObject GetTileAtPos(Vector2Int pos)
     {
         GameObject tileAtPos = null;
 
