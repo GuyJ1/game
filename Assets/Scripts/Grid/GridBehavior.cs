@@ -448,7 +448,7 @@ public class GridBehavior : MonoBehaviour
             Vector2Int tilePos = tileScript.position;
 
             // Highlight tile
-            tileRend.material = highlighted;
+            //tileRend.material = highlighted;
             tileScript.highlighted = true;
 
             // Get neighboring tiles

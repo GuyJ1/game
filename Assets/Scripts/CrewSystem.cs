@@ -14,7 +14,7 @@ using UnityEngine;
  * */
 
 
-public class crew_system : MonoBehaviour
+public class CrewSystem : MonoBehaviour
 {
     public int inventory_gold =1 ;
     public int inventory_wood =2 ;

@@ -7,6 +7,7 @@ public class CharacterStats : MonoBehaviour
 
     [SerializeField]
     public int HP;
+    public int HPMAX;
     public int STR;
     public int DEF;
     public int SPD;

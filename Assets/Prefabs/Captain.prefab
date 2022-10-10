@@ -79,5 +79,9 @@ PrefabInstance:
       propertyPath: Name
       value: Charles
       objectReference: {fileID: 0}
+    - target: {fileID: 6886658739876458237, guid: 35e9b644f5a473148bedf512f2340242, type: 3}
+      propertyPath: HPMAX
+      value: 500
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 35e9b644f5a473148bedf512f2340242, type: 3}

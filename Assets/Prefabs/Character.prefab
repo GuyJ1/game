@@ -55,6 +55,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HP: 200
+  HPMAX: 200
   STR: 20
   DEF: 20
   SPD: 20

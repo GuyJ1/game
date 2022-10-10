@@ -90,7 +90,7 @@ public class BattleEngine : MonoBehaviour {
                             if (charSelected == false)
                             {
                                 // Select new tile at tile pos
-                                HighlightValidMoves(tilePos, tileScript.characterOn.GetComponent<CharacterStats>().MV);
+                                if(!moved) HighlightValidMoves(tilePos, tileScript.characterOn.GetComponent<CharacterStats>().MV);
                                 selectRend.material = isTileActive(tilePos) ? gridTiles.activeSelected : gridTiles.selected;
                                 selectedCharPos = tilePos;
                                 Debug.Log("Character on " + objectHit.name + " has been selected");
@@ -114,9 +114,10 @@ public class BattleEngine : MonoBehaviour {
                                 Debug.Log("Unselecting character on " + selectedCharPos.x + " " + selectedCharPos.y);
                                 gridTiles.grid[selectedCharPos.x, selectedCharPos.y].GetComponent<Renderer>().material = isTileActive(selectedCharPos) ? gridTiles.activeUnselected : gridTiles.unselected;
 
+                                ResetAllHighlights();
                                 // Select new tile at tile pos (Note: code is repeated above, not good practice)
-                                HighlightValidMoves(tilePos, tileScript.characterOn.GetComponent<CharacterStats>().MV);
-                                selectRend.material = isTileActive(selectedCharPos) ? gridTiles.activeSelected : gridTiles.selected;
+                                if(!moved) HighlightValidMoves(tilePos, tileScript.characterOn.GetComponent<CharacterStats>().MV);
+                                selectRend.material = isTileActive(tilePos) ? gridTiles.activeSelected : gridTiles.selected;
                                 selectedCharPos = tilePos;
                                 Debug.Log("Character on " + objectHit.name + " has been selected");
                                 charSelected = true;
@@ -129,24 +130,22 @@ public class BattleEngine : MonoBehaviour {
                         {
                             Debug.Log(activeUnit);
                             Debug.Log(gridTiles.GetCharacterAtPos(selectedCharPos));
-                            if (charSelected && activeUnit == gridTiles.GetCharacterAtPos(selectedCharPos) && tilePos != selectedCharPos)
+                            if (!moved && charSelected && activeUnit == gridTiles.GetCharacterAtPos(selectedCharPos) && tilePos != selectedCharPos)
                             {
-                                // Unselect currently select character
-                                Debug.Log("Unselecting character on " + selectedCharPos.x + " " + selectedCharPos.y);
-                                gridTiles.grid[selectedCharPos.x, selectedCharPos.y].GetComponent<Renderer>().material = isTileActive(selectedCharPos) ? gridTiles.activeUnselected : gridTiles.unselected;
-                                charSelected = false;
-                                charHighlighted = false;
-
                                 // Move character
                                 if (gridTiles.MoveCharacterOnTile(selectedCharPos, tilePos, true) == false)
                                 {
                                     Debug.Log("Cannot move character to tile " + tilePos.x + " " + tilePos.y);
                                 }
                                 else {
+                                    // Unselect currently select character
+                                    Debug.Log("Unselecting character on " + selectedCharPos.x + " " + selectedCharPos.y);
+                                    activeUnitPos = tilePos;
+                                    gridTiles.grid[selectedCharPos.x, selectedCharPos.y].GetComponent<Renderer>().material = isTileActive(selectedCharPos) ? gridTiles.activeUnselected : gridTiles.unselected;
+                                    charSelected = false;
+                                    charHighlighted = false;
                                     ResetAllHighlights();
                                     moved = true;
-                                    //TEMPORARY END TO TEST TURNS
-                                    endTurn();
                                 }
                             }
                         }
@@ -231,7 +230,7 @@ public class BattleEngine : MonoBehaviour {
         if(gridTiles.GetCharacterAtPos(pos) != activeUnit) return; //Can't move anywhere unless unit is active
         ResetAllHighlights();
         var root = gridTiles.GetAllPathsFromTile(gridTiles.GetTileAtPos(pos), range);
-        //highlightPathTree(root);
+        highlightPathTree(root);
     }
 
     public void highlightPathTree(PathTreeNode root) {
@@ -243,7 +242,6 @@ public class BattleEngine : MonoBehaviour {
 
         // Highlight tile
         tileRend.material = isTileActive(tilePos) ? gridTiles.activeHighlighted : gridTiles.highlighted;
-        tileScript.highlighted = true;
         if(root.up != null) highlightPathTree(root.up);
         if(root.down != null) highlightPathTree(root.down);
         if(root.left != null) highlightPathTree(root.left);
@@ -271,6 +269,14 @@ public class BattleEngine : MonoBehaviour {
                 else return 0;
             }
         }
+    }
+
+    public void selectAction() {
+        
+    }
+
+    public void selectMove() {
+        
     }
 
     public void pickNewTurn() {
@@ -301,10 +307,14 @@ public class BattleEngine : MonoBehaviour {
                 }
             }
         }
+        ResetAllHighlights();
     }
 
     //End the active unit's turn
     public void endTurn() {
+        var gridTiles = grid.GetComponent<GridBehavior>();
+        gridTiles.GetTileAtPos(activeUnitPos).GetComponent<TileScript>().highlighted = false;
+        gridTiles.GetTileAtPos(activeUnitPos).GetComponent<Renderer>().material = gridTiles.unselected;
         pickNewTurn();
     }
 
