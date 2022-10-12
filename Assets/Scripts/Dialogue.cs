@@ -25,7 +25,7 @@ public class Dialogue : MonoBehaviour
         if(playerInRange) {
             visualCue.SetActive(true);
 
-            // // triggers the dialogue if interact button is pressed
+            // triggers the dialogue if interact button is pressed
             // if(InputManager.GetInstance().GetInteractPressed()) {
             //     Debug.Log(inkJSON.text);
             // }
