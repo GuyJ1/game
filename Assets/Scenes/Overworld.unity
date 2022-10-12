@@ -236,7 +236,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 139702412}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.0815353, y: 0.1, z: -1.98}
+  m_LocalPosition: {x: -11.45, y: 0.1, z: -1.98}
   m_LocalScale: {x: 1, y: 0.1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -425,7 +425,7 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 0.00001
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &751525764
 MeshRenderer:
@@ -476,7 +476,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 751525762}
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!4 &751525766
 Transform:
   m_ObjectHideFlags: 0
@@ -486,7 +486,7 @@ Transform:
   m_GameObject: {fileID: 751525762}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -6.64, y: 1, z: 1.48}
-  m_LocalScale: {x: 2, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 2.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -709,7 +709,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1281599835}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.0815353, y: 0.1, z: 4.53}
+  m_LocalPosition: {x: -9.18, y: 0.1, z: 2}
   m_LocalScale: {x: 1, y: 0.1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -927,9 +927,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   goldTbox: {fileID: 0}
-  BoozeTbox: {fileID: 0}
-  MoraleTbox: {fileID: 0}
+  boozeTbox: {fileID: 0}
+  moraleTbox: {fileID: 0}
   Canvas: {fileID: 0}
+  gold: 0
+  booze: 0
+  morale: 0
 --- !u!1 &1447537417
 GameObject:
   m_ObjectHideFlags: 0
@@ -1076,6 +1079,7 @@ GameObject:
   - component: {fileID: 1719614747}
   - component: {fileID: 1719614746}
   - component: {fileID: 1719614745}
+  - component: {fileID: 1719614748}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1116,7 +1120,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 70.085594
+  field of view: 54.1498
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -1141,14 +1145,27 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1719614744}
-  m_LocalRotation: {x: -0.48296407, y: 0.50681293, z: -0.49995014, w: -0.5098395}
-  m_LocalPosition: {x: -2.54, y: 16.59, z: -0.96}
+  m_LocalRotation: {x: 0.5, y: -0.5, z: 0.5, w: 0.5}
+  m_LocalPosition: {x: 1.32, y: 16.38, z: -0.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 87.752, y: -59.725, z: -328.925}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 90}
+--- !u!114 &1719614748
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1719614744}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 237882c6676929c4a86ef1c66ab4bcda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boat: {fileID: 0}
 --- !u!1 &1864074544
 GameObject:
   m_ObjectHideFlags: 0
@@ -1413,7 +1430,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1903612815}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.0815353, y: 0.1, z: -12.23}
+  m_LocalPosition: {x: -17.65, y: 0.1, z: -12.23}
   m_LocalScale: {x: 1, y: 0.1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

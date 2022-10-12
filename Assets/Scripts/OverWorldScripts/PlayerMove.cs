@@ -57,29 +57,33 @@ public class PlayerMove : MonoBehaviour
     public IEnumerator Sail()
     {
         float distanceX = xAxis-destination.transform.position.x;
-        float distanceZ = zAxis-destination.transform.position.z;
-        
-        float velocity = 2f;
+        float distanceZ = zAxis-destination.transform.position.z;        
+        float velocity = 3f;
+        Vector3 look = new Vector3(destination.transform.position.x, BOAT.transform.position.y, destination.transform.position.z);
+
         while (travel == true)
         {
             yield return new WaitForSeconds(0.0f);
-            if (distanceX < -0.1f && xAxis < destination.transform.position.x) 
+            BOAT.transform.LookAt(look);
+            BOAT.transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
+            
+            if (distanceX < -0.05f && xAxis < destination.transform.position.x) 
             { 
                 xAxis += velocity*Time.deltaTime; 
             }
-            if (distanceX > 0.1f && xAxis > destination.transform.position.x)
+            if (distanceX > 0.05f && xAxis > destination.transform.position.x)
             {
                 xAxis -= velocity * Time.deltaTime;
             }
-            if (distanceZ < -0.1f && zAxis < destination.transform.position.z)
+            if (distanceZ < -0.05f && zAxis < destination.transform.position.z)
             {
                 zAxis += velocity *Time.deltaTime;
             }
-            if (distanceZ > 0.1f && zAxis > destination.transform.position.z)
+            if (distanceZ > 0.05f && zAxis > destination.transform.position.z)
             {
                 zAxis -= velocity * Time.deltaTime;
             }
-            if(distanceZ < 0.1f && distanceZ > -0.1f && distanceX <0.1f && distanceX > -0.1f)
+            if(distanceZ < 0.05f && distanceZ > -0.05f && distanceX <0.05f && distanceX > -0.05f)
             {
             zAxis = destination.transform.position.z;
             xAxis = destination.transform.position.x;
@@ -87,9 +91,9 @@ public class PlayerMove : MonoBehaviour
             }
             distanceX = xAxis - destination.transform.position.x;
             distanceZ = zAxis - destination.transform.position.z;
-            print(distanceX);
-            print(distanceZ);
+
         }
+
     }
 
     public IEnumerator floating()
