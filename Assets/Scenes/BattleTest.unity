@@ -449,7 +449,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Action
+  m_text: Attack
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -578,6 +578,7 @@ MonoBehaviour:
   units: []
   grid: {fileID: 282761987}
   active: 1
+  moving: 0
 --- !u!1 &329505571
 GameObject:
   m_ObjectHideFlags: 0
@@ -988,6 +989,10 @@ PrefabInstance:
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2223838504842600106, guid: 34e4afe442b789a4f926fd55f48aeefd, type: 3}
+      propertyPath: ability
+      value: 
+      objectReference: {fileID: 2100000, guid: db91749294350764c82a65f20ff911ed, type: 2}
+    - target: {fileID: 2223838504842600106, guid: 34e4afe442b789a4f926fd55f48aeefd, type: 3}
       propertyPath: selected
       value: 
       objectReference: {fileID: 2100000, guid: 5a703cd9ba3a3864eaf48d169dae309f, type: 2}
@@ -1233,7 +1238,7 @@ GameObject:
   - component: {fileID: 948306666}
   - component: {fileID: 948306665}
   m_Layer: 5
-  m_Name: ActionButton
+  m_Name: AttackButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1306,7 +1311,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 322437417}
         m_TargetAssemblyTypeName: BattleEngine, Assembly-CSharp
-        m_MethodName: selectAction
+        m_MethodName: selectAttack
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

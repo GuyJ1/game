@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 //Main controller for the battle system
 //Note that this system must be activated and will not perform any logic until it is
@@ -9,24 +10,29 @@ public class BattleEngine : MonoBehaviour {
     public GameObject grid;
     public bool active = false; //Activation flag to be set by other systems
 
+    public bool moving = false; //Whether the current mode is moving or acting
+    private Ability selectedAbility;
     private bool init = false;
     private bool isPlayerTurn;
-    private bool moved = false;
-    private bool acted = false;
+    private bool moved = false; //Whether movement was taken
+    private bool acted = false; //Whether an action was taken
     private uint turnCount = 0;
     private GameObject activeUnit;
     private Vector2Int activeUnitPos;
     private List<GameObject> unitsBySpeed = new List<GameObject>(); //Units sorted from lowest to highest speed values
     private List<GameObject> turnQueue = new List<GameObject>(); //Stored units in the turn queue (units can repeat)
 
-    // Click Detection
+    //Button references
+    private Button attackButton, moveButton, endButton;
+
+    //Click Detection
     private Camera cam;
     private Renderer rend;
     private Ray ray;
     private RaycastHit hit;
     private int gridMask = 1 << 6;
 
-    // Selection Management
+    //Selection Management
     private bool charSelected = false;
     private bool charHighlighted = false;
     private Vector2Int selectedCharPos;
@@ -35,6 +41,9 @@ public class BattleEngine : MonoBehaviour {
     // Start is called before the first frame update
     void Start() {
         cam = Camera.main;
+        attackButton = GameObject.Find("AttackButton").GetComponent<Button>();
+        moveButton = GameObject.Find("MoveButton").GetComponent<Button>();
+        endButton = GameObject.Find("EndButton").GetComponent<Button>();
     }
 
     // Update is called once per frame
@@ -87,16 +96,7 @@ public class BattleEngine : MonoBehaviour {
                         if (tileScript.hasCharacter)
                         {
                             // Case 1: if there's no selected character, then just select this one
-                            if (charSelected == false)
-                            {
-                                // Select new tile at tile pos
-                                if(!moved) HighlightValidMoves(tilePos, tileScript.characterOn.GetComponent<CharacterStats>().MV);
-                                selectRend.material = isTileActive(tilePos) ? gridTiles.activeSelected : gridTiles.selected;
-                                selectedCharPos = tilePos;
-                                Debug.Log("Character on " + objectHit.name + " has been selected");
-                                charSelected = true;
-                                charHighlighted = false;
-                            }
+                            if (charSelected == false) setupMove(objectHit);
                             // Case 2: if the character is the same as the already selected,
                             // then unselect it
                             else if (tilePos == selectedCharPos)
@@ -108,21 +108,7 @@ public class BattleEngine : MonoBehaviour {
                             }
                             // Case 3: if the character is different than the currently selected character,
                             // then deselect the current character and select the new one
-                            else
-                            {
-                                // Unselect currently selected character
-                                Debug.Log("Unselecting character on " + selectedCharPos.x + " " + selectedCharPos.y);
-                                gridTiles.grid[selectedCharPos.x, selectedCharPos.y].GetComponent<Renderer>().material = isTileActive(selectedCharPos) ? gridTiles.activeUnselected : gridTiles.unselected;
-
-                                ResetAllHighlights();
-                                // Select new tile at tile pos (Note: code is repeated above, not good practice)
-                                if(!moved) HighlightValidMoves(tilePos, tileScript.characterOn.GetComponent<CharacterStats>().MV);
-                                selectRend.material = isTileActive(tilePos) ? gridTiles.activeSelected : gridTiles.selected;
-                                selectedCharPos = tilePos;
-                                Debug.Log("Character on " + objectHit.name + " has been selected");
-                                charSelected = true;
-                                charHighlighted = false;
-                            }
+                            else setupMove(objectHit);
                         }
                         // If we have a selected character/tile, then we can move it to any
                         // highlighted tile without a character already on it
@@ -146,6 +132,8 @@ public class BattleEngine : MonoBehaviour {
                                     charHighlighted = false;
                                     ResetAllHighlights();
                                     moved = true;
+                                    moveButton.interactable = false;
+                                    update();
                                 }
                             }
                         }
@@ -271,12 +259,28 @@ public class BattleEngine : MonoBehaviour {
         }
     }
 
-    public void selectAction() {
-        
+    public static bool isUnitAlive(GameObject unit) {
+        return unit.GetComponent<CharacterStats>().HP > 0;
+    }
+
+    public static bool isAllyUnit(GameObject unit) {
+        return unit.GetComponent<CharacterStats>().crew.GetComponent<CrewSystem>().isPlayer;
+    }
+
+    public static Ability getBasicAttack(GameObject unit) {
+        return unit.GetComponent<CharacterStats>().basicAttack.GetComponent<Ability>();
+    }
+
+    public static Ability getComboAttack(GameObject unit) {
+        return unit.GetComponent<CharacterStats>().comboAttack.GetComponent<Ability>();
+    }
+
+    public void selectAttack() {
+        moving = false;
     }
 
     public void selectMove() {
-        
+        moving = true;
     }
 
     public void pickNewTurn() {
@@ -308,6 +312,17 @@ public class BattleEngine : MonoBehaviour {
             }
         }
         ResetAllHighlights();
+        isPlayerTurn = isAllyUnit(activeUnit);
+        attackButton.interactable = isPlayerTurn;
+        moveButton.interactable = isPlayerTurn;
+        if(!isPlayerTurn) doAITurn();
+        /*else {
+            selectedCharPos = activeUnitPos;
+            charSelected = true;
+            charHighlighted = false;
+            var tile = gridTiles.getTileAtPos(selectedCharPos);
+            tile.GetComponent<Renderer>().material = gridTiles.activeSelected;
+        }*/
     }
 
     //End the active unit's turn
@@ -327,15 +342,41 @@ public class BattleEngine : MonoBehaviour {
     }
 
     public void doAITurn() {
-
+        //TODO: AI stuff here
+        endTurn();
     }
 
     public uint getTurnCount() {
         return turnCount;
     }
 
-    //Try to take an action at the specified position on the grid. Returns true if action succeeds.
-    public bool actUnit(int x, int y) {
+    public void setupMove(Transform objectHit) {
+        var gridTiles = grid.GetComponent<GridBehavior>();
+        var selectRend  = objectHit.GetComponent<Renderer>();
+        var tileScript  = objectHit.GetComponent<TileScript>();
+        Vector2Int tilePos = tileScript.position;
+        // Unselect currently selected character
+        if(charSelected) {
+            Debug.Log("Unselecting character on " + selectedCharPos.x + " " + selectedCharPos.y);
+            gridTiles.grid[selectedCharPos.x, selectedCharPos.y].GetComponent<Renderer>().material = isTileActive(selectedCharPos) ? gridTiles.activeUnselected : gridTiles.unselected;
+        }
+
+        ResetAllHighlights();
+        // Select new tile at tile pos (Note: code is repeated above, not good practice)
+        if(!moved) HighlightValidMoves(tilePos, tileScript.characterOn.GetComponent<CharacterStats>().MV);
+        selectRend.material = isTileActive(tilePos) ? gridTiles.activeSelected : gridTiles.selected;
+        selectedCharPos = tilePos;
+        Debug.Log("Character on " + objectHit.name + " has been selected");
+        charSelected = true;
+        charHighlighted = false;
+    }
+
+    public void setupAction() {
+
+    }
+
+    //Try to use the selected ability at the specified position on the grid. Returns true if action succeeds.
+    public bool useAbility(int x, int y) {
         acted = true;
         return true;
     }
@@ -345,13 +386,47 @@ public class BattleEngine : MonoBehaviour {
         return true;
     }
 
-    //Check for victory conditions and end the battle if met
-    public void checkVictory() {
+    public void update() {
+        checkOutcome();
+        if(moved && acted) endTurn();
+        checkOutcome();
+    }
 
+    //Check whether victory or defeat conditions are met
+    public void checkOutcome() {
+        checkDefeat();
+        checkVictory();
+    }
+
+    //Check for victory conditions and end the battle if met
+    private void checkVictory() {
+        bool won = true;
+        //Check if any enemies are alive
+        foreach(GameObject unit in units) {
+            if(isUnitAlive(unit) && !isAllyUnit(unit)) {
+                won = false;
+                break;
+            }
+        }
+        //End on win
+        if(won) {
+            active = false;
+        }
     }
 
     //Check for defeat conditions and end the battle if met
-    public void checkDefeat() {
-
+    private void checkDefeat() {
+        bool loss = true;
+        //Check if any allies are alive
+        foreach(GameObject unit in units) {
+            if(isUnitAlive(unit) && isAllyUnit(unit)) {
+                loss = false;
+                break;
+            }
+        }
+        //End on loss
+        if(loss) {
+            active = false;
+        }
     }
 }

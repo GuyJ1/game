@@ -39,7 +39,7 @@ public class CharacterStats : MonoBehaviour
         healthBar = Instantiate(healthBar, canvas.transform);
 
         // Set gradient color
-        bool isPlayer = !crew.GetComponent<CrewSystem>().isPlayer;
+        bool isPlayer = crew.GetComponent<CrewSystem>().isPlayer;
         Gradient grad = new Gradient();
 
         // Populate the color keys at the relative time 0 and 1 (0 and 100%)
