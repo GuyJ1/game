@@ -1020,9 +1020,21 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 5537537504233135668, guid: 35e9b644f5a473148bedf512f2340242, type: 3}
     - target: {fileID: 2223838504842600106, guid: 34e4afe442b789a4f926fd55f48aeefd, type: 3}
+      propertyPath: crews.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2223838504842600106, guid: 34e4afe442b789a4f926fd55f48aeefd, type: 3}
       propertyPath: activeHighlighted
       value: 
       objectReference: {fileID: 2100000, guid: 92d79583c5ac4144a9edc3eb49f76360, type: 2}
+    - target: {fileID: 2223838504842600106, guid: 34e4afe442b789a4f926fd55f48aeefd, type: 3}
+      propertyPath: crews.Array.data[0]
+      value: 
+      objectReference: {fileID: 8677408311475748420, guid: 238bccab6e5fb4a449c65233d85a8160, type: 3}
+    - target: {fileID: 2223838504842600106, guid: 34e4afe442b789a4f926fd55f48aeefd, type: 3}
+      propertyPath: crews.Array.data[1]
+      value: 
+      objectReference: {fileID: 8677408311475748420, guid: ff7e742bfec002a4c80690599f895dce, type: 3}
     - target: {fileID: 3374352494009361424, guid: 34e4afe442b789a4f926fd55f48aeefd, type: 3}
       propertyPath: m_LocalScale.x
       value: 1

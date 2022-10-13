@@ -59,7 +59,7 @@ MonoBehaviour:
   HPMAX: 200
   STR: 20
   DEF: 20
-  SPD: 20
+  SPD: 10
   MV: 5
   Name: Dummy
   basicAttack: {fileID: 5751798234688528242, guid: dfebc8a26e6c41845a3b9ea13ddcb1b0, type: 3}

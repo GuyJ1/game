@@ -55,6 +55,12 @@ public class CrewSystem : MonoBehaviour
 
     }
 
+    public void initCharacters() {
+        foreach (GameObject character in characters) {
+            character.GetComponent<CharacterStats>().crew = this.gameObject; //Set reference to crew in character
+        }
+    }
+
     /// <summary>
     /// Function to update an item in the inventory by a given quantity
     /// </summary>

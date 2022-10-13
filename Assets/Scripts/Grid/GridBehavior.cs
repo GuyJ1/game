@@ -23,8 +23,8 @@ public class GridBehavior : MonoBehaviour
     // Materials
     [SerializeField] public Material unselected, highlighted, selected, activeUnselected, activeHighlighted, activeSelected, impassible;
 
-    // Temp
-    public GameObject characterToSpawn;
+    // Crews
+    public List<GameObject> crews;
     
     // Start is called before the first frame update
     void Start()
@@ -35,12 +35,14 @@ public class GridBehavior : MonoBehaviour
         // Get camera
         cam = Camera.main;
 
-        // Spawn characters for testing purposes
-        SpawnCharacter(characterToSpawn, new Vector2Int(0,0));
-        SpawnCharacter(characterToSpawn);
-        SpawnCharacter(characterToSpawn);
-        SpawnCharacter(characterToSpawn);
-        SpawnCharacter(characterToSpawn);
+        // Spawn characters (random positions)
+        foreach(GameObject crew in crews) {
+            List<GameObject> characters = crew.GetComponent<CrewSystem>().characters;
+            foreach(GameObject character in characters) {
+                crew.GetComponent<CrewSystem>().initCharacters();
+                SpawnCharacter(character);
+            }
+        }
     }
 
     // --------------------------------------------------------------
