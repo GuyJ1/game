@@ -62,6 +62,9 @@ MonoBehaviour:
   SPD: 20
   MV: 5
   Name: Dummy
+  basicAttack: {fileID: 5751798234688528242, guid: dfebc8a26e6c41845a3b9ea13ddcb1b0, type: 3}
+  comboAttack: {fileID: 5751798234688528242, guid: 340a031d05ed20443bfb33cc3da77785, type: 3}
+  abilities: []
   healthBar: {fileID: 4151192400801874901}
   healthBarYOffset: 1
   canvas: {fileID: 0}

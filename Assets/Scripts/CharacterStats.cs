@@ -14,6 +14,10 @@ public class CharacterStats : MonoBehaviour
     public int MV;
     public string Name;
 
+    // Actions
+    public GameObject basicAttack, comboAttack; //Generic actions
+    public List<GameObject> abilities; //Unique abilities
+
     // Healthbar
     public HealthBar healthBar;
     public float healthBarYOffset;

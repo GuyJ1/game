@@ -19,16 +19,6 @@ public class GridBehavior : MonoBehaviour
 
     // Things used for click detection
     private Camera cam;
-    private Renderer rend;
-    private Ray ray;
-    private RaycastHit hit;
-    private int layerMask = 1 << 6;
-
-    // Selection Management
-    private bool charSelected = false;
-    private bool charHighlighted = false;
-    private Vector2Int selectedCharPos;
-    private Vector2Int highlightedCharPos;
 
     // Materials
     [SerializeField] public Material unselected, highlighted, selected, activeUnselected, activeHighlighted, activeSelected, impassible;

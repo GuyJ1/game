@@ -16,6 +16,9 @@ using UnityEngine;
 
 public class CrewSystem : MonoBehaviour
 {
+    public bool isPlayer; //Whether this crew is a player crew (do not change this in code)
+    public List<GameObject> characters; //List of all characters in this crew
+
     public int inventory_gold =1 ;
     public int inventory_wood =2 ;
     public int inventory_crew =3 ;
@@ -23,7 +26,7 @@ public class CrewSystem : MonoBehaviour
 
     public int[] inventory;
     int inventorySize = 19;
-    int inventoryItemsIn = 0; 
+    int inventoryItemsIn = 0;
 
     // Start is called before the first frame update
     void Start()
