@@ -6,12 +6,16 @@ public class CharacterStats : MonoBehaviour
 {
 
     [SerializeField]
-    public int HP;
-    public int HPMAX;
-    public int STR;
-    public int DEF;
-    public int SPD;
-    public int MV;
+    public int HP; //Current health
+    public int HPMAX; //Maximum health
+    public int STR; //Strength
+    public int DEF; //Defense
+    public int SPD; //Speed
+    public int MV; //Movement
+    public int AP; //Ability Points (possible currency for abilities)
+    public int APMAX; //Maximum ability points
+    public int Morale; //Morale
+    public int MoraleMAX; //Maximum Morale
     public string Name;
 
     // Actions
@@ -56,9 +60,13 @@ public class CharacterStats : MonoBehaviour
 
         healthBar.gradient = grad;
 
-        // Set health
+        // Set health, ability points, and morale
         HP = HPMAX;
         healthBar.SetMaxHealth(HPMAX);
+
+        AP = APMAX;
+
+        Morale = MoraleMAX;
     }
 
     // Update is called once per frame
@@ -81,10 +89,68 @@ public class CharacterStats : MonoBehaviour
         healthBar.transform.position = Camera.main.WorldToScreenPoint(transform.position + posOffset);
     }
 
-    // Taking damage
-    void Damage(int damage)
+    // HP changed (either taking damage (negative) or healing (positive))
+    void adjustHP(int change)
     {
-        HP -= damage;
+        HP += change;
+
+        if(HP < 0){
+            HP = 0;
+        }
+
+        if(HP > HPMAX){
+            HP = HPMAX;
+        }
+
         healthBar.SetHealth(HP);
     }
+
+
+
+    //AP changed (either positive or negative)
+    //subType is primarily for subtractions (either ability used (1) or AP drained (2) [0 if not subtraction])
+    //returns 0 if adjustment was successful, 1 otherwise
+    int adjustAP(int change, int subType){
+
+        int oldAP = AP;
+        AP += change;
+
+        if(subType != 0){
+
+            if(AP < 0 and subType = 1){
+                AP = oldAP; //not enough AP!
+                return 1;
+            
+            }
+            else if(AP < 0 and subType = 2){
+                AP = 0
+                return 0;
+
+            }
+            else{
+
+                return 0;
+            }   
+        }
+        if(AP > APMAX){
+            AP = APMAX;
+        }
+
+        return 0;
+    }
+
+    //Morale changed (either positive or negative)
+    void adjustMorale(int change){
+        Morale += change;
+        if(Morale < 0){
+            Morale = 0;
+        }
+        if(Morale > MoraleMAX){
+            Morale = MoraleMAX;
+        }
+    }
+
+
+
+
 }
