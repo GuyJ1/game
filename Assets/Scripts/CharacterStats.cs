@@ -123,7 +123,7 @@ public class CharacterStats : MonoBehaviour
             
             }
             else if(AP < 0 and subType = 2){
-                AP = 0
+                AP = 0;
                 return 0;
 
             }
