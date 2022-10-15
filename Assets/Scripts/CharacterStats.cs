@@ -16,6 +16,7 @@ public class CharacterStats : MonoBehaviour
     public int APMAX; //Maximum ability points
     public int Morale; //Morale
     public int MoraleMAX; //Maximum Morale
+    public int ATK; //Attack power (= STR - Enemy's DEF)
     public string Name;
 
     // Actions
@@ -75,7 +76,9 @@ public class CharacterStats : MonoBehaviour
         // Health Testing
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            Damage(20);
+
+            //damage
+            adjustHP(-20);
         }
     }
 
@@ -117,20 +120,24 @@ public class CharacterStats : MonoBehaviour
 
         if(subType != 0){
 
-            if(AP < 0 && subType = 1){
-                AP = oldAP; //not enough AP!
-                return 1;
-            
-            }
-            else if(AP < 0 && subType = 2){
-                AP = 0;
-                return 0;
+            if(AP < 0){
+
+                if(subType == 1){
+
+                    AP = oldAP; //not enough AP!
+                    return 1;
+
+                }
+                else{
+
+                    AP = 0;
+                    return 0;
+
+                }
 
             }
-            else{
 
-                return 0;
-            }   
+            return 0;
         }
         if(AP > APMAX){
             AP = APMAX;
