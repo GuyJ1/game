@@ -1,22 +1,30 @@
+// this script should trigger the dialogue when the player interacts with an npc
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Dialogue : MonoBehaviour
+public class UI_DialogueTrigger : MonoBehaviour
 {
-    //visual cue object
+    // ------------------------ variables: ------------------------
+
+    // visual cue object
     [Header("visual cue")] 
     [SerializeField] private GameObject visualCue;
 
+    // ink text file object
     [Header("ink json")]
-    [SerializeField] private TextAsset inkJSON;  
+    [SerializeField] private TextAsset inkJSONFile;  
 
     private bool playerInRange;
 
+
+    // ------------------------ functions: ------------------------
+
+    // function to initalize everything
     private void Awake()
     {
         playerInRange = false;
-        visualCue.SetActive(false);     // initalize visual cue to inactive
+        visualCue.SetActive(false);     // set visual cue to inactive
     }
 
     // enables/disables the visual cue based on whether the player is in range or not
@@ -25,14 +33,12 @@ public class Dialogue : MonoBehaviour
         if(playerInRange) {
             visualCue.SetActive(true);
 
-            triggers the dialogue if interact button is pressed
+            // triggers the dialogue if interact button is pressed
             if(InputManager.GetInstance().GetInteractPressed()) {
-                Debug.Log(inkJSON.text);
+                UI_DialogueManager.GetInstance().EnterDialogueMode(inkJSONFile);
             }
-
         } 
             
-
         else {
             visualCue.SetActive(false);
         } 
@@ -55,3 +61,4 @@ public class Dialogue : MonoBehaviour
         }
     }
 }
+// ------------------------ end of file ------------------------
