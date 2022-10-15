@@ -117,12 +117,12 @@ public class CharacterStats : MonoBehaviour
 
         if(subType != 0){
 
-            if(AP < 0 and subType = 1){
+            if(AP < 0 && subType = 1){
                 AP = oldAP; //not enough AP!
                 return 1;
             
             }
-            else if(AP < 0 and subType = 2){
+            else if(AP < 0 && subType = 2){
                 AP = 0;
                 return 0;
 
