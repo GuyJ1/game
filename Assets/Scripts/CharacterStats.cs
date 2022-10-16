@@ -11,12 +11,22 @@ public class CharacterStats : MonoBehaviour
     public int STR; //Strength
     public int DEF; //Defense
     public int SPD; //Speed
+    public int DEX; //Dexterity
+    public int LCK; //Luck
     public int MV; //Movement
     public int AP; //Ability Points (possible currency for abilities)
     public int APMAX; //Maximum ability points
-    public int Morale; //Morale
+    public int Morale; //Morale (from 0 - 100), 
+                        //depending on this value, ATK/CRIT are boosted from +1 to +5 and HIT/AVO is boosted by +2 to +10
     public int MoraleMAX; //Maximum Morale
     public int ATK; //Attack power (= STR - Enemy's DEF)
+    public int HIT; //Hit  (= (DEX*3 + LCK) / 2)
+    public int CRIT; //Critical  (= (DEX / 2) - 5)
+    public int AVO; //Avoid  (= (SPD*3 + LCK) / 2)
+
+    public int HitRate; // = HIT - Enemy's AVO
+    public int CritRate; // = CRIT - Enemy's LCK
+
     public string Name;
 
     // Actions
@@ -35,6 +45,8 @@ public class CharacterStats : MonoBehaviour
 
     // Crew that this character belongs to (should be set by CrewSystem)
     public GameObject crew;
+
+    
 
     // Start is called before the first frame update
     void Start()
@@ -93,7 +105,7 @@ public class CharacterStats : MonoBehaviour
     }
 
     // HP changed (either taking damage (negative) or healing (positive))
-    void adjustHP(int change)
+    public void adjustHP(int change)
     {
         HP += change;
 
@@ -113,7 +125,7 @@ public class CharacterStats : MonoBehaviour
     //AP changed (either positive or negative)
     //subType is primarily for subtractions (either ability used (1) or AP drained (2) [0 if not subtraction])
     //returns 0 if adjustment was successful, 1 otherwise
-    int adjustAP(int change, int subType){
+    public int adjustAP(int change, int subType){
 
         int oldAP = AP;
         AP += change;
@@ -147,7 +159,7 @@ public class CharacterStats : MonoBehaviour
     }
 
     //Morale changed (either positive or negative)
-    void adjustMorale(int change){
+    public void adjustMorale(int change){
         Morale += change;
         if(Morale < 0){
             Morale = 0;
@@ -156,6 +168,16 @@ public class CharacterStats : MonoBehaviour
             Morale = MoraleMAX;
         }
     }
+
+    public int Attack(EnemyStats target){
+
+        ATK = (STR + (Morale / 5)) - target.DEF;
+        target.adjustHP(-ATK);
+
+        return ATK;
+    }
+
+    
 
 
 
