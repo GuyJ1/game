@@ -52,8 +52,12 @@ MonoBehaviour:
   unselected: {fileID: 2100000, guid: f0e855c34670ad5459890b16548d4bdc, type: 2}
   highlighted: {fileID: 2100000, guid: 651c00cb132d0b34e876b1e41a8e1c6c, type: 2}
   selected: {fileID: 2100000, guid: 5a703cd9ba3a3864eaf48d169dae309f, type: 2}
+  activeUnselected: {fileID: 0}
+  activeHighlighted: {fileID: 0}
+  activeSelected: {fileID: 0}
+  ability: {fileID: 0}
   impassible: {fileID: 2100000, guid: 47b14fb6e7f2df54f906def83c3fa99b, type: 2}
-  characterToSpawn: {fileID: 5537537504233135668, guid: 35e9b644f5a473148bedf512f2340242, type: 3}
+  crews: []
 --- !u!1 &6455160471617079445
 GameObject:
   m_ObjectHideFlags: 0
@@ -115,7 +119,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: f0e855c34670ad5459890b16548d4bdc, type: 2}
+  - {fileID: 2100000, guid: b280d57b38fcff144b600f9d053d60b1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
