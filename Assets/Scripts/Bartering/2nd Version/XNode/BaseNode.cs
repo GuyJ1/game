@@ -10,9 +10,8 @@ public class BaseNode : Node {
 		return null;
 	}
 
-	/*public virtual Sprite GetSprite()
+	public virtual Sprite GetSprite()
 	{
 		return null;
 	}
-	*/
 }
