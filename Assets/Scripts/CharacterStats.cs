@@ -20,12 +20,9 @@ public class CharacterStats : MonoBehaviour
                         //depending on this value, ATK/CRIT are boosted from +1 to +5 and HIT/AVO is boosted by +2 to +10
     public int MoraleMAX; //Maximum Morale
     public int ATK; //Attack power (= STR - Enemy's DEF)
-    public int HIT; //Hit  (= (DEX*3 + LCK) / 2)
-    public int CRIT; //Critical  (= (DEX / 2) - 5)
+    public int HIT; //Hit Rate (= (((DEX*3 + LCK) / 2) - Enemy's AVO)
+    public int CRIT; //Critical Rate (= ((DEX / 2) - 5) - Enemy's LCK)
     public int AVO; //Avoid  (= (SPD*3 + LCK) / 2)
-
-    public int HitRate; // = HIT - Enemy's AVO
-    public int CritRate; // = CRIT - Enemy's LCK
 
     public string Name;
 
@@ -169,12 +166,54 @@ public class CharacterStats : MonoBehaviour
         }
     }
 
+    //Attack the enemy, possibly with a critical hit
+    //Note: Critical hits triple the total damage
     public int Attack(EnemyStats target){
 
-        ATK = (STR + (Morale / 5)) - target.DEF;
-        target.adjustHP(-ATK);
+        HIT = (((DEX * 3 + LCK) / 2) + (2 * (Morale / 5))) - target.AVO;
+        CRIT = (((DEX / 2) - 5) + (Morale / 5)) - target.LCK;
+
+        if(determineCRIT(CRIT)){
+
+            ATK = ((STR + (Morale / 5)) - target.DEF) * 3; //CRITICAL HIT!
+            target.adjustHP(-ATK);
+
+        }
+        else if(determineHIT(HIT)){
+            ATK = (STR + (Morale / 5)) - target.DEF; //HIT!
+            target.adjustHP(-ATK);
+
+        }
+        else{
+
+            ATK = 0; //Miss...
+            
+        }
+
 
         return ATK;
+    }
+
+    public bool determineHIT(int HIT){
+
+       
+        if(HIT >= Random.Range(0, 100)){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public bool determineCRIT(int CRIT){
+
+        
+        if(CRIT >= Random.Range(0,100)){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     
