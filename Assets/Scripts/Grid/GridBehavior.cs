@@ -126,7 +126,7 @@ public class GridBehavior : MonoBehaviour
                     Debug.Log("Spawning character as position " + randX + " " + randY);
 
                     // Set tile data
-                    tilesScript.characterOn = Instantiate(character, pos, transform.rotation);
+                    tilesScript.characterOn = Instantiate(character, pos, transform.rotation, this.transform);
                     tilesScript.hasCharacter = true;
 
                     // Update flag and # of available tiles
@@ -171,7 +171,7 @@ public class GridBehavior : MonoBehaviour
                 Debug.Log("Spawning character as position " + spawnPos.x + " " + spawnPos.y);
 
                 // Set tile data
-                tilesScript.characterOn = Instantiate(character, pos, transform.rotation);
+                tilesScript.characterOn = Instantiate(character, pos, transform.rotation, this.transform);
                 tilesScript.hasCharacter = true;
 
                 // Update flag and # of available tiles

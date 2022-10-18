@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _version: 0
   _prewarm: 1
-  _foamFadeRate: 5.03
-  _waveFoamStrength: 1.87
-  _waveFoamCoverage: 0.426
-  _shorelineFoamMaxDepth: 1.35
-  _shorelineFoamStrength: 1.53
+  _foamFadeRate: 4.18
+  _waveFoamStrength: 1.85
+  _waveFoamCoverage: 0.3
+  _shorelineFoamMaxDepth: 0.68
+  _shorelineFoamStrength: 1.91
   _renderTextureGraphicsFormat: 45
   _simulationFrequency: 30

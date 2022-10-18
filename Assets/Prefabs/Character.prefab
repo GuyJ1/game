@@ -61,6 +61,11 @@ MonoBehaviour:
   DEF: 20
   SPD: 10
   MV: 5
+  AP: 0
+  APMAX: 0
+  Morale: 0
+  MoraleMAX: 0
+  ATK: 0
   Name: Dummy
   basicAttack: {fileID: 5751798234688528242, guid: dfebc8a26e6c41845a3b9ea13ddcb1b0, type: 3}
   comboAttack: {fileID: 5751798234688528242, guid: 340a031d05ed20443bfb33cc3da77785, type: 3}
@@ -69,6 +74,7 @@ MonoBehaviour:
   healthBarYOffset: 1
   canvas: {fileID: 0}
   gridPosition: {x: 0, y: 0}
+  crew: {fileID: 0}
 --- !u!23 &8884561808067556798
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -89,7 +95,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 7b03744efab917241a147dd1cd6cac91, type: 2}
+  - {fileID: 1450959637776569338, guid: 145fe57700747ec448449eef490f1647, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
