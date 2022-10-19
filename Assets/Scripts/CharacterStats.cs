@@ -39,7 +39,7 @@ public class CharacterStats : MonoBehaviour
     // Movement
     public Stack<PathTreeNode> pathToFollow = new Stack<PathTreeNode>();
     private bool followingPath = false;
-    public int travelSteps = 1000;
+    public int travelSteps = 10;
     private int currentSteps = 0;
     private Vector3 targetPos;
     private Vector3 stepLength;
@@ -103,6 +103,7 @@ public class CharacterStats : MonoBehaviour
             followingPath = true;
             transform.position += stepLength;
         }
+        else
         {
             followingPath = false;
         }

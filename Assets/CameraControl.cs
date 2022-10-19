@@ -5,7 +5,8 @@ using UnityEngine;
 public class CameraControl : MonoBehaviour
 {
     // Control Speed
-    [SerializeField] public float ControlSpeed; // WASD Speed
+    [SerializeField] public float ControlSpeed, PanSpeed; // WASD Speed and Pan Speed
+
 
     // Viewing offset
     private Vector3 offset;
@@ -31,7 +32,7 @@ public class CameraControl : MonoBehaviour
         if (xDirection != 0 || zDirection != 0)
         {
             Vector3 moveVector = new Vector3(xDirection, 0.0f, zDirection);
-            transform.position += moveVector * ControlSpeed;
+            transform.position += moveVector * Time.deltaTime * ControlSpeed;
             target = transform.position;
 
             controlling = true;
@@ -47,7 +48,7 @@ public class CameraControl : MonoBehaviour
     {
         if (controlling == false)
         {
-            Vector3 diff = (target - transform.position) / 64;
+            Vector3 diff = (target - transform.position) * Time.deltaTime * PanSpeed;
             transform.position += diff;
         }
     }

@@ -48,7 +48,15 @@ public class BattleEngine : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update() {
+    void Update()
+    {
+        // Ability to quit game on esc
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Debug.Log("Exiting Adrift..."); //For testing purposes, text shows in log
+            Application.Quit(); //exits and quits the game application
+        }
+        
         if(!active) return;
         else {
             ray = cam.ScreenPointToRay(Input.mousePosition);
