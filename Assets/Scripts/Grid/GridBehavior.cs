@@ -230,7 +230,7 @@ public class GridBehavior : MonoBehaviour
                     charToMove = sourceTileScipt.characterOn;
 
                     // Move character to destPos
-                    charToMove.GetComponent<CharacterStats>().pathToFollow = destTileScript.pathRef.PathToRoot();
+                    charToMove.GetComponent<FollowPath>().pathToFollow = destTileScript.pathRef.PathToRoot();
                     //Vector3 pos = new Vector3(destTile.transform.position.x, destTile.transform.position.y+0.5f, destTile.transform.position.z);
                     //charToMove.transform.position = pos;
 
