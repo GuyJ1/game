@@ -11,7 +11,7 @@ public class MainMenu : MonoBehaviour
         {
         //use SceneManager.LoadScene(i) where i indicates the scene "name" of which to load or a # based on index queue
         //SceneManager.LoadScene("Chapter1"); //Labeling the start of the game as Chapter1
-        SceneManager.LoadScene("Overworld"); //Temporary scene to begin game.
+        SceneManager.LoadScene(1); //Temporary scene to begin game.
         //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);  //Loads next scene based in queue, when building scene.
         }
 
@@ -26,7 +26,7 @@ public class MainMenu : MonoBehaviour
         }
         public void LoadBattleTest() //method to load Battle schene
         {
-          SceneManager.LoadScene("BattleTest");
+          SceneManager.LoadScene(1); // 1 = battle scene for now
         }
 
       public void LoadCredits () //method to access credit scene

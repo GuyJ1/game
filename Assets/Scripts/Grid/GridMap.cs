@@ -26,31 +26,59 @@ public class GridMap
         {false, false, false, false, false, false, false, false},
         {false, false, false, false, false, false, false, false},
         {false, false, false, false, false, false, false, false},
-        {false, false, false, false, false, false, false, false},
+        {false, false, false, false, false, false, false, false}
     };
     // ------------------------
 
     // ------- Grid One -------
-    public const uint GridOneWidth = 8;
-    public const uint GridOneHeight = 16;
+    public const uint GridOneWidth = 9;
+    public const uint GridOneHeight = 20;
     public static bool[,] GridOnePassableFlags = 
     {
-        {true , true , false, false, false, false, true , true },
-        {true , true , false, false, false, false, true , true },
-        {true , false, false, false, false, false, false, true },
-        {true , false, false, false, false, false, false, true },
-        {true , false, false, false, false, false, false, true },
-        {false, false, false, false, false, false, false, false},
-        {false, false, false, true , true , false, false, false},
-        {false, false, false, true , true , false, false, false},
-        {false, false, false, true , true , false, false, false},
-        {false, false, false, false, false, false, false, false},
-        {false, false, false, false, false, false, false, false},
-        {true , false, false, false, false, false, false, true },
-        {true , false, false, false, false, false, false, true },
-        {true , false, false, false, false, false, false, true },
-        {true , true , false, false, false, false, true , true },
-        {true , true , true,  false, false, true , true , true }
+        {false, false, false, false, false, false, false, false, false},
+        {false, false, false, false, false, false, false, false, false},
+        {false, false, false, false, false, false, false, false, false},
+        {false, false, true , true , true , true , true , false, false},
+        {false, false, true , true , true , true , true , false, false},
+        {false, false, true , true , true , true , true , false, false},
+        {false, false, true , true , true , true , true , false, false},
+        {false, false, true , true , true , true , true , false, false},
+        {false, false, true , true , true , true , true , false, false},
+        {false, false, false, false, false, false, false, false, false},
+        {false, false, false, false, false, false, false, false, false},
+        {false, false, true , true , true , true , true , false, false},
+        {false, false, false, false, false, false, false, false, false},
+        {false, false, false, false, false, false, false, false, false},
+        {false, false, false, true , true , true , false, false, false},
+        {false, false, false, true , true , true , false, false, false},
+        {false, false, false, true , true , true , false, false, false},
+        {true , false, false, false, false, false, false, false, true },
+        {true , false, false, false, false, false, false, false, true },
+        {true , false, false, false, false, false, false, false, true }
+    };
+
+    public static float[,] GridOneHeightOffsets = 
+    {
+        {-2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f},
+        {-2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f},
+        {-2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f},
+        {-2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f},
+        {-2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f},
+        {-2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f},
+        {-2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f},
+        {-2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f},
+        {-2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f},
+        {-1.8f, -1.8f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -1.8f, -1.8f},
+        {-0.6f, -0.6f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -0.6f, -0.6f},
+        {-0.2f, -0.2f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -0.2f, -0.2f},
+        {-0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f},
+        {-0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f},
+        {-0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f},
+        {-0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f},
+        {-0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f},
+        {-0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f},
+        {-0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f},
+        {-0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f}
     };
     // ------------------------
 
@@ -137,5 +165,26 @@ public class GridMap
         }
 
         return flagAtPos;
+    }
+
+    // Get the flag at a given grid map position
+    public float GetHeightOffsetAtPos(Vector2Int pos)
+    {
+        float offsetAtPos = 0.0f;
+
+        switch(gridSelected)
+        {
+            case 0:
+                offsetAtPos = GridOneHeightOffsets[pos.y, pos.x];
+                break;
+            case 1:
+                offsetAtPos = GridOneHeightOffsets[pos.y, pos.x];
+                break;
+            default:
+                Debug.Log("GetHeightOffsetAtPos(): Error! Cannot find selected grid");
+                break;
+        }
+
+        return offsetAtPos;
     }
 }

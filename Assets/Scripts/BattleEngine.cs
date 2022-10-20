@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class BattleEngine : MonoBehaviour {
     public List<GameObject> units = new List<GameObject>();
     public GameObject grid;
+    public PathTreeNode gridPaths;
     public bool active = false; //Activation flag to be set by other systems
 
     public bool moving = false; //Whether the current mode is moving or acting
@@ -47,7 +48,15 @@ public class BattleEngine : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update() {
+    void Update()
+    {
+        // Ability to quit game on esc
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Debug.Log("Exiting Adrift..."); //For testing purposes, text shows in log
+            Application.Quit(); //exits and quits the game application
+        }
+        
         if(!active) return;
         else {
             ray = cam.ScreenPointToRay(Input.mousePosition);
@@ -87,6 +96,7 @@ public class BattleEngine : MonoBehaviour {
                     var selectRend  = objectHit.GetComponent<Renderer>();
                     var tileScript  = objectHit.GetComponent<TileScript>();
                     Vector2Int tilePos = tileScript.position;
+
                     // ----------------------------
                     // Character Selection and Movement
                     // ----------------------------
@@ -95,6 +105,9 @@ public class BattleEngine : MonoBehaviour {
                         // If a tile has a character on it, then we can only select it
                         if (tileScript.hasCharacter)
                         {
+                            // Move Camera to clicked character
+                            cam.GetComponent<CameraControl>().LookAtPos(objectHit.position);
+                            
                             // Case 1: if there's no selected character, then just select this one
                             if (charSelected == false) setupMove(objectHit);
                             // Case 2: if the character is the same as the already selected,
@@ -119,7 +132,7 @@ public class BattleEngine : MonoBehaviour {
                             if (!moved && charSelected && activeUnit == gridTiles.GetCharacterAtPos(selectedCharPos) && tilePos != selectedCharPos)
                             {
                                 // Move character
-                                if (gridTiles.MoveCharacterOnTile(selectedCharPos, tilePos, true) == false)
+                                if (gridTiles.MoveCharacterOnTile(gridPaths, selectedCharPos, tilePos, true) == false)
                                 {
                                     Debug.Log("Cannot move character to tile " + tilePos.x + " " + tilePos.y);
                                 }
@@ -217,8 +230,8 @@ public class BattleEngine : MonoBehaviour {
         var gridTiles = grid.GetComponent<GridBehavior>();
         if(gridTiles.GetCharacterAtPos(pos) != activeUnit) return; //Can't move anywhere unless unit is active
         ResetAllHighlights();
-        var root = gridTiles.GetAllPathsFromTile(gridTiles.GetTileAtPos(pos), range);
-        highlightPathTree(root);
+        gridPaths = gridTiles.GetAllPathsFromTile(gridTiles.GetTileAtPos(pos), range);
+        highlightPathTree(gridPaths);
     }
 
     public void highlightPathTree(PathTreeNode root) {
@@ -306,7 +319,9 @@ public class BattleEngine : MonoBehaviour {
                 if(gridTiles.GetCharacterAtPos(new Vector2Int(x,y)) == activeUnit) {
                     activeUnitPos = new Vector2Int(x,y);
                     //Make sure active tile is updated
-                    gridTiles.grid[activeUnitPos.x, activeUnitPos.y].GetComponent<Renderer>().material = gridTiles.activeUnselected;
+                    GameObject activeUnitTile = gridTiles.grid[activeUnitPos.x, activeUnitPos.y];
+                    activeUnitTile.GetComponent<Renderer>().material = gridTiles.activeUnselected;
+                    cam.GetComponent<CameraControl>().LookAtPos(activeUnitTile.transform.position);
                     break;
                 }
             }
@@ -355,6 +370,7 @@ public class BattleEngine : MonoBehaviour {
         var selectRend  = objectHit.GetComponent<Renderer>();
         var tileScript  = objectHit.GetComponent<TileScript>();
         Vector2Int tilePos = tileScript.position;
+
         // Unselect currently selected character
         if(charSelected) {
             Debug.Log("Unselecting character on " + selectedCharPos.x + " " + selectedCharPos.y);
@@ -366,7 +382,10 @@ public class BattleEngine : MonoBehaviour {
         if(!moved) HighlightValidMoves(tilePos, tileScript.characterOn.GetComponent<CharacterStats>().MV);
         selectRend.material = isTileActive(tilePos) ? gridTiles.activeSelected : gridTiles.selected;
         selectedCharPos = tilePos;
+
         Debug.Log("Character on " + objectHit.name + " has been selected");
+
+        // Selection Logic
         charSelected = true;
         charHighlighted = false;
     }

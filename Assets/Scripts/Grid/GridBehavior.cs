@@ -9,13 +9,14 @@ using UnityEngine;
 
 public class GridBehavior : MonoBehaviour
 {
-    [SerializeField] public uint width, height; // Width and height of the grid
+    [SerializeField] public int gridNum; // Grid number 
     [SerializeField] public int tilesize; // Size of each tile
 
     // Grid vars
     public GameObject Tile; // A cell or tile that makes up the grid
     public GameObject [,] grid; // The actual grid, represented by a 2d array
     private uint availableTiles;
+    public uint height, width;
 
     // Things used for click detection
     private Camera cam;
@@ -30,7 +31,7 @@ public class GridBehavior : MonoBehaviour
     void Start()
     {
         // Generate the grid by instantiating tile objects
-        GenerateGrid(1);
+        GenerateGrid(gridNum);
 
         // Get camera
         cam = Camera.main;
@@ -65,8 +66,9 @@ public class GridBehavior : MonoBehaviour
             for (int y = 0; y < height; y++)
             {
                 // Calculate the position of the tile to create
-                Vector3 pos = new Vector3(transform.position.x + x*tilesize, transform.position.y, transform.position.z + y*tilesize);
-
+                Vector2Int xy = new Vector2Int(x, y);
+                Vector3 pos = new Vector3(transform.position.x + x*tilesize, transform.position.y + passableTiles.GetHeightOffsetAtPos(xy), transform.position.z + y*tilesize);
+                
                 // Create the tile
                 GameObject newTile = Instantiate(Tile, pos, transform.rotation, this.transform);
 
@@ -77,7 +79,7 @@ public class GridBehavior : MonoBehaviour
                 newTileScript.position.y = y;
 
                 // Check the grid map for impassible tiles
-                if (passableTiles.GetFlagAtPos(new Vector2Int(x, y)))
+                if (passableTiles.GetFlagAtPos(xy))
                 {
                     newTileScript.passable = false;
                     newTile.GetComponent<Renderer>().material = impassible;
@@ -122,11 +124,12 @@ public class GridBehavior : MonoBehaviour
             if (tilesScript.hasCharacter == false && tilesScript.passable)
                 {
                     // Spawn the character if valid
-                    Vector3 pos = new Vector3(transform.position.x + randX*tilesize, transform.position.y+0.5f, transform.position.z + randY*tilesize);
+                    Vector3 tilePos = spawningTile.transform.position;
+                    Vector3 pos = new Vector3(tilePos.x, tilePos.y+0.5f, tilePos.z);
                     Debug.Log("Spawning character as position " + randX + " " + randY);
 
                     // Set tile data
-                    tilesScript.characterOn = Instantiate(character, pos, transform.rotation);
+                    tilesScript.characterOn = Instantiate(character, pos, transform.rotation, this.transform);
                     tilesScript.hasCharacter = true;
 
                     // Update flag and # of available tiles
@@ -167,11 +170,12 @@ public class GridBehavior : MonoBehaviour
             if (tilesScript.hasCharacter == false && tilesScript.passable)
             {
                 // Spawn the character if valid
-                Vector3 pos = new Vector3(transform.position.x + spawnPos.x*tilesize, transform.position.y+0.5f, transform.position.z + spawnPos.y*tilesize);
+                Vector3 tilePos = spawningTile.transform.position;
+                Vector3 pos = new Vector3(tilePos.x, tilePos.y+0.5f, tilePos.z);
                 Debug.Log("Spawning character as position " + spawnPos.x + " " + spawnPos.y);
 
                 // Set tile data
-                tilesScript.characterOn = Instantiate(character, pos, transform.rotation);
+                tilesScript.characterOn = Instantiate(character, pos, transform.rotation, this.transform);
                 tilesScript.hasCharacter = true;
 
                 // Update flag and # of available tiles
@@ -195,11 +199,12 @@ public class GridBehavior : MonoBehaviour
 
     // --------------------------------------------------------------
     // @desc: Move a character on the grid based on tile positions
+    // @arg: pathTreeRef - reference to the path tree
     // @arg: sourcePos - logical grid position with a character on it
     // @arg: destPos   - logical grid position to move the character to
     // @ret: bool      - whether the move is successful or not
     // --------------------------------------------------------------
-    public bool MoveCharacterOnTile(Vector2Int sourcePos, Vector2Int destPos, bool onlyHighlighted)
+    public bool MoveCharacterOnTile(PathTreeNode pathTreeRef, Vector2Int sourcePos, Vector2Int destPos, bool onlyHighlighted)
     {
         GameObject charToMove = null;
         bool moveSuccess = false;
@@ -225,8 +230,12 @@ public class GridBehavior : MonoBehaviour
                     charToMove = sourceTileScipt.characterOn;
 
                     // Move character to destPos
-                    Vector3 pos = new Vector3(destTile.transform.position.x, destTile.transform.position.y+0.5f, destTile.transform.position.z);
-                    charToMove.transform.position = pos;
+                    charToMove.GetComponent<FollowPath>().pathToFollow = destTileScript.pathRef.PathToRoot();
+                    //Vector3 pos = new Vector3(destTile.transform.position.x, destTile.transform.position.y+0.5f, destTile.transform.position.z);
+                    //charToMove.transform.position = pos;
+
+                    // Move camera to destPos
+                    cam.GetComponent<CameraControl>().LookAtPos(destTile.transform.position);
 
                     // Set source tile data
                     sourceTileScipt.hasCharacter = false;
@@ -425,6 +434,31 @@ public class PathTreeNode
     {
         parent = p;
         myTile = t;
+        myTile.GetComponent<TileScript>().pathRef = this;
         tileRange = range;
+    }
+
+    // Get path to root
+    public Stack<PathTreeNode> PathToRoot()
+    {
+        Stack<PathTreeNode> path = new Stack<PathTreeNode>(); // Create path stack
+        PathTreeNode currentNode = this; // Set current node to this node
+
+        // Push Self
+        path.Push(this);
+
+        // Do this until the root is found
+        while (currentNode.parent != null)
+        {
+            // Add the current node's parent to path
+            path.Push(currentNode.parent);
+
+            Debug.Log("Adding tile at position " + currentNode.myTile.transform.position.x + " " + currentNode.myTile.transform.position.y + " " + currentNode.myTile.transform.position.z + " to path");
+
+            // Go to parent
+            currentNode = currentNode.parent;
+        }
+        
+        return path;
     }
 }
