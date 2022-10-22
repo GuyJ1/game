@@ -22,7 +22,7 @@ public class GridBehavior : MonoBehaviour
     private Camera cam;
 
     // Materials
-    [SerializeField] public Material unselected, highlighted, selected, activeUnselected, activeHighlighted, activeSelected, ability, impassible;
+    [SerializeField] public Material unselected, highlighted, selected, activeUnselected, activeHighlighted, activeSelected, ability, abilityHighlighted, impassible;
 
     // Crews
     public List<GameObject> crews;

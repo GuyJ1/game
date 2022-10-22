@@ -15,7 +15,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &2797077193110064003
 Transform:
@@ -45,7 +45,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   friendly: 0
-  totalDMG: 10
+  requiresTarget: 1
+  totalDMG: 40
   totalHP: 0
   cost: 0
+  costType: 0
   range: 1
+  ID: 1

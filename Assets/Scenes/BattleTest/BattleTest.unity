@@ -1201,6 +1201,10 @@ PrefabInstance:
       value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2223838504842600106, guid: 34e4afe442b789a4f926fd55f48aeefd, type: 3}
+      propertyPath: ability
+      value: 
+      objectReference: {fileID: 2100000, guid: 0e31bc8d5de7c1140a992c4f29cd57ae, type: 2}
+    - target: {fileID: 2223838504842600106, guid: 34e4afe442b789a4f926fd55f48aeefd, type: 3}
       propertyPath: gridNum
       value: 1
       objectReference: {fileID: 0}
@@ -1208,6 +1212,10 @@ PrefabInstance:
       propertyPath: crews.Array.size
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 2223838504842600106, guid: 34e4afe442b789a4f926fd55f48aeefd, type: 3}
+      propertyPath: abilityHighlighted
+      value: 
+      objectReference: {fileID: 2100000, guid: 249832c3a3a2b64408780e5728ba623c, type: 2}
     - target: {fileID: 2223838504842600106, guid: 34e4afe442b789a4f926fd55f48aeefd, type: 3}
       propertyPath: crews.Array.data[0]
       value: 
@@ -1499,7 +1507,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 322437417}
         m_TargetAssemblyTypeName: BattleEngine, Assembly-CSharp
-        m_MethodName: selectAttack
+        m_MethodName: selectAction
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

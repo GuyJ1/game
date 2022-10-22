@@ -168,7 +168,7 @@ public class CharacterStats : MonoBehaviour
 
     //Attack the enemy, possibly with a critical hit
     //Note: Critical hits triple the total damage
-    public int Attack(EnemyStats target){
+    public int Attack(CharacterStats target){
 
         HIT = (((DEX * 3 + LCK) / 2) + (2 * (Morale / 5))) - target.AVO;
         CRIT = (((DEX / 2) - 5) + (Morale / 5)) - target.LCK;
