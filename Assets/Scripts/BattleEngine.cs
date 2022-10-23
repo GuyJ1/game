@@ -20,11 +20,13 @@ public class BattleEngine : MonoBehaviour {
     private uint turnCount = 0;
     public GameObject activeUnit, activeUnitTile;
     public Vector2Int activeUnitPos;
+    public List<GameObject> deadUnits = new List<GameObject>();
     private List<GameObject> unitsBySpeed = new List<GameObject>(); //Units sorted from lowest to highest speed values
     private List<GameObject> turnQueue = new List<GameObject>(); //Stored units in the turn queue (units can repeat)
 
     //Button references
     private Button attackButton, moveButton, endButton;
+    private GameObject victoryText, defeatText;
 
     //Click Detection
     private Camera cam;
@@ -45,6 +47,10 @@ public class BattleEngine : MonoBehaviour {
         attackButton = GameObject.Find("AttackButton").GetComponent<Button>();
         moveButton = GameObject.Find("MoveButton").GetComponent<Button>();
         endButton = GameObject.Find("EndButton").GetComponent<Button>();
+        victoryText = GameObject.Find("VictoryText");
+        victoryText.SetActive(false);
+        defeatText = GameObject.Find("DefeatText");
+        defeatText.SetActive(false);
     }
 
     // Update is called once per frame
@@ -287,7 +293,7 @@ public class BattleEngine : MonoBehaviour {
     }
 
     public static bool isUnitAlive(GameObject unit) {
-        return unit.GetComponent<CharacterStats>().HP > 0;
+        return !unit.GetComponent<CharacterStats>().isDead();
     }
 
     public static bool isAllyUnit(GameObject unit) {
@@ -323,7 +329,7 @@ public class BattleEngine : MonoBehaviour {
 
     public void updateTurnOrder() {
         turnQueue.Clear();
-        turnQueue.Add(units[(int) turnCount % units.Count]);
+        turnQueue.Add(unitsBySpeed[(int) turnCount % unitsBySpeed.Count]);
     }
 
     //Start a new turn for the active unit
@@ -353,7 +359,9 @@ public class BattleEngine : MonoBehaviour {
         moveButton.interactable = isPlayerTurn;
         endButton.interactable = isPlayerTurn;
         if(!isPlayerTurn) doAITurn();
-        else selectMove(); //Default to move (generally units move before acting)
+        else {
+            selectMove(); //Default to move (generally units move before acting)
+        }
     }
 
     //End the active unit's turn
@@ -488,7 +496,17 @@ public class BattleEngine : MonoBehaviour {
         return true;
     }
 
+    //Perform all end-of-turn logic
     public void update() {
+        //Collect any dead units
+        foreach(GameObject unit in units) {
+            if(!isUnitAlive(unit)) {
+                if(grid.GetComponent<GridBehavior>().RemoveCharacter(unit)) {
+                    deadUnits.Add(unit);
+                    unitsBySpeed.Remove(unit);
+                }
+            }
+        }
         checkOutcome();
         if(moved && acted) endTurn();
         checkOutcome();
@@ -512,10 +530,8 @@ public class BattleEngine : MonoBehaviour {
         }
         //End on win
         if(won) {
-            active = false;
-            attackButton.interactable = false;
-            moveButton.interactable = false;
-            endButton.interactable = false;
+            onEnd();
+            victoryText.SetActive(true);
         }
     }
 
@@ -531,10 +547,16 @@ public class BattleEngine : MonoBehaviour {
         }
         //End on loss
         if(loss) {
-            active = false;
-            attackButton.interactable = false;
-            moveButton.interactable = false;
-            endButton.interactable = false;
+            onEnd();
+            defeatText.SetActive(true);
         }
+    }
+
+    private void onEnd() {
+        active = false;
+        attackButton.interactable = false;
+        moveButton.interactable = false;
+        endButton.interactable = false;
+        deadUnits.Clear();
     }
 }

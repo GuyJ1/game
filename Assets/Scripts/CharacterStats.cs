@@ -101,6 +101,17 @@ public class CharacterStats : MonoBehaviour
         healthBar.transform.position = Camera.main.WorldToScreenPoint(transform.position + posOffset);
     }
 
+    // Disable the character and associated elements
+    public void removeFromGrid() {
+        this.gameObject.SetActive(false);
+        healthBar.gameObject.SetActive(false);
+    }
+
+    // Whether this character is considered dead in battle
+    public bool isDead() {
+        return HP <= 0;
+    }
+
     // HP changed (either taking damage (negative) or healing (positive))
     public void adjustHP(int change)
     {
