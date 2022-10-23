@@ -61,12 +61,17 @@ MonoBehaviour:
   STR: 20
   DEF: 20
   SPD: 10
+  DEX: 0
+  LCK: 0
   MV: 5
   AP: 0
   APMAX: 0
   Morale: 0
   MoraleMAX: 0
   ATK: 0
+  HIT: 0
+  CRIT: 0
+  AVO: 0
   Name: Dummy
   basicAttack: {fileID: 5751798234688528242, guid: dfebc8a26e6c41845a3b9ea13ddcb1b0, type: 3}
   comboAttack: {fileID: 5751798234688528242, guid: 340a031d05ed20443bfb33cc3da77785, type: 3}
@@ -130,7 +135,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ac0121d77fe1c446be3c5696356ebf8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  travelSteps: 10
+  moveSpeed: 5
 --- !u!1001 &6577584407946331733
 PrefabInstance:
   m_ObjectHideFlags: 0
