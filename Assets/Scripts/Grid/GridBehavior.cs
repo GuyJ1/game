@@ -245,9 +245,7 @@ public class GridBehavior : MonoBehaviour
                     charToMove = sourceTileScipt.characterOn;
 
                     // Move character to destPos
-                    charToMove.GetComponent<FollowPath>().pathToFollow = destTileScript.pathRef.PathToRoot();
-                    //Vector3 pos = new Vector3(destTile.transform.position.x, destTile.transform.position.y+0.5f, destTile.transform.position.z);
-                    //charToMove.transform.position = pos;
+                    destTileScript.pathRef.PathToRootOnStack(charToMove.GetComponent<FollowPath>().pathToFollow);
 
                     // Move camera to destPos
                     cam.GetComponent<CameraControl>().LookAtPos(destTile.transform.position);
@@ -470,12 +468,34 @@ public class PathTreeNode
             // Add the current node's parent to path
             path.Push(currentNode.parent);
 
-            Debug.Log("Adding tile at position " + currentNode.myTile.transform.position.x + " " + currentNode.myTile.transform.position.y + " " + currentNode.myTile.transform.position.z + " to path");
+            //Debug.Log("Adding tile at position " + currentNode.myTile.transform.position.ToString() + " to path");
 
             // Go to parent
             currentNode = currentNode.parent;
         }
         
         return path;
+    }
+
+    // Puts a path of nodes, to the root, onto a stack
+    public void PathToRootOnStack(Stack<PathTreeNode> stack)
+    {
+        // Set current node to this node
+        PathTreeNode currentNode = this;
+
+        // Push Self
+        stack.Push(this);
+
+        // Do this until the root is found
+        while (currentNode.parent != null)
+        {
+            // Add the current node's parent to path
+            stack.Push(currentNode.parent);
+
+            //Debug.Log("Adding tile at position " + currentNode.myTile.transform.position.ToString() + " to path");
+
+            // Go to parent
+            currentNode = currentNode.parent;
+        }
     }
 }

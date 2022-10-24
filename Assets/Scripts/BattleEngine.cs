@@ -394,7 +394,7 @@ public class BattleEngine : MonoBehaviour
         }
 
         //Logging to display what is being enqueued
-        Debug.Log("AI Enqueue: " + activeUnit.GetComponent<CharacterStats>().Name + " " + playerTarget.GetComponent<CharacterStats>().Name + " " + selectedAbility + " " + moved);
+        //Debug.Log("AI Enqueue: " + activeUnit.GetComponent<CharacterStats>().Name + " " + playerTarget.GetComponent<CharacterStats>().Name + " " + selectedAbility + " " + moved);
 
         //Logging to show what is at the top of the playerActions queue
         if(!playerActions.isEmpty())

@@ -4,37 +4,58 @@ using UnityEngine;
 
 public class FollowPath : MonoBehaviour
 {
-    // Movement
+    // Movespeed
+    [SerializeField] public float moveSpeed = 3.0f;
+
+    // A stack of path nodes that link to the position of tiles
     public Stack<PathTreeNode> pathToFollow = new Stack<PathTreeNode>();
-    private bool followingPath = false;
-    public int travelSteps = 10;
-    private int currentSteps = 0;
+
+    // Current target position and direction
     private Vector3 targetPos;
-    private Vector3 stepLength;
+    private Vector3 targetDirection;
+
+    // Flags
+    private bool tileSet = false;
 
     // Update is called once per frame
-    void LateUpdate()
+    void Update()
     {
-        // Follow Path
-        if (pathToFollow.Count > 0 && currentSteps <= 0)
+        // Get a new tile to travel to when these conditions are met
+        if (pathToFollow != null && pathToFollow.Count > 0 && tileSet == false)
         {
+            // Get the next node
             var currentNode = pathToFollow.Pop();
+
+            // Get the position of the corresponding tile
             Vector3 pos = currentNode.myTile.transform.position;
+
+            // Set the target position to the position of the tile
             targetPos = new Vector3(pos.x, pos.y + 0.5f, pos.z);
-            stepLength = (targetPos - transform.position) / travelSteps;
-            currentSteps = travelSteps;
+            targetDirection = (targetPos - transform.position).normalized;
+
+            Debug.Log("Follow Path: moving " + this.name + " to " + targetPos.ToString());
+
+            // Target tile is set
+            tileSet = true;
         }
 
-        if (currentSteps > 0)
+        // When we have a tile to travel to
+        if (tileSet)
         {
-            followingPath = true;
-            transform.position += stepLength;
-        }
-        else
-        {
-            followingPath = false;
-        }
+            float distToTarget = Vector3.Distance(transform.position, targetPos);
+            float moveDist = Vector3.Distance(new Vector3(0,0,0), targetDirection * moveSpeed * Time.deltaTime);
 
-        currentSteps--;
+            // Check whether we reached the target
+            if (distToTarget <= moveDist)
+            {
+                transform.position = targetPos;
+                tileSet = false;
+            }
+            // Else, move this object towards it
+            else
+            {
+                transform.position += targetDirection * moveSpeed * Time.deltaTime;
+            }
+        }
     }
 }
