@@ -15,7 +15,7 @@ public class PlayerAction : MonoBehaviour
     //The character whose turn is being recorded
     private CharacterStats _character;
 
-    //The target of the character's actions (might be empty)
+    //The target of the character's actions (might be empty) ### MIGHT NEED TO MAKE THIS A LIST ###
     private EnemyStats _target;
 
     //The ability the character used on its turn (might be empty)
@@ -47,18 +47,18 @@ public class PlayerAction : MonoBehaviour
     //Default Constructor
     public PlayerAction()
     {
+        _character = null;
         _target = null;
         _action = null;
-        _character = null;
         _movement = false;
     }
 
     //Parameterized Constructor
     public PlayerAction(CharacterStats character, EnemyStats target, Ability action, bool movement)
     {
+        _character = character;
         _target = target;
         _action = action;
-        _character = character;
         _movement = movement;
     }
 

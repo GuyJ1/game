@@ -37,6 +37,8 @@ public class EnemyStats : MonoBehaviour
 
         Morale = MoraleMAX;
         
+        //Temporary name attributed to enemy characters: Will need to have functionality added later
+        Name = "Angery Doggo";
     }
 
     // Update is called once per frame

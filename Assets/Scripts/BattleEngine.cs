@@ -43,10 +43,13 @@ public class BattleEngine : MonoBehaviour
     private Vector2Int highlightedCharPos;
 
     //AI Variables
-    private PlayerActionList PlayerActions;
+    private PlayerActionList playerActions = null;
+    private GameObject playerTarget = null; //Might be unnecessary
+    private Ability playerAbility = null; //Might not be needed due to 'selectedAbility'
 
     // Start is called before the first frame update
-    void Start() {
+    void Start() 
+    {
         cam = Camera.main;
         attackButton = GameObject.Find("AttackButton").GetComponent<Button>();
         moveButton = GameObject.Find("MoveButton").GetComponent<Button>();
@@ -55,6 +58,8 @@ public class BattleEngine : MonoBehaviour
         victoryText.SetActive(false);
         defeatText = GameObject.Find("DefeatText");
         defeatText.SetActive(false);
+
+        playerActions = new PlayerActionList();
     }
 
     // Update is called once per frame
@@ -96,7 +101,8 @@ public class BattleEngine : MonoBehaviour
                 init = true;
                 Debug.Log("BattleEngine initialized.");
             }
-            else {
+            else 
+            {
                 var gridTiles = grid.GetComponent<GridBehavior>();
                 // Use physics to detect a "collision" from a ray
                 if (Physics.Raycast(ray, out hit, 1000f, gridMask) == true)
@@ -323,7 +329,8 @@ public class BattleEngine : MonoBehaviour
         setupAction(activeUnitTile);
     }
 
-    public void selectMove() {
+    public void selectMove() 
+    {
         moving = true;
         moveButton.interactable = false;
         if(!acted) attackButton.interactable = true;
@@ -350,7 +357,8 @@ public class BattleEngine : MonoBehaviour
         //Search for unit on grid and save the position for later
         for(int x = 0; x < gridTiles.width; x++) {
             for(int y = 0; y < gridTiles.height; y++) {
-                if(gridTiles.GetCharacterAtPos(new Vector2Int(x,y)) == activeUnit) {
+                if(gridTiles.GetCharacterAtPos(new Vector2Int(x,y)) == activeUnit) 
+                {
                     activeUnitPos = new Vector2Int(x,y);
                     //Make sure active tile is updated
                     activeUnitTile = gridTiles.grid[activeUnitPos.x, activeUnitPos.y];
@@ -366,7 +374,8 @@ public class BattleEngine : MonoBehaviour
         moveButton.interactable = isPlayerTurn;
         endButton.interactable = isPlayerTurn;
         if(!isPlayerTurn) doAITurn();
-        else {
+        else 
+        {
             selectMove(); //Default to move (generally units move before acting)
         }
     }
@@ -377,6 +386,20 @@ public class BattleEngine : MonoBehaviour
         var gridTiles = grid.GetComponent<GridBehavior>();
         gridTiles.GetTileAtPos(activeUnitPos).GetComponent<TileScript>().highlighted = false;
         gridTiles.GetTileAtPos(activeUnitPos).GetComponent<Renderer>().material = gridTiles.unselected;
+
+        //Player turn logging handling - passes in the current active unit (if it is a player controlled unit), 
+        //the target of this turn's action (if any), the type of action taken this turn (if any), and whether the character moved
+        if(isPlayerTurn)
+        {
+            //Add the new PlayerAction to the playerActions queue, using the overloaded constructor
+            //playerActions.add(new PlayerAction(activeUnit.GetComponent<CharacterStats>(), playerTarget.GetComponent<EnemyStats>(), selectedAbility, moved));
+        }
+
+        Debug.Log("AI Enqueue: " + activeUnit.GetComponent<CharacterStats>().Name + " " + playerTarget.GetComponent<CharacterStats>().Name + " " + selectedAbility + " " + moved);
+
+        //Problems with the Peek() method used below, but it is currently unnecessary
+        //Debug.Log("AI Enqueue: " + playerActions.Peek().GetCharacter().Name + " " + playerActions.Peek().GetTarget().Name + " " + playerActions.Peek().GetAbility().ID + " " + playerActions.Peek().GetMovement());
+
         pickNewTurn();
     }
 
@@ -450,11 +473,14 @@ public class BattleEngine : MonoBehaviour
     }
 
     //Try to use the selected ability at the specified position on the grid. Returns true if action succeeds. Will not affect game state if simulate is true.
-    public bool actUnit(Vector2Int tilePos, bool simulate) {
+    public bool actUnit(Vector2Int tilePos, bool simulate) 
+    {
         var gridTiles = grid.GetComponent<GridBehavior>();
         var tileScript = gridTiles.GetTileAtPos(tilePos).GetComponent<TileScript>();
         if(moving || acted) return false; //Can't act twice
-        if(selectedAbility.requiresTarget) { //Check for valid target
+        if(selectedAbility.requiresTarget) 
+        { 
+            //Check for valid target
             if(!tileScript.hasCharacter) return false;
             if(selectedAbility.friendly && !isAllyUnit(gridTiles.GetCharacterAtPos(tilePos))) return false;
             if(!selectedAbility.friendly && isAllyUnit(gridTiles.GetCharacterAtPos(tilePos))) return false;
@@ -466,6 +492,10 @@ public class BattleEngine : MonoBehaviour
         acted = true;
         attackButton.interactable = false;
         selectedAbility.affectCharacters(activeUnit, characters);
+
+        //AI: Forward the target(s) to AI handler for enqueue. Currently only forwards one character - for refactoring later
+        playerTarget = characters[0];
+
         if(!moved) selectMove(); //Move to move state if available
         update();
         return true;

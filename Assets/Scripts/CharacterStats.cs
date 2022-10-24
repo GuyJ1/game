@@ -77,6 +77,9 @@ public class CharacterStats : MonoBehaviour
         AP = APMAX;
 
         Morale = MoraleMAX;
+
+        //Temporary name for player-controlled characters for logging: Will need to have functionality added later
+        Name = "Pupperton";
     }
 
     // Update is called once per frame

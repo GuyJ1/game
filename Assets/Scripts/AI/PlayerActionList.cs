@@ -12,20 +12,26 @@ public class PlayerActionList : MonoBehaviour
     // Private Variables //
     ///////////////////////
 
-    private Queue _playerActions;
+    private Queue<PlayerAction> _playerActions;
     private int _capacity;
     
     // Start is called before the first frame update
     void Start()
     {
-        _playerActions = new Queue();
-        _capacity = 50;
+
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    //Constructor
+    public PlayerActionList()
+    {
+        _playerActions = new Queue<PlayerAction>();
+        _capacity = 50;
     }
 
     //Destructor
@@ -49,6 +55,11 @@ public class PlayerActionList : MonoBehaviour
             _playerActions.Dequeue();
             _playerActions.Enqueue(newAction);
         }
+    }
+
+    public PlayerAction Peek()
+    {
+        return _playerActions.Peek();
     }
 
 
