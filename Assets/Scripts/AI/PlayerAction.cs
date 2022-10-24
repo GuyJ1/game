@@ -6,7 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerAction : MonoBehaviour
+public class PlayerAction
 {
     ///////////////////////
     // Private Variables //
@@ -58,6 +58,14 @@ public class PlayerAction : MonoBehaviour
     {
         _character = character;
         _target = target;
+        _action = action;
+        _movement = movement;
+    }
+
+    //Temporary test constructor while waiting for EnemyStats to be implemented
+    public PlayerAction(CharacterStats character, Ability action, bool movement)
+    {
+        _character = character;
         _action = action;
         _movement = movement;
     }

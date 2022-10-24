@@ -6,7 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerActionList : MonoBehaviour
+public class PlayerActionList
 {
     ///////////////////////
     // Private Variables //
@@ -61,6 +61,18 @@ public class PlayerActionList : MonoBehaviour
     {
         return _playerActions.Peek();
     }
+
+    public bool isEmpty()
+    {
+        return _playerActions.Count == 0;
+    }
+
+    public int Count()
+    {
+        return _playerActions.Count;
+    }
+
+
 
 
 }

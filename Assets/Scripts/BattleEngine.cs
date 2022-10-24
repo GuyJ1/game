@@ -43,7 +43,7 @@ public class BattleEngine : MonoBehaviour
     private Vector2Int highlightedCharPos;
 
     //AI Variables
-    private PlayerActionList playerActions = null;
+    private PlayerActionList playerActions = new PlayerActionList();
     private GameObject playerTarget = null; //Might be unnecessary
     private Ability playerAbility = null; //Might not be needed due to 'selectedAbility'
 
@@ -58,8 +58,6 @@ public class BattleEngine : MonoBehaviour
         victoryText.SetActive(false);
         defeatText = GameObject.Find("DefeatText");
         defeatText.SetActive(false);
-
-        playerActions = new PlayerActionList();
     }
 
     // Update is called once per frame
@@ -392,13 +390,20 @@ public class BattleEngine : MonoBehaviour
         if(isPlayerTurn)
         {
             //Add the new PlayerAction to the playerActions queue, using the overloaded constructor
-            //playerActions.add(new PlayerAction(activeUnit.GetComponent<CharacterStats>(), playerTarget.GetComponent<EnemyStats>(), selectedAbility, moved));
+            playerActions.add(new PlayerAction(activeUnit.GetComponent<CharacterStats>(), selectedAbility, moved));
         }
 
+        //Logging to display what is being enqueued
         Debug.Log("AI Enqueue: " + activeUnit.GetComponent<CharacterStats>().Name + " " + playerTarget.GetComponent<CharacterStats>().Name + " " + selectedAbility + " " + moved);
 
-        //Problems with the Peek() method used below, but it is currently unnecessary
-        //Debug.Log("AI Enqueue: " + playerActions.Peek().GetCharacter().Name + " " + playerActions.Peek().GetTarget().Name + " " + playerActions.Peek().GetAbility().ID + " " + playerActions.Peek().GetMovement());
+        //Logging to show what is at the top of the playerActions queue
+        if(!playerActions.isEmpty())
+        {
+            //Usually shows the same thing over and over again, since player actions aren't being dequeued until the 10th turn
+            Debug.Log("AI Enqueue: " + playerActions.Peek().GetCharacter().Name + " " + playerActions.Peek().GetAbility().ID + " " + playerActions.Peek().GetMovement() 
+            + "\n" + "Queue Size: " + playerActions.Count());
+        }
+        
 
         pickNewTurn();
     }
