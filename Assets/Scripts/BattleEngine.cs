@@ -385,7 +385,7 @@ public class BattleEngine : MonoBehaviour
         gridTiles.GetTileAtPos(activeUnitPos).GetComponent<TileScript>().highlighted = false;
         gridTiles.GetTileAtPos(activeUnitPos).GetComponent<Renderer>().material = gridTiles.unselected;
 
-        //Player turn logging handling - passes in the current active unit (if it is a player controlled unit), 
+        //Player turn enqueue handling - passes in the current active unit (if it is a player controlled unit), 
         //the target of this turn's action (if any), the type of action taken this turn (if any), and whether the character moved
         if(isPlayerTurn)
         {
@@ -399,7 +399,7 @@ public class BattleEngine : MonoBehaviour
         //Logging to show what is at the top of the playerActions queue
         if(!playerActions.isEmpty())
         {
-            //Usually shows the same thing over and over again, since player actions aren't being dequeued until the 10th turn
+            //Usually shows the same thing over and over again, since player actions aren't being dequeued until the 50th turn
             Debug.Log("AI Enqueue: " + playerActions.Peek().GetCharacter().Name + " " + playerActions.Peek().GetAbility().ID + " " + playerActions.Peek().GetMovement() 
             + "\n" + "Queue Size: " + playerActions.Count());
         }
