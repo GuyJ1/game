@@ -10,7 +10,7 @@ public class CharacterStats : MonoBehaviour
     public int HPMAX; //Maximum health
     public int STR; //Strength
     public int DEF; //Defense
-    public int SPD; //Speed
+    public int SPD; //Agility
     public int DEX; //Dexterity
     public int LCK; //Luck
     public int MV; //Movement
@@ -42,6 +42,9 @@ public class CharacterStats : MonoBehaviour
 
     // Crew that this character belongs to (should be set by CrewSystem)
     public GameObject crew;
+
+    //Equipment
+    public Weapon weapon; //increases ATK
 
     
 
@@ -77,6 +80,9 @@ public class CharacterStats : MonoBehaviour
         AP = APMAX;
 
         Morale = MoraleMAX;
+
+        //Temporary name for player-controlled characters for logging: Will need to have functionality added later
+        Name = "Pupperton";
     }
 
     // Update is called once per frame
@@ -89,6 +95,8 @@ public class CharacterStats : MonoBehaviour
             //damage
             adjustHP(-20);
         }
+
+        AVO = ((SPD*3 + LCK) / 2) + (2 * (Morale / 5));
     }
 
     // Update healthbar position
@@ -99,6 +107,17 @@ public class CharacterStats : MonoBehaviour
 
         // Update the healthbar position
         healthBar.transform.position = Camera.main.WorldToScreenPoint(transform.position + posOffset);
+    }
+
+    // Disable the character and associated elements
+    public void removeFromGrid() {
+        this.gameObject.SetActive(false);
+        healthBar.gameObject.SetActive(false);
+    }
+
+    // Whether this character is considered dead in battle
+    public bool isDead() {
+        return HP <= 0;
     }
 
     // HP changed (either taking damage (negative) or healing (positive))
@@ -175,13 +194,25 @@ public class CharacterStats : MonoBehaviour
 
         if(determineCRIT(CRIT)){
 
-            ATK = ((STR + (Morale / 5)) - target.DEF) * 3; //CRITICAL HIT!
+            ATK = ((STR + (Morale / 5) + weaponBonus()) - target.DEF) * 3; //CRITICAL HIT!
             target.adjustHP(-ATK);
+
+            if(weapon != null){
+
+                weapon.weaponDamage();
+
+            }
 
         }
         else if(determineHIT(HIT)){
-            ATK = (STR + (Morale / 5)) - target.DEF; //HIT!
+            ATK = (STR + (Morale / 5) + weaponBonus()) - target.DEF; //HIT!
             target.adjustHP(-ATK);
+
+            if(weapon != null){
+
+                weapon.weaponDamage();
+
+            }
 
         }
         else{
@@ -213,6 +244,19 @@ public class CharacterStats : MonoBehaviour
         }
         else{
             return false;
+        }
+    }
+
+    public int weaponBonus(){
+
+        if(weapon != null && !(weapon.isBroken)){
+
+            return weapon.MGT;
+
+        }
+        else{
+
+            return 0;
         }
     }
 

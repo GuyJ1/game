@@ -127,6 +127,7 @@ public class GridBehavior : MonoBehaviour
                     Vector3 tilePos = spawningTile.transform.position;
                     Vector3 pos = new Vector3(tilePos.x, tilePos.y+0.5f, tilePos.z);
                     Debug.Log("Spawning character as position " + randX + " " + randY);
+                    character.GetComponent<CharacterStats>().gridPosition = new Vector2Int(randX, randY);
 
                     // Set tile data
                     tilesScript.characterOn = Instantiate(character, pos, transform.rotation, this.transform);
@@ -135,6 +136,7 @@ public class GridBehavior : MonoBehaviour
                     // Update flag and # of available tiles
                     availableTiles--;
                     characterSpawned = true;
+
                 }
             }
         }
@@ -173,6 +175,7 @@ public class GridBehavior : MonoBehaviour
                 Vector3 tilePos = spawningTile.transform.position;
                 Vector3 pos = new Vector3(tilePos.x, tilePos.y+0.5f, tilePos.z);
                 Debug.Log("Spawning character as position " + spawnPos.x + " " + spawnPos.y);
+                character.GetComponent<CharacterStats>().gridPosition = spawnPos;
 
                 // Set tile data
                 tilesScript.characterOn = Instantiate(character, pos, transform.rotation, this.transform);
@@ -195,6 +198,18 @@ public class GridBehavior : MonoBehaviour
         }
 
         return characterSpawned;
+    }
+
+    public bool RemoveCharacter(GameObject character) {
+        Vector2Int tilePos = character.GetComponent<CharacterStats>().gridPosition;
+        var tile = GetTileAtPos(tilePos).GetComponent<TileScript>();
+        if(tile.characterOn == character) {
+            character.GetComponent<CharacterStats>().removeFromGrid();
+            tile.characterOn = null;
+            tile.hasCharacter = false;
+            return true;
+        }
+        return false;
     }
 
     // --------------------------------------------------------------
@@ -244,6 +259,8 @@ public class GridBehavior : MonoBehaviour
                     // Set destination tile data
                     destTileScript.hasCharacter = true;
                     destTileScript.characterOn = charToMove;
+
+                    charToMove.GetComponent<CharacterStats>().gridPosition = destPos;
 
                     moveSuccess = true;
                 }

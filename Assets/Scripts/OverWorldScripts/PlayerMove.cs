@@ -8,19 +8,27 @@ public class PlayerMove : MonoBehaviour
     public float zAxis;
     public float xAxis;
     public float yAxis;
-    public float originalYAxis;
+    public float originalYAxis=1;
     public bool FloatUp = true;
     public GameObject destination;
     public static GameObject destination2;
     public bool travel = false;
+    public static GameObject currNode;//=GameObject.Find("StartNode");
 
+
+    private void Awake()
+    {
+        currNode = GameObject.Find("StartNode");
+
+    }
     // Start is called before the first frame update
     void Start()
     {
+
         originalYAxis = 1;
         BOAT = this.gameObject;
-        zAxis = BOAT.transform.position.z;
-        xAxis = BOAT.transform.position.x;
+        zAxis = currNode.transform.position.z;//BOAT.transform.position.z;
+        xAxis = currNode.transform.position.x;
         yAxis = originalYAxis;
         //originalYAxis = yAxis;
         BOAT.transform.position = new Vector3(xAxis, originalYAxis, zAxis);
@@ -41,8 +49,12 @@ public class PlayerMove : MonoBehaviour
                     destination2 = NodeClick.GetClickObj();
                     if (destination == destination2)
                     {
-                        travel = true;
-                        StartCoroutine(Sail());
+                        if (NodeLines.isNeighbor(currNode, destination2))
+                        {
+                            travel = true;
+                            currNode = destination2;
+                            StartCoroutine(Sail());
+                        }
                     }
                     else
                     {

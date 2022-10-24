@@ -5,7 +5,8 @@ using UnityEngine.UI;
 
 //Main controller for the battle system
 //Note that this system must be activated and will not perform any logic until it is
-public class BattleEngine : MonoBehaviour {
+public class BattleEngine : MonoBehaviour 
+ {
     public List<GameObject> units = new List<GameObject>();
     public GameObject grid;
     public PathTreeNode gridPaths;
@@ -20,11 +21,13 @@ public class BattleEngine : MonoBehaviour {
     private uint turnCount = 0;
     public GameObject activeUnit, activeUnitTile;
     public Vector2Int activeUnitPos;
+    public List<GameObject> deadUnits = new List<GameObject>();
     private List<GameObject> unitsBySpeed = new List<GameObject>(); //Units sorted from lowest to highest speed values
     private List<GameObject> turnQueue = new List<GameObject>(); //Stored units in the turn queue (units can repeat)
 
     //Button references
     private Button attackButton, moveButton, endButton;
+    private GameObject victoryText, defeatText;
 
     //Click Detection
     private Camera cam;
@@ -39,12 +42,22 @@ public class BattleEngine : MonoBehaviour {
     private Vector2Int selectedCharPos;
     private Vector2Int highlightedCharPos;
 
+    //AI Variables
+    private PlayerActionList playerActions = new PlayerActionList();
+    private GameObject playerTarget = null; //Might be unnecessary
+    private Ability playerAbility = null; //Might not be needed due to 'selectedAbility'
+
     // Start is called before the first frame update
-    void Start() {
+    void Start() 
+    {
         cam = Camera.main;
         attackButton = GameObject.Find("AttackButton").GetComponent<Button>();
         moveButton = GameObject.Find("MoveButton").GetComponent<Button>();
         endButton = GameObject.Find("EndButton").GetComponent<Button>();
+        victoryText = GameObject.Find("VictoryText");
+        victoryText.SetActive(false);
+        defeatText = GameObject.Find("DefeatText");
+        defeatText.SetActive(false);
     }
 
     // Update is called once per frame
@@ -86,7 +99,8 @@ public class BattleEngine : MonoBehaviour {
                 init = true;
                 Debug.Log("BattleEngine initialized.");
             }
-            else {
+            else 
+            {
                 var gridTiles = grid.GetComponent<GridBehavior>();
                 // Use physics to detect a "collision" from a ray
                 if (Physics.Raycast(ray, out hit, 1000f, gridMask) == true)
@@ -103,7 +117,8 @@ public class BattleEngine : MonoBehaviour {
                     if (Input.GetMouseButtonDown(0))
                     {
                         // Movement
-                        if(moving) {
+                        if(moving) 
+                        {
                             // If a tile has a character on it, then we can only select it
                             if (tileScript.hasCharacter)
                             {
@@ -111,7 +126,8 @@ public class BattleEngine : MonoBehaviour {
                                 cam.GetComponent<CameraControl>().LookAtPos(objectHit.position);
 
                                 // Case 1: if there's no selected character, then just select this one
-                                if (charSelected == false) {
+                                if (charSelected == false) 
+                                {
                                     if(moving) setupMove(objectHit.gameObject);
                                     else setupAction(objectHit.gameObject);
                                 }
@@ -126,7 +142,8 @@ public class BattleEngine : MonoBehaviour {
                                 }
                                 // Case 3: if the character is different than the currently selected character,
                                 // then deselect the current character and select the new one
-                                else {
+                                else 
+                                {
                                     if(moving) setupMove(objectHit.gameObject);
                                     else setupAction(objectHit.gameObject);
                                 }
@@ -287,7 +304,7 @@ public class BattleEngine : MonoBehaviour {
     }
 
     public static bool isUnitAlive(GameObject unit) {
-        return unit.GetComponent<CharacterStats>().HP > 0;
+        return !unit.GetComponent<CharacterStats>().isDead();
     }
 
     public static bool isAllyUnit(GameObject unit) {
@@ -310,7 +327,8 @@ public class BattleEngine : MonoBehaviour {
         setupAction(activeUnitTile);
     }
 
-    public void selectMove() {
+    public void selectMove() 
+    {
         moving = true;
         moveButton.interactable = false;
         if(!acted) attackButton.interactable = true;
@@ -323,7 +341,7 @@ public class BattleEngine : MonoBehaviour {
 
     public void updateTurnOrder() {
         turnQueue.Clear();
-        turnQueue.Add(units[(int) turnCount % units.Count]);
+        turnQueue.Add(unitsBySpeed[(int) turnCount % unitsBySpeed.Count]);
     }
 
     //Start a new turn for the active unit
@@ -337,7 +355,8 @@ public class BattleEngine : MonoBehaviour {
         //Search for unit on grid and save the position for later
         for(int x = 0; x < gridTiles.width; x++) {
             for(int y = 0; y < gridTiles.height; y++) {
-                if(gridTiles.GetCharacterAtPos(new Vector2Int(x,y)) == activeUnit) {
+                if(gridTiles.GetCharacterAtPos(new Vector2Int(x,y)) == activeUnit) 
+                {
                     activeUnitPos = new Vector2Int(x,y);
                     //Make sure active tile is updated
                     activeUnitTile = gridTiles.grid[activeUnitPos.x, activeUnitPos.y];
@@ -353,14 +372,39 @@ public class BattleEngine : MonoBehaviour {
         moveButton.interactable = isPlayerTurn;
         endButton.interactable = isPlayerTurn;
         if(!isPlayerTurn) doAITurn();
-        else selectMove(); //Default to move (generally units move before acting)
+        else 
+        {
+            selectMove(); //Default to move (generally units move before acting)
+        }
     }
 
     //End the active unit's turn
-    public void endTurn() {
+    public void endTurn() 
+    {
         var gridTiles = grid.GetComponent<GridBehavior>();
         gridTiles.GetTileAtPos(activeUnitPos).GetComponent<TileScript>().highlighted = false;
         gridTiles.GetTileAtPos(activeUnitPos).GetComponent<Renderer>().material = gridTiles.unselected;
+
+        //Player turn logging handling - passes in the current active unit (if it is a player controlled unit), 
+        //the target of this turn's action (if any), the type of action taken this turn (if any), and whether the character moved
+        if(isPlayerTurn)
+        {
+            //Add the new PlayerAction to the playerActions queue, using the overloaded constructor
+            playerActions.add(new PlayerAction(activeUnit.GetComponent<CharacterStats>(), selectedAbility, moved));
+        }
+
+        //Logging to display what is being enqueued
+        Debug.Log("AI Enqueue: " + activeUnit.GetComponent<CharacterStats>().Name + " " + playerTarget.GetComponent<CharacterStats>().Name + " " + selectedAbility + " " + moved);
+
+        //Logging to show what is at the top of the playerActions queue
+        if(!playerActions.isEmpty())
+        {
+            //Usually shows the same thing over and over again, since player actions aren't being dequeued until the 10th turn
+            Debug.Log("AI Enqueue: " + playerActions.Peek().GetCharacter().Name + " " + playerActions.Peek().GetAbility().ID + " " + playerActions.Peek().GetMovement() 
+            + "\n" + "Queue Size: " + playerActions.Count());
+        }
+        
+
         pickNewTurn();
     }
 
@@ -381,14 +425,16 @@ public class BattleEngine : MonoBehaviour {
         return turnCount;
     }
 
-    public void setupMove(GameObject objectTile) {
+    public void setupMove(GameObject objectTile) 
+    {
         var gridTiles = grid.GetComponent<GridBehavior>();
         var selectRend  = objectTile.GetComponent<Renderer>();
         var tileScript  = objectTile.GetComponent<TileScript>();
         Vector2Int tilePos = tileScript.position;
 
         // Unselect currently selected character
-        if(charSelected) {
+        if(charSelected) 
+        {
             Debug.Log("Unselecting character on " + selectedCharPos.x + " " + selectedCharPos.y);
             gridTiles.grid[selectedCharPos.x, selectedCharPos.y].GetComponent<Renderer>().material = isTileActive(selectedCharPos) ? gridTiles.activeUnselected : gridTiles.unselected;
         }
@@ -432,11 +478,14 @@ public class BattleEngine : MonoBehaviour {
     }
 
     //Try to use the selected ability at the specified position on the grid. Returns true if action succeeds. Will not affect game state if simulate is true.
-    public bool actUnit(Vector2Int tilePos, bool simulate) {
+    public bool actUnit(Vector2Int tilePos, bool simulate) 
+    {
         var gridTiles = grid.GetComponent<GridBehavior>();
         var tileScript = gridTiles.GetTileAtPos(tilePos).GetComponent<TileScript>();
         if(moving || acted) return false; //Can't act twice
-        if(selectedAbility.requiresTarget) { //Check for valid target
+        if(selectedAbility.requiresTarget) 
+        { 
+            //Check for valid target
             if(!tileScript.hasCharacter) return false;
             if(selectedAbility.friendly && !isAllyUnit(gridTiles.GetCharacterAtPos(tilePos))) return false;
             if(!selectedAbility.friendly && isAllyUnit(gridTiles.GetCharacterAtPos(tilePos))) return false;
@@ -448,22 +497,29 @@ public class BattleEngine : MonoBehaviour {
         acted = true;
         attackButton.interactable = false;
         selectedAbility.affectCharacters(activeUnit, characters);
+
+        //AI: Forward the target(s) to AI handler for enqueue. Currently only forwards one character - for refactoring later
+        playerTarget = characters[0];
+
         if(!moved) selectMove(); //Move to move state if available
         update();
         return true;
     }
 
     //Try to move the unit to the specified position on the grid. Returns true if move succeeds. Will not affect game state if simulate is true.
-    public bool moveUnit(Vector2Int tilePos, bool simulate) {
+    public bool moveUnit(Vector2Int tilePos, bool simulate) 
+    {
         var gridTiles = grid.GetComponent<GridBehavior>();
-        if(!moved && moving && charSelected && activeUnit == gridTiles.GetCharacterAtPos(selectedCharPos) && tilePos != selectedCharPos) {
+        if(!moved && moving && charSelected && activeUnit == gridTiles.GetCharacterAtPos(selectedCharPos) && tilePos != selectedCharPos) 
+        {
             // Move character
             if (gridTiles.MoveCharacterOnTile(gridPaths, selectedCharPos, tilePos, true) == false)
             {
                 Debug.Log("Cannot move character to tile " + tilePos.x + " " + tilePos.y);
                 return false;
             }
-            else {
+            else 
+            {
                 if(simulate) return true;
                 // Unselect currently select character
                 Debug.Log("Unselecting character on " + selectedCharPos.x + " " + selectedCharPos.y);
@@ -488,7 +544,17 @@ public class BattleEngine : MonoBehaviour {
         return true;
     }
 
+    //Perform all end-of-turn logic
     public void update() {
+        //Collect any dead units
+        foreach(GameObject unit in units) {
+            if(!isUnitAlive(unit)) {
+                if(grid.GetComponent<GridBehavior>().RemoveCharacter(unit)) {
+                    deadUnits.Add(unit);
+                    unitsBySpeed.Remove(unit);
+                }
+            }
+        }
         checkOutcome();
         if(moved && acted) endTurn();
         checkOutcome();
@@ -512,10 +578,8 @@ public class BattleEngine : MonoBehaviour {
         }
         //End on win
         if(won) {
-            active = false;
-            attackButton.interactable = false;
-            moveButton.interactable = false;
-            endButton.interactable = false;
+            onEnd();
+            victoryText.SetActive(true);
         }
     }
 
@@ -531,10 +595,16 @@ public class BattleEngine : MonoBehaviour {
         }
         //End on loss
         if(loss) {
-            active = false;
-            attackButton.interactable = false;
-            moveButton.interactable = false;
-            endButton.interactable = false;
+            onEnd();
+            defeatText.SetActive(true);
         }
+    }
+
+    private void onEnd() {
+        active = false;
+        attackButton.interactable = false;
+        moveButton.interactable = false;
+        endButton.interactable = false;
+        deadUnits.Clear();
     }
 }
