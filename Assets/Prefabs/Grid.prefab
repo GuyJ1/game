@@ -49,11 +49,15 @@ MonoBehaviour:
   height: 5
   tilesize: 1
   Tile: {fileID: 2968087839482331240, guid: 56f49a443e7bc4f40bc6d0603e82630a, type: 3}
-  unselected: {fileID: 2100000, guid: f0e855c34670ad5459890b16548d4bdc, type: 2}
-  highlighted: {fileID: 2100000, guid: 651c00cb132d0b34e876b1e41a8e1c6c, type: 2}
-  selected: {fileID: 2100000, guid: 5a703cd9ba3a3864eaf48d169dae309f, type: 2}
-  impassible: {fileID: 2100000, guid: 47b14fb6e7f2df54f906def83c3fa99b, type: 2}
-  characterToSpawn: {fileID: 5537537504233135668, guid: 35e9b644f5a473148bedf512f2340242, type: 3}
+  unselected: {fileID: 2100000, guid: 7b860dc907468f94c926f9d3528ddb15, type: 2}
+  highlighted: {fileID: 2100000, guid: 56f5da568bf34ce45804ebe0468202b6, type: 2}
+  selected: {fileID: 2100000, guid: 071f6e423333f3f468ef8032b6be4b12, type: 2}
+  activeUnselected: {fileID: 2100000, guid: c9650d005f0fc664da16bcddfb24897e, type: 2}
+  activeHighlighted: {fileID: 2100000, guid: 9d9216b03654f524d8a4fd306d97ac0f, type: 2}
+  activeSelected: {fileID: 2100000, guid: f68252263c999344d999dd07ae7c65c3, type: 2}
+  ability: {fileID: 2100000, guid: db91749294350764c82a65f20ff911ed, type: 2}
+  impassible: {fileID: 2100000, guid: 11c6b3eb101252b459fce2e184b82649, type: 2}
+  crews: []
 --- !u!1 &6455160471617079445
 GameObject:
   m_ObjectHideFlags: 0
@@ -65,6 +69,7 @@ GameObject:
   - component: {fileID: 3374352494009361424}
   - component: {fileID: 7725412294915859934}
   - component: {fileID: 1396833275124054830}
+  - component: {fileID: 7316087251409829}
   m_Layer: 0
   m_Name: Plane
   m_TagString: Untagged
@@ -115,7 +120,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: f0e855c34670ad5459890b16548d4bdc, type: 2}
+  - {fileID: 2100000, guid: 7b860dc907468f94c926f9d3528ddb15, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -137,3 +142,15 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &7316087251409829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6455160471617079445}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f9bd8d7c2fa97449ad7f0185756114a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

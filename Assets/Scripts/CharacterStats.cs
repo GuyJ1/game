@@ -11,12 +11,19 @@ public class CharacterStats : MonoBehaviour
     public int STR; //Strength
     public int DEF; //Defense
     public int SPD; //Speed
+    public int DEX; //Dexterity
+    public int LCK; //Luck
     public int MV; //Movement
     public int AP; //Ability Points (possible currency for abilities)
     public int APMAX; //Maximum ability points
-    public int Morale; //Morale
+    public int Morale; //Morale (from 0 - 100), 
+                        //depending on this value, ATK/CRIT are boosted from +1 to +5 and HIT/AVO is boosted by +2 to +10
     public int MoraleMAX; //Maximum Morale
     public int ATK; //Attack power (= STR - Enemy's DEF)
+    public int HIT; //Hit Rate (= (((DEX*3 + LCK) / 2) - Enemy's AVO)
+    public int CRIT; //Critical Rate (= ((DEX / 2) - 5) - Enemy's LCK)
+    public int AVO; //Avoid  (= (SPD*3 + LCK) / 2)
+
     public string Name;
 
     // Actions
@@ -35,6 +42,8 @@ public class CharacterStats : MonoBehaviour
 
     // Crew that this character belongs to (should be set by CrewSystem)
     public GameObject crew;
+
+    
 
     // Start is called before the first frame update
     void Start()
@@ -68,6 +77,9 @@ public class CharacterStats : MonoBehaviour
         AP = APMAX;
 
         Morale = MoraleMAX;
+
+        //Temporary name for player-controlled characters for logging: Will need to have functionality added later
+        Name = "Pupperton";
     }
 
     // Update is called once per frame
@@ -92,8 +104,19 @@ public class CharacterStats : MonoBehaviour
         healthBar.transform.position = Camera.main.WorldToScreenPoint(transform.position + posOffset);
     }
 
+    // Disable the character and associated elements
+    public void removeFromGrid() {
+        this.gameObject.SetActive(false);
+        healthBar.gameObject.SetActive(false);
+    }
+
+    // Whether this character is considered dead in battle
+    public bool isDead() {
+        return HP <= 0;
+    }
+
     // HP changed (either taking damage (negative) or healing (positive))
-    void adjustHP(int change)
+    public void adjustHP(int change)
     {
         HP += change;
 
@@ -113,7 +136,7 @@ public class CharacterStats : MonoBehaviour
     //AP changed (either positive or negative)
     //subType is primarily for subtractions (either ability used (1) or AP drained (2) [0 if not subtraction])
     //returns 0 if adjustment was successful, 1 otherwise
-    int adjustAP(int change, int subType){
+    public int adjustAP(int change, int subType){
 
         int oldAP = AP;
         AP += change;
@@ -147,7 +170,7 @@ public class CharacterStats : MonoBehaviour
     }
 
     //Morale changed (either positive or negative)
-    void adjustMorale(int change){
+    public void adjustMorale(int change){
         Morale += change;
         if(Morale < 0){
             Morale = 0;
@@ -156,6 +179,58 @@ public class CharacterStats : MonoBehaviour
             Morale = MoraleMAX;
         }
     }
+
+    //Attack the enemy, possibly with a critical hit
+    //Note: Critical hits triple the total damage
+    public int Attack(CharacterStats target){
+
+        HIT = (((DEX * 3 + LCK) / 2) + (2 * (Morale / 5))) - target.AVO;
+        CRIT = (((DEX / 2) - 5) + (Morale / 5)) - target.LCK;
+
+        if(determineCRIT(CRIT)){
+
+            ATK = ((STR + (Morale / 5)) - target.DEF) * 3; //CRITICAL HIT!
+            target.adjustHP(-ATK);
+
+        }
+        else if(determineHIT(HIT)){
+            ATK = (STR + (Morale / 5)) - target.DEF; //HIT!
+            target.adjustHP(-ATK);
+
+        }
+        else{
+
+            ATK = 0; //Miss...
+            
+        }
+
+
+        return ATK;
+    }
+
+    public bool determineHIT(int HIT){
+
+       
+        if(HIT >= Random.Range(0, 100)){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public bool determineCRIT(int CRIT){
+
+        
+        if(CRIT >= Random.Range(0,100)){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    
 
 
 

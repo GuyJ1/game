@@ -17,9 +17,9 @@ public class DialogueNode : BaseNode {
 		return "DialogueNode/" + speakerName + "/" + dialogueLine;
 	}
 
-	/*(public override Sprite GetSprite()
+	public override Sprite GetSprite()
 	{
 		return sprite;
 	}
-	*/
+	
 }

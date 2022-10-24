@@ -19,4 +19,7 @@ public class TileScript : MonoBehaviour
     public bool hasCharacter = false;
     public bool highlighted = false;
     public bool passable = true;
+
+    // Path to root
+    public PathTreeNode pathRef;
 }
