@@ -8,7 +8,7 @@ public class FollowPath : MonoBehaviour
     [SerializeField] public float moveSpeed = 3.0f;
 
     // A stack of path nodes that link to the position of tiles
-    public Stack<PathTreeNode> pathToFollow = null;
+    public Stack<PathTreeNode> pathToFollow = new Stack<PathTreeNode>();
 
     // Current target position and direction
     private Vector3 targetPos;
@@ -32,6 +32,8 @@ public class FollowPath : MonoBehaviour
             // Set the target position to the position of the tile
             targetPos = new Vector3(pos.x, pos.y + 0.5f, pos.z);
             targetDirection = (targetPos - transform.position).normalized;
+
+            Debug.Log("Follow Path: moving " + this.name + " to " + targetPos.ToString());
 
             // Target tile is set
             tileSet = true;
