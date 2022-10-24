@@ -5,7 +5,8 @@ using UnityEngine.UI;
 
 //Main controller for the battle system
 //Note that this system must be activated and will not perform any logic until it is
-public class BattleEngine : MonoBehaviour {
+public class BattleEngine : MonoBehaviour 
+ {
     public List<GameObject> units = new List<GameObject>();
     public GameObject grid;
     public PathTreeNode gridPaths;
@@ -40,6 +41,9 @@ public class BattleEngine : MonoBehaviour {
     private bool charHighlighted = false;
     private Vector2Int selectedCharPos;
     private Vector2Int highlightedCharPos;
+
+    //AI Variables
+    private PlayerActionList PlayerActions;
 
     // Start is called before the first frame update
     void Start() {
@@ -109,7 +113,8 @@ public class BattleEngine : MonoBehaviour {
                     if (Input.GetMouseButtonDown(0))
                     {
                         // Movement
-                        if(moving) {
+                        if(moving) 
+                        {
                             // If a tile has a character on it, then we can only select it
                             if (tileScript.hasCharacter)
                             {
@@ -117,7 +122,8 @@ public class BattleEngine : MonoBehaviour {
                                 cam.GetComponent<CameraControl>().LookAtPos(objectHit.position);
 
                                 // Case 1: if there's no selected character, then just select this one
-                                if (charSelected == false) {
+                                if (charSelected == false) 
+                                {
                                     if(moving) setupMove(objectHit.gameObject);
                                     else setupAction(objectHit.gameObject);
                                 }
@@ -132,7 +138,8 @@ public class BattleEngine : MonoBehaviour {
                                 }
                                 // Case 3: if the character is different than the currently selected character,
                                 // then deselect the current character and select the new one
-                                else {
+                                else 
+                                {
                                     if(moving) setupMove(objectHit.gameObject);
                                     else setupAction(objectHit.gameObject);
                                 }
@@ -365,7 +372,8 @@ public class BattleEngine : MonoBehaviour {
     }
 
     //End the active unit's turn
-    public void endTurn() {
+    public void endTurn() 
+    {
         var gridTiles = grid.GetComponent<GridBehavior>();
         gridTiles.GetTileAtPos(activeUnitPos).GetComponent<TileScript>().highlighted = false;
         gridTiles.GetTileAtPos(activeUnitPos).GetComponent<Renderer>().material = gridTiles.unselected;
@@ -389,14 +397,16 @@ public class BattleEngine : MonoBehaviour {
         return turnCount;
     }
 
-    public void setupMove(GameObject objectTile) {
+    public void setupMove(GameObject objectTile) 
+    {
         var gridTiles = grid.GetComponent<GridBehavior>();
         var selectRend  = objectTile.GetComponent<Renderer>();
         var tileScript  = objectTile.GetComponent<TileScript>();
         Vector2Int tilePos = tileScript.position;
 
         // Unselect currently selected character
-        if(charSelected) {
+        if(charSelected) 
+        {
             Debug.Log("Unselecting character on " + selectedCharPos.x + " " + selectedCharPos.y);
             gridTiles.grid[selectedCharPos.x, selectedCharPos.y].GetComponent<Renderer>().material = isTileActive(selectedCharPos) ? gridTiles.activeUnselected : gridTiles.unselected;
         }
@@ -462,16 +472,19 @@ public class BattleEngine : MonoBehaviour {
     }
 
     //Try to move the unit to the specified position on the grid. Returns true if move succeeds. Will not affect game state if simulate is true.
-    public bool moveUnit(Vector2Int tilePos, bool simulate) {
+    public bool moveUnit(Vector2Int tilePos, bool simulate) 
+    {
         var gridTiles = grid.GetComponent<GridBehavior>();
-        if(!moved && moving && charSelected && activeUnit == gridTiles.GetCharacterAtPos(selectedCharPos) && tilePos != selectedCharPos) {
+        if(!moved && moving && charSelected && activeUnit == gridTiles.GetCharacterAtPos(selectedCharPos) && tilePos != selectedCharPos) 
+        {
             // Move character
             if (gridTiles.MoveCharacterOnTile(gridPaths, selectedCharPos, tilePos, true) == false)
             {
                 Debug.Log("Cannot move character to tile " + tilePos.x + " " + tilePos.y);
                 return false;
             }
-            else {
+            else 
+            {
                 if(simulate) return true;
                 // Unselect currently select character
                 Debug.Log("Unselecting character on " + selectedCharPos.x + " " + selectedCharPos.y);
