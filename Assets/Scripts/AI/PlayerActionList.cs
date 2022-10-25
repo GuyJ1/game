@@ -18,7 +18,7 @@ public class PlayerActionList
     // Start is called before the first frame update
     void Start()
     {
-
+        sortPlayerActionsByName();
     }
 
     // Update is called once per frame
@@ -72,6 +72,32 @@ public class PlayerActionList
         return _playerActions.Count;
     }
 
+    /// <summary>
+    /// Sorts Player Actions by each of the following fields:
+    /// name, enemy name, ability id and movement true/false
+    /// </summary>
+    /// <returns></returns>
+    public List<PlayerAction> sortPlayerActionsByName()
+    {
+        PlayerAction[] list1  =  _playerActions.ToArray();
+        List<PlayerAction> realList = new List<PlayerAction>(list1);
+        realList.Sort((a, b) => a.GetCharacter().Name.CompareTo(b.GetCharacter().Name));
+
+        System.Console.WriteLine("logging" + realList);
+
+        return realList;
+    }
+
+    public List<PlayerAction> sortPlayerActionsByEnemyName()
+    {
+        PlayerAction[] list1 = _playerActions.ToArray();
+        List<PlayerAction> realList = new List<PlayerAction>(list1);
+        realList.Sort((a, b) => a.GetTarget().Name.CompareTo(b.GetTarget().Name));
+
+        System.Console.WriteLine("logging" + realList);
+
+        return realList
+    }
 
 
 
