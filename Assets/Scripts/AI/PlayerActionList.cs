@@ -57,6 +57,14 @@ public class PlayerActionList
         }
     }
 
+    public void clear() 
+    {
+        if(_playerActions.Count > 0)
+        {
+            _playerActions.Dequeue();
+        }
+    }
+
     public PlayerAction Peek()
     {
         return _playerActions.Peek();
@@ -130,6 +138,31 @@ public class PlayerActionList
 
 
         return realList;
+    }
+
+
+    public bool searchForCharacterStats(PlayerAction characterID)
+    {
+        bool exists = _playerActions.Contains(characterID);
+        return exists;
+    }
+
+    public bool searchForTarget(PlayerAction targetID)
+    {
+        bool exists = _playerActions.Contains(targetID);
+        return exists;
+    }
+
+    public bool searchForAction(PlayerAction actionID)
+    {
+        bool exists = _playerActions.Contains(actionID);
+        return exists;
+    }
+
+    public bool searchForMovement(PlayerAction movementID)
+    {
+        bool exists = _playerActions.Contains(movementID);
+        return exists;
     }
 
 }
