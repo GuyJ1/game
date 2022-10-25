@@ -125,7 +125,7 @@ public class PlayerActionList
     {
         PlayerAction[] list1 = _playerActions.ToArray();
         List<PlayerAction> realList = new List<PlayerAction>(list1);
-        realList.Sort((a, b) => a.GetMovement().MV.CompareTo(b.GetMovement().MV));
+        realList.Sort((a, b) => a.GetMovement().CompareTo(b.GetMovement()));
 
 
 
