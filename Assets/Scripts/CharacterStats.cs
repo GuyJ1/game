@@ -45,6 +45,9 @@ public class CharacterStats : MonoBehaviour
 
     //Equipment
     public Weapon weapon; //increases ATK
+    public Armor armor; //increases DEF
+    public Accessory accessory; //has varying effects
+
 
     
 
@@ -77,6 +80,28 @@ public class CharacterStats : MonoBehaviour
         HP = HPMAX;
         healthBar.SetMaxHealth(HPMAX);
 
+        if(armor != null){
+            DEF += armor.RES;
+            if(STR < armor.CON){
+
+                if(((armor.CON - STR) / 10) > 5){
+
+                    MV -= 5;
+
+                }
+                else{
+
+                    MV -= ((armor.CON - STR) / 10);
+                }
+
+            }
+
+            if(MV < 1){
+                MV = 1;
+            }
+            
+        }
+
         AP = APMAX;
 
         Morale = MoraleMAX;
@@ -97,6 +122,7 @@ public class CharacterStats : MonoBehaviour
         }
 
         AVO = ((SPD*3 + LCK) / 2) + (2 * (Morale / 5));
+
     }
 
     // Update healthbar position
