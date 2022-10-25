@@ -96,7 +96,7 @@ public class PlayerActionList
 
         System.Console.WriteLine("logging" + realList);
 
-        return realList
+        return realList;
     }
 
 
