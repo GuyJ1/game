@@ -73,8 +73,7 @@ public class PlayerActionList
     }
 
     /// <summary>
-    /// Sorts Player Actions by each of the following fields:
-    /// name, enemy name, ability id and movement true/false
+    /// Sorts Player Actions by character name.
     /// </summary>
     /// <returns></returns>
     public List<PlayerAction> sortPlayerActionsByName()
@@ -83,23 +82,55 @@ public class PlayerActionList
         List<PlayerAction> realList = new List<PlayerAction>(list1);
         realList.Sort((a, b) => a.GetCharacter().Name.CompareTo(b.GetCharacter().Name));
 
-        System.Console.WriteLine("logging" + realList);
+       
 
         return realList;
     }
 
+    /// <summary>
+    /// Sorts Player actions by enemy name
+    /// </summary>
+    /// <returns></returns>
     public List<PlayerAction> sortPlayerActionsByEnemyName()
     {
         PlayerAction[] list1 = _playerActions.ToArray();
         List<PlayerAction> realList = new List<PlayerAction>(list1);
         realList.Sort((a, b) => a.GetTarget().Name.CompareTo(b.GetTarget().Name));
 
-        System.Console.WriteLine("logging" + realList);
+        
 
         return realList;
     }
 
+    /// <summary>
+    /// Sorts player action by ability ID
+    /// </summary>
+    /// <returns></returns>
+    public List<PlayerAction> sortPlayerActionsByAbilityId()
+    {
+        PlayerAction[] list1 = _playerActions.ToArray();
+        List<PlayerAction> realList = new List<PlayerAction>(list1);
+        realList.Sort((a, b) => a.GetAbility().ID.CompareTo(b.GetAbility().ID));
 
+        
+
+        return realList;
+    }
+
+    /// <summary>
+    /// Sorts player actions by movement, this is just a true false sort.
+    /// </summary>
+    /// <returns></returns>
+    public List<PlayerAction> sortPlayerActionsByMovement()
+    {
+        PlayerAction[] list1 = _playerActions.ToArray();
+        List<PlayerAction> realList = new List<PlayerAction>(list1);
+        realList.Sort((a, b) => a.GetMovement().MV.CompareTo(b.GetMovement().MV));
+
+
+
+        return realList;
+    }
 
 }
 
