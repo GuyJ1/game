@@ -1,11 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using System;
 
 public class SelectPanelScript : MonoBehaviour
 {
     //for relative position
     RectTransform rt;
+
+    //variablez
+    private float scrollSpeed = 0f;
+    int tPos;
+
+    public Button Button1;
+    public Button Button2;
+    public Button Button3;
+    public Button Button4;
 
     // Update is called once per frame
     void Update()
@@ -17,12 +28,46 @@ public class SelectPanelScript : MonoBehaviour
         //scroll up
         if (Input.GetAxis("Mouse ScrollWheel") > 0f && rt.offsetMin.y > -85f)
         {
-            transform.Translate(0, -5000 * Time.deltaTime, 0, Space.World);
+            scrollSpeed = -250f;
+            //transform.Translate(0, -1f * scrollSpeed * Time.deltaTime, 0, Space.World);
         }
         //scroll down
         if (Input.GetAxis("Mouse ScrollWheel") < 0f && rt.offsetMin.y < 210f)
         {
-            transform.Translate(0, 5000 * Time.deltaTime, 0, Space.World);
-        } 
+            scrollSpeed = 250f;
+            //transform.Translate(0, scrollSpeed * Time.deltaTime, 0, Space.World);
+        }
+
+        //translate panel each frame
+        if (scrollSpeed != 0f)
+        {
+            transform.Translate(0, scrollSpeed * Time.deltaTime, 0, Space.World);
+            scrollSpeed = scrollSpeed > 0f ? scrollSpeed - 0.8f : scrollSpeed + 0.8f;
+            if (Math.Abs(scrollSpeed) < 1f || rt.offsetMin.y <= -85f || rt.offsetMin.y >= 210f)
+                scrollSpeed = 0f;
+
+        }
+
+        tPos = (int)rt.offsetMin.y;
+        switch (tPos)
+        {
+            case int tPos when (tPos > 128):
+                Button4.Select();
+                //Button1.DoStateTransition(SelectionState.Highlighted, false);
+                break;
+            case int tPos when (tPos <= 128 && tPos > 55):
+                Button3.Select();
+                //Button2.DoStateTransition(SelectionState.Highlighted, false);
+                break;
+            case int tPos when (tPos <= 55 && tPos > -16):
+                Button2.Select(); 
+                //Button3.DoStateTransition(SelectionState.Highlighted, false);
+                break;
+            case int tPos when (tPos <= 16):
+                Button1.Select();
+                //Button4.DoStateTransition(SelectionState.Highlighted, false);
+                break;
+        }
+
     }
 }
