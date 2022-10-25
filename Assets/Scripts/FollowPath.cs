@@ -14,6 +14,10 @@ public class FollowPath : MonoBehaviour
     private Vector3 targetPos;
     private Vector3 targetDirection;
 
+    // Distances
+    private float distToTarget;
+    private float moveDist;
+
     // Flags
     private bool tileSet = false;
 
@@ -21,7 +25,7 @@ public class FollowPath : MonoBehaviour
     void Update()
     {
         // Get a new tile to travel to when these conditions are met
-        if (pathToFollow != null && pathToFollow.Count > 0 && tileSet == false)
+        while (pathToFollow != null && pathToFollow.Count > 0 && tileSet == false)
         {
             // Get the next node
             var currentNode = pathToFollow.Pop();
@@ -32,18 +36,24 @@ public class FollowPath : MonoBehaviour
             // Set the target position to the position of the tile
             targetPos = new Vector3(pos.x, pos.y + 0.5f, pos.z);
             targetDirection = (targetPos - transform.position).normalized;
+            distToTarget = Vector3.Distance(transform.position, targetPos);
 
-            Debug.Log("Follow Path: moving " + this.name + " to " + targetPos.ToString());
+            // Test whether the target position is different from the current position
+            if (transform.position != targetPos)
+            {
+                // Debug msg
+                Debug.Log("Follow Path: moving " + this.name + " from " + transform.position.ToString() + " to " + targetPos.ToString());
 
-            // Target tile is set
-            tileSet = true;
+                // Target tile is set
+                tileSet = true;
+            }            
         }
 
         // When we have a tile to travel to
         if (tileSet)
         {
-            float distToTarget = Vector3.Distance(transform.position, targetPos);
-            float moveDist = Vector3.Distance(new Vector3(0,0,0), targetDirection * moveSpeed * Time.deltaTime);
+            distToTarget = Vector3.Distance(transform.position, targetPos);
+            moveDist = Vector3.Distance(new Vector3(0,0,0), targetDirection * moveSpeed * Time.deltaTime);
 
             // Check whether we reached the target
             if (distToTarget <= moveDist)
