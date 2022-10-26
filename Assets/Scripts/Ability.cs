@@ -15,6 +15,8 @@ public class Ability : MonoBehaviour
     public int range;
     public int ID; //every ability has a unique ID. Can be used for randomly assigning abilities to characters/enemies
 
+    public GameObject Visual; // in-game visual element
+
     public Ability(bool friendly, int totalDMG, int totalHP, int cost, int costType, int range, int ID) {
         this.friendly = friendly;
         this.totalDMG = totalDMG;
@@ -84,8 +86,18 @@ public class Ability : MonoBehaviour
 
     //Generic ability with no special effects
     int Generic(CharacterStats user, CharacterStats target) {
-        if(!friendly) target.adjustHP(-totalDMG);
-        else target.adjustHP(totalHP);
+        if(!friendly)
+        {
+            GameObject canvas = GameObject.Find("UI Menu");
+            GameObject slashVisual = Instantiate(Visual, canvas.transform);
+            slashVisual.transform.position = Camera.main.WorldToScreenPoint(target.transform.position);
+
+            target.adjustHP(-totalDMG);
+        }
+        else
+        {
+            target.adjustHP(totalHP);
+        }
         return 0;
     }
 

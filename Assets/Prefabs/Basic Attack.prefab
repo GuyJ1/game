@@ -52,3 +52,4 @@ MonoBehaviour:
   costType: 0
   range: 1
   ID: 0
+  Visual: {fileID: 4565807176365005463, guid: de478c229838fa044bfada1d358a4a91, type: 3}
