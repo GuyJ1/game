@@ -52,4 +52,4 @@ MonoBehaviour:
   costType: 0
   range: 1
   ID: 1
-  Visual: {fileID: 4565807176365005463, guid: de478c229838fa044bfada1d358a4a91, type: 3}
+  DarkSlash: {fileID: 696958063292329688, guid: 00092c09e25beb54f813012f561ea1c0, type: 3}
