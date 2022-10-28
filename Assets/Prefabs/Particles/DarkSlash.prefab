@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5872131047112593301}
   - component: {fileID: 1215528931786135337}
   - component: {fileID: 7847794147253314821}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: DarkSlash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3813,7 +3813,7 @@ ParticleSystem:
       properties: 0
       emitProbability: 1
   LightsModule:
-    enabled: 0
+    enabled: 1
     ratio: 0
     light: {fileID: 0}
     randomDistribution: 1
