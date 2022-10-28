@@ -19,6 +19,7 @@ public class CharacterStats : MonoBehaviour
     public int Morale; //Morale (from 0 - 100), 
                         //depending on this value, ATK/CRIT are boosted from +1 to +5 and HIT/AVO is boosted by +2 to +10
     public int MoraleMAX; //Maximum Morale
+    public int MoraleMIN; //Minimum Morale (used for Shoes)
     public int ATK; //Attack power (= STR - Enemy's DEF)
     public int HIT; //Hit Rate (= (((DEX*3 + LCK) / 2) - Enemy's AVO)
     public int CRIT; //Critical Rate (= ((DEX / 2) - 5) - Enemy's LCK)
@@ -46,7 +47,12 @@ public class CharacterStats : MonoBehaviour
     //Equipment
     public Weapon weapon; //increases ATK
     public Armor armor; //increases DEF
-    public Accessory accessory; //has varying effects
+    public Hat hat; //can increase STR, DEF, SPD, and/or DEX
+    public Ring ring; //can increase ATK, HIT, CRIT, and/or AVO
+    public Amulet amulet; //can increase max HP and/or LCK
+    public Bracelet bracelet; //can increase max AP and/or LCK
+    public Shoes shoes; //can increase MV and/or Morale
+    public Aura aura; //can increase any stat
 
 
     
@@ -76,9 +82,46 @@ public class CharacterStats : MonoBehaviour
 
         healthBar.gradient = grad;
 
-        // Set health, ability points, and morale
-        HP = HPMAX;
-        healthBar.SetMaxHealth(HPMAX);
+        MoraleMIN = 0;
+
+        //Temporary name for player-controlled characters for logging: Will need to have functionality added later
+        Name = "Pupperton";
+
+        // Set health, ability points, morale, etc.
+
+        if(hat != null){
+
+            hat.statBonus(this);
+        }
+
+        if(amulet != null){
+            amulet.statBonus(this);
+        }
+
+        if(bracelet != null){
+
+            bracelet.statBonus(this);
+        }
+
+        if(shoes != null){
+
+            shoes.statBonus(this);
+
+        }
+
+        if(aura != null){
+
+            aura.statBonus(this);
+        }
+
+
+
+
+        if(MoraleMIN > 80){//minimum morale can't go higher than 80%
+
+            MoraleMIN = 80;
+
+        }
 
         if(armor != null){
             DEF += armor.RES;
@@ -102,12 +145,19 @@ public class CharacterStats : MonoBehaviour
             
         }
 
-        AP = APMAX;
+        HP = HPMAX;
+
+        healthBar.SetMaxHealth(HPMAX);
 
         Morale = MoraleMAX;
 
-        //Temporary name for player-controlled characters for logging: Will need to have functionality added later
-        Name = "Pupperton";
+        AP = APMAX;
+
+        updateAVO(ring, aura);
+
+
+
+
     }
 
     // Update is called once per frame
@@ -121,7 +171,7 @@ public class CharacterStats : MonoBehaviour
             adjustHP(-20);
         }
 
-        AVO = ((SPD*3 + LCK) / 2) + (2 * (Morale / 5));
+        updateAVO(ring, aura);
 
     }
 
@@ -203,8 +253,8 @@ public class CharacterStats : MonoBehaviour
     //Morale changed (either positive or negative)
     public void adjustMorale(int change){
         Morale += change;
-        if(Morale < 0){
-            Morale = 0;
+        if(Morale < MoraleMIN){
+            Morale = MoraleMIN;
         }
         if(Morale > MoraleMAX){
             Morale = MoraleMAX;
@@ -215,12 +265,12 @@ public class CharacterStats : MonoBehaviour
     //Note: Critical hits triple the total damage
     public int Attack(CharacterStats target){
 
-        HIT = (((DEX * 3 + LCK) / 2) + (2 * (Morale / 5))) - target.AVO;
-        CRIT = (((DEX / 2) - 5) + (Morale / 5)) - target.LCK;
+        HIT = ((((DEX * 3 + LCK) / 2) + (2 * (Morale / 5))) - target.AVO) + accessoryBonus(1);
+        CRIT = ((((DEX / 2) - 5) + (Morale / 5)) - target.LCK) + accessoryBonus(2);
 
         if(determineCRIT(CRIT)){
 
-            ATK = ((STR + (Morale / 5) + weaponBonus()) - target.DEF) * 3; //CRITICAL HIT!
+            ATK = ((STR + (Morale / 5) + weaponBonus() + accessoryBonus(0)) - target.DEF) * 3; //CRITICAL HIT!
             target.adjustHP(-ATK);
 
             if(weapon != null){
@@ -231,7 +281,7 @@ public class CharacterStats : MonoBehaviour
 
         }
         else if(determineHIT(HIT)){
-            ATK = (STR + (Morale / 5) + weaponBonus()) - target.DEF; //HIT!
+            ATK = (STR + (Morale / 5) + weaponBonus() + accessoryBonus(0)) - target.DEF; //HIT!
             target.adjustHP(-ATK);
 
             if(weapon != null){
@@ -285,6 +335,47 @@ public class CharacterStats : MonoBehaviour
             return 0;
         }
     }
+
+    public int accessoryBonus(int type){
+
+        int totalBonus = 0;
+
+
+        if(ring != null){
+
+            totalBonus += ring.battleBonus(type);
+        }
+        
+        if(aura != null){
+
+            totalBonus += aura.battleBonus(type);
+        }
+
+        return totalBonus;
+
+        
+    }
+
+
+    public void updateAVO(Ring ring, Aura aura){
+
+        int totalMod = 0;
+        if(ring != null){
+
+            totalMod += ring.AVOmodifier;
+
+        }
+
+        if(aura != null){
+
+            totalMod += aura.AVOmodifier;
+        }
+
+        AVO = ((SPD*3 + LCK) / 2) + (2 * (Morale / 5)) + totalMod;
+
+    }
+
+    
 
     
 
