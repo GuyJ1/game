@@ -15,7 +15,7 @@ public class Ability : MonoBehaviour
     public int range;
     public int ID; //every ability has a unique ID. Can be used for randomly assigning abilities to characters/enemies
 
-    public GameObject Visual; // in-game visual element
+    [SerializeField] public GameObject DarkSlash;
 
     public Ability(bool friendly, int totalDMG, int totalHP, int cost, int costType, int range, int ID) {
         this.friendly = friendly;
@@ -32,13 +32,12 @@ public class Ability : MonoBehaviour
     void Start()
     {
 
-        
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     // Apply ability to this list of characters
@@ -88,9 +87,8 @@ public class Ability : MonoBehaviour
     int Generic(CharacterStats user, CharacterStats target) {
         if(!friendly)
         {
-            GameObject canvas = GameObject.Find("UI Menu");
-            GameObject slashVisual = Instantiate(Visual, canvas.transform);
-            slashVisual.transform.position = Camera.main.WorldToScreenPoint(target.transform.position);
+            GameObject hitParticle = Instantiate(DarkSlash);
+            hitParticle.transform.position = target.transform.position;
 
             target.adjustHP(-totalDMG);
         }
