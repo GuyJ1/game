@@ -10,13 +10,15 @@ public class FollowPath : MonoBehaviour
     // A stack of path nodes that link to the position of tiles
     public Stack<PathTreeNode> pathToFollow = new Stack<PathTreeNode>();
 
-    // Current target position and direction
+    // Current target node
+    private PathTreeNode targetNode;
     private Vector3 targetPos;
     private Vector3 targetDirection;
 
     // Distances
     private float distToTarget;
     private float moveDist;
+
 
     // Flags
     private bool tileSet = false;
@@ -28,15 +30,7 @@ public class FollowPath : MonoBehaviour
         while (pathToFollow != null && pathToFollow.Count > 0 && tileSet == false)
         {
             // Get the next node
-            var currentNode = pathToFollow.Pop();
-
-            // Get the position of the corresponding tile
-            Vector3 pos = currentNode.myTile.transform.position;
-
-            // Set the target position to the position of the tile
-            targetPos = new Vector3(pos.x, pos.y + 0.5f, pos.z);
-            targetDirection = (targetPos - transform.position).normalized;
-            distToTarget = Vector3.Distance(transform.position, targetPos);
+            targetNode = pathToFollow.Pop();
 
             // Test whether the target position is different from the current position
             if (transform.position != targetPos)
@@ -46,17 +40,23 @@ public class FollowPath : MonoBehaviour
 
                 // Target tile is set
                 tileSet = true;
-            }            
+            }
         }
 
         // When we have a tile to travel to
         if (tileSet)
         {
+            // Get the position of the corresponding tile
+            Vector3 pos = targetNode.myTile.transform.position;
+
+            // Set the target position to the position of the tile
+            targetPos = new Vector3(pos.x, pos.y + 0.5f, pos.z);
+            targetDirection = (targetPos - transform.position).normalized;
             distToTarget = Vector3.Distance(transform.position, targetPos);
             moveDist = Vector3.Distance(new Vector3(0,0,0), targetDirection * moveSpeed * Time.deltaTime);
 
             // Check whether we reached the target
-            if (distToTarget <= moveDist)
+            if (distToTarget <= 0.05f || distToTarget <= moveDist*0.5f || distToTarget <= moveDist)
             {
                 transform.position = targetPos;
                 tileSet = false;
