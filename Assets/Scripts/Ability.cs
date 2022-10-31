@@ -41,6 +41,11 @@ public class Ability : MonoBehaviour
     }
 
     // Apply ability to this list of characters
+    public void affectCharacter(GameObject user, GameObject target) {
+        callAbility(this.ID, user.GetComponent<CharacterStats>(), target.GetComponent<CharacterStats>());
+    }
+
+    // Apply ability to this list of characters
     public void affectCharacters(GameObject user, List<GameObject> targets) {
         foreach(GameObject target in targets) {
             callAbility(this.ID, user.GetComponent<CharacterStats>(), target.GetComponent<CharacterStats>());
