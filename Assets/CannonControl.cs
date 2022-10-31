@@ -5,6 +5,7 @@ using UnityEngine;
 public class CannonControl : MonoBehaviour
 {
     public GameObject cannonball;
+    public GameObject muzzleFlash;
 
     // Start is called before the first frame update
     void Start()
@@ -23,13 +24,18 @@ public class CannonControl : MonoBehaviour
 
     public void fireCannonball()
     {
-        GameObject newCannonball = Instantiate(cannonball, transform);
+        // ----- Muzzle Flash -----
+        GameObject mFlash = Instantiate(muzzleFlash);
+        mFlash.transform.position = transform.GetChild(0).transform.position;
+
+        // ----- Cannonball Spawning -----
+        GameObject newCannonball = Instantiate(cannonball, transform.GetChild(0).transform);
         var rb = newCannonball.GetComponent<Rigidbody>();
 
-        float randX = Random.value * 20.0f;
-        float randY = Random.value * 20.0f;
-        float randZ = Random.value * 20.0f;
+        float randX = Random.value * 3.0f;
+        float randY = Random.value * 3.0f;
+        float randZ = Random.value * 2.0f;
 
-        rb.velocity = new Vector3(40.0f + randX, 40.0f + randY, randZ);
+        rb.velocity = new Vector3(30.0f + randX, 1.5f + randY, -1.0f + randZ);
     }
 }
