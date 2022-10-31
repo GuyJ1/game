@@ -321,8 +321,7 @@ public class BattleEngine : MonoBehaviour
 
     public void selectAction() {
         moving = false;
-        attackButton.interactable = false;
-        if(!moved) moveButton.interactable = true;
+        attackButton.Select();
         selectedAbility = getBasicAttack(activeUnit); //TODO: Temporary default to basic attack for now
         setupAction(activeUnitTile);
     }
@@ -330,8 +329,7 @@ public class BattleEngine : MonoBehaviour
     public void selectMove() 
     {
         moving = true;
-        moveButton.interactable = false;
-        if(!acted) attackButton.interactable = true;
+        moveButton.Select();
         setupMove(activeUnitTile);
     }
 
@@ -351,6 +349,7 @@ public class BattleEngine : MonoBehaviour
         acted = false;
         updateTurnOrder();
         activeUnit = turnQueue[0];
+        selectedAbility = null;
         var gridTiles = grid.GetComponent<GridBehavior>();
         //Search for unit on grid and save the position for later
         for(int x = 0; x < gridTiles.width; x++) {
@@ -500,12 +499,37 @@ public class BattleEngine : MonoBehaviour
         attackButton.interactable = false;
         selectedAbility.affectCharacters(activeUnit, characters);
 
+        //Try combo attack
+        int xDist = activeUnitPos.x - tilePos.x;
+        int yDist = activeUnitPos.y - tilePos.y;
+        if(selectedAbility.requiresTarget && xDist != yDist) { //No diagonals
+            if(Mathf.Abs(xDist) > Mathf.Abs(yDist)) { //Horizontal cases
+                if(xDist > 0) tryComboAttack(gridTiles.GetTileWest(tilePos), tileScript.characterOn);
+                else tryComboAttack(gridTiles.GetTileEast(tilePos), tileScript.characterOn);
+            }
+            else { //Vertical cases
+                if(yDist > 0) tryComboAttack(gridTiles.GetTileSouth(tilePos), tileScript.characterOn);
+                else tryComboAttack(gridTiles.GetTileNorth(tilePos), tileScript.characterOn);
+            }
+        }
+
         //AI: Forward the target(s) to AI handler for enqueue. Currently only forwards one character - for refactoring later
         playerTarget = characters[0];
 
         if(!moved) selectMove(); //Move to move state if available
         update();
         return true;
+    }
+
+    //Try to perform a combo attack from the specified character to the target
+    public void tryComboAttack(GameObject characterTile, GameObject targetCharacter) {
+        if(characterTile != null && characterTile.GetComponent<TileScript>()) {
+            TileScript tile = characterTile.GetComponent<TileScript>();
+            if(tile.hasCharacter && isAllyUnit(tile.characterOn) != isAllyUnit(targetCharacter)) { //Need target on opposite team
+                Debug.Log("Triggering combo attack...");
+                getComboAttack(tile.characterOn).affectCharacter(tile.characterOn, targetCharacter);
+            }
+        }
     }
 
     //Try to move the unit to the specified position on the grid. Returns true if move succeeds. Will not affect game state if simulate is true.

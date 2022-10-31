@@ -409,6 +409,22 @@ public class GridBehavior : MonoBehaviour
         return tileAtPos;
     }
 
+    public GameObject GetTileNorth(Vector2Int pos) {
+        return GetTileAtPos(new Vector2Int(pos.x, pos.y + 1));
+    }
+
+    public GameObject GetTileSouth(Vector2Int pos) {
+        return GetTileAtPos(new Vector2Int(pos.x, pos.y - 1));
+    }
+
+    public GameObject GetTileEast(Vector2Int pos) {
+        return GetTileAtPos(new Vector2Int(pos.x + 1, pos.y));
+    }
+
+    public GameObject GetTileWest(Vector2Int pos) {
+        return GetTileAtPos(new Vector2Int(pos.x - 1, pos.y));
+    }
+
     // Get a character game object from a grid position (if there is one)
     public GameObject GetCharacterAtPos(Vector2Int pos)
     {
