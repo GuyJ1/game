@@ -22,13 +22,6 @@ public class ShipMove : MonoBehaviour
     }
     void Update()
     {
-        // Seasickness Mode
-        if (Input.GetKey(KeyCode.P))
-        {
-            tiltSpeed = 20.0f;
-            tiltAmount = 50.0f;
-        }
-
         // Move in direction set by move direction
         transform.position += moveDirection * moveSpeed * Time.deltaTime;
 

@@ -32,6 +32,7 @@ public class CharacterStats : MonoBehaviour
     public List<GameObject> abilities; //Unique abilities
 
     // Healthbar
+    [SerializeField] public float healthBarScale;
     public HealthBar healthBar;
     public float healthBarYOffset;
 
@@ -181,8 +182,19 @@ public class CharacterStats : MonoBehaviour
         // Offset
         Vector3 posOffset = new Vector3(0, healthBarYOffset, 0);
 
-        // Update the healthbar position
+        // --------- Update healthbar position ---------
         healthBar.transform.position = Camera.main.WorldToScreenPoint(transform.position + posOffset);
+
+        // --------- Update scale based on camera position ---------
+        float camDist = Vector3.Distance(Camera.main.transform.position, this.transform.position);
+        float newScale = 0.0f;
+
+        if (camDist != 0.0f)
+        {
+            newScale = healthBarScale / camDist;
+        }
+
+        healthBar.transform.localScale = new Vector3(newScale, newScale, newScale);
     }
 
     // Disable the character and associated elements

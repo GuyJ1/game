@@ -68,6 +68,7 @@ MonoBehaviour:
   APMAX: 0
   Morale: 0
   MoraleMAX: 0
+  MoraleMIN: 0
   ATK: 0
   HIT: 0
   CRIT: 0
@@ -76,15 +77,20 @@ MonoBehaviour:
   basicAttack: {fileID: 5751798234688528242, guid: dfebc8a26e6c41845a3b9ea13ddcb1b0, type: 3}
   comboAttack: {fileID: 5751798234688528242, guid: 340a031d05ed20443bfb33cc3da77785, type: 3}
   abilities: []
+  healthBarScale: 2
   healthBar: {fileID: 4151192400801874901}
-  basicSlash: {fileID: 4565807176365005463, guid: de478c229838fa044bfada1d358a4a91, type: 3}
   healthBarYOffset: 1
   canvas: {fileID: 0}
-  gridPosition: {x: 0, y: 0}
-  crew: {fileID: 0}
+  gridPosition: {x: 4, y: 17}
+  crew: {fileID: 8677408311475748420, guid: ff7e742bfec002a4c80690599f895dce, type: 3}
   weapon: {fileID: 0}
   armor: {fileID: 0}
-  accessory: {fileID: 0}
+  hat: {fileID: 0}
+  ring: {fileID: 0}
+  amulet: {fileID: 0}
+  bracelet: {fileID: 0}
+  shoes: {fileID: 0}
+  aura: {fileID: 0}
 --- !u!23 &8884561808067556798
 MeshRenderer:
   m_ObjectHideFlags: 0

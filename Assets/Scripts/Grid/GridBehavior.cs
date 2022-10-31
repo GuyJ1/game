@@ -248,7 +248,7 @@ public class GridBehavior : MonoBehaviour
                     destTileScript.pathRef.PathToRootOnStack(charToMove.GetComponent<FollowPath>().pathToFollow);
 
                     // Move camera to destPos
-                    cam.GetComponent<CameraControl>().LookAtPos(destTile.transform.position);
+                    cam.GetComponent<CameraControl>().SetCameraFollow(charToMove);
 
                     // Set source tile data
                     sourceTileScipt.hasCharacter = false;

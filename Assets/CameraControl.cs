@@ -10,7 +10,8 @@ public class CameraControl : MonoBehaviour
     // Viewing offset
     private Vector3 offset;
 
-    // Position camera is looking at
+    // Position or object camera is looking at
+    private GameObject objectFollowing = null;
     private Vector3 target;
 
     // If this camera is being controlled by the player
@@ -47,6 +48,7 @@ public class CameraControl : MonoBehaviour
             transform.position += moveVector * Time.deltaTime * ControlSpeed;
             target = transform.position;
 
+            objectFollowing = null;
             controlling = true;
         }
         else
@@ -54,14 +56,12 @@ public class CameraControl : MonoBehaviour
             controlling = false;
         }
 
-        // Zooming (Warning: slight values will probably cause drift here)
-        if (Input.mouseScrollDelta.y != 0.0f)
+        // Zooming
+        if (Input.mouseScrollDelta.y > 0.1f || Input.mouseScrollDelta.y < -0.1f)
         {
-            //Vector3 previousPos = this.transform.position;
-
-            //this.transform.Translate(Vector3.forward * Input.mouseScrollDelta.y, this.transform);
-
-            //offset = this.transform.position - previousPos;
+            objectFollowing = null;
+            controlling = true;
+            this.transform.Translate(Vector3.forward * Input.mouseScrollDelta.y, this.transform);
         }
 
         // Layer Setting
@@ -89,6 +89,14 @@ public class CameraControl : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
+        // If following an object
+        if (objectFollowing != null)
+        {
+            target = objectFollowing.transform.position + offset;
+            travelingToTarget = true;
+        }
+
+        // Travel to target
         if (controlling == false && travelingToTarget == true)
         {
             float distToTarget = Vector3.Distance(transform.position, target);
@@ -111,6 +119,17 @@ public class CameraControl : MonoBehaviour
     {
         target = pos + offset;
         travelingToTarget = true;
+        objectFollowing = null;
+    }
+
+    public void SetCameraFollow(GameObject objectToFollow)
+    {
+        objectFollowing = objectToFollow;
+    }
+
+    public void StopCameraFollow()
+    {
+        objectFollowing = null;
     }
 
     public void SetLayerMode(LAYERMODE lm)

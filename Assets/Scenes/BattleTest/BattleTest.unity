@@ -364,11 +364,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2918592252996794388, guid: a1dcd447bfbb3bc45821f8b436c031d2, type: 3}
       propertyPath: tiltSpeed
-      value: 2
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2918592252996794388, guid: a1dcd447bfbb3bc45821f8b436c031d2, type: 3}
       propertyPath: tiltAmount
-      value: 5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5283416272865759212, guid: a1dcd447bfbb3bc45821f8b436c031d2, type: 3}
       propertyPath: m_Layer
@@ -1510,11 +1510,6 @@ MonoBehaviour:
   _timeResolution: 4
   _smallestWavelengthRequired: 2
   _timeLoopLength: 32
---- !u!4 &1563697934 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 9036149285931199850, guid: a1dcd447bfbb3bc45821f8b436c031d2, type: 3}
-  m_PrefabInstance: {fileID: 157698713}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1772665602
 GameObject:
   m_ObjectHideFlags: 0
@@ -1582,10 +1577,7 @@ MonoBehaviour:
     -
     Reduce Health: Space
 
-    - Layer Views: Numpad 0-3
-
-    - Seasickness Mode:
-    P (WARNING: DON''T PRESS)'
+    - Layer Views: Numpad 0-3'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2068,13 +2060,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2054579715}
   m_LocalRotation: {x: 0.5075849, y: -0, z: -0, w: 0.86160177}
-  m_LocalPosition: {x: 0, y: 10, z: -7}
+  m_LocalPosition: {x: 0, y: 10, z: -6.08}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2122734046}
-  m_Father: {fileID: 1563697934}
-  m_RootOrder: 45
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 61.006, y: 0, z: 0}
 --- !u!114 &2054579719
 MonoBehaviour:
