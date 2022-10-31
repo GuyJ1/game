@@ -387,7 +387,7 @@ public class BattleEngine : MonoBehaviour
 
         //Player turn enqueue handling - passes in the current active unit (if it is a player controlled unit), 
         //the target of this turn's action (if any), the type of action taken this turn (if any), and whether the character moved
-        if(isPlayerTurn)
+        if(isPlayerTurn && selectedAbility != null)
         {
             //Add the new PlayerAction to the playerActions queue, using the overloaded constructor
             playerActions.add(new PlayerAction(activeUnit.GetComponent<CharacterStats>(), selectedAbility, moved));
@@ -489,6 +489,8 @@ public class BattleEngine : MonoBehaviour
             if(!tileScript.hasCharacter) return false;
             if(selectedAbility.friendly && !isAllyUnit(gridTiles.GetCharacterAtPos(tilePos))) return false;
             if(!selectedAbility.friendly && isAllyUnit(gridTiles.GetCharacterAtPos(tilePos))) return false;
+            int dist = Mathf.Abs(activeUnitPos.x - tilePos.x) + Mathf.Abs(activeUnitPos.y - tilePos.y); //Take Manhattan distance
+            if(dist > selectedAbility.range) return false;
         }
         if(simulate) return true;
         List<GameObject> characters = new List<GameObject>();
