@@ -35,6 +35,7 @@ public class CharacterController2D : MonoBehaviour
     private void Update()
     {
         UpdateIsGrounded();
+        //Debug.Log("isGrounded:" + isGrounded);
         HandleHorizontalMovement();
         HandleJumping();
     }
@@ -66,15 +67,19 @@ public class CharacterController2D : MonoBehaviour
 
     private void HandleHorizontalMovement()
     {
-        Vector2 moveDirection = InputManager.GetInstance().GetMoveDirection();
-        rb.velocity = new Vector2(moveDirection.x * runSpeed, rb.velocity.y);
+        //Vector2 moveDirection = InputManager.GetInstance().GetMoveDirection();
+        //rb.velocity = new Vector2(moveDirection.x * runSpeed, rb.velocity.y);
+
+        float xDirection = Input.GetAxis("Horizontal");
+        Vector3 moveVector = new Vector3(xDirection, 0.0f, 0.0f);
+        transform.position += moveVector * Time.deltaTime * runSpeed;
     }
 
 
     private void HandleJumping()
     {
-        bool jumpPressed = InputManager.GetInstance().GetJumpPressed();
-        if (isGrounded && jumpPressed)
+        //bool jumpPressed = InputManager.GetInstance().GetJumpPressed();
+        if (isGrounded && Input.GetKey(KeyCode.Space))
         {
             isGrounded = false;
             rb.velocity = new Vector2(rb.velocity.x, jumpSpeed);
