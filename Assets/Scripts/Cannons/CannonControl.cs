@@ -4,13 +4,22 @@ using UnityEngine;
 
 public class CannonControl : MonoBehaviour
 {
+    // Values
+    [SerializeField] public float shotSpeed;
+    [SerializeField] public float shotRandomness;
+
+    // Assets
     public GameObject cannonball;
     public GameObject muzzleFlash;
+
+    // Muzzle Object
+    private Transform muzzle;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        // Get child
+        muzzle = transform.GetChild(0);
     }
 
     // Update is called once per frame
@@ -31,16 +40,19 @@ public class CannonControl : MonoBehaviour
     {
         // ----- Muzzle Flash -----
         GameObject mFlash = Instantiate(muzzleFlash);
-        mFlash.transform.position = transform.GetChild(0).transform.position;
+        mFlash.transform.position = muzzle.position;
 
         // ----- Cannonball Spawning -----
-        GameObject newCannonball = Instantiate(cannonball, transform.GetChild(0).transform);
+        GameObject newCannonball = Instantiate(cannonball, muzzle);
         var rb = newCannonball.GetComponent<Rigidbody>();
 
-        float randX = Random.value * 3.0f;
-        float randY = Random.value * 3.0f;
-        float randZ = Random.value * 2.0f;
+        // Calculate cannonball velocity
+        Vector3 shotVelocity = muzzle.forward * shotSpeed;
+        shotVelocity.x += (Random.value * shotRandomness) - shotRandomness/2;
+        shotVelocity.y += (Random.value * shotRandomness) - shotRandomness/2;
+        shotVelocity.z += (Random.value * shotRandomness) - shotRandomness/2;
 
-        rb.velocity = new Vector3(30.0f + randX, 1.5f + randY, -1.0f + randZ);
+        // Apply calculated velocity
+        rb.velocity = shotVelocity;
     }
 }

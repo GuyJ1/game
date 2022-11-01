@@ -55,14 +55,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4652120480772209619}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: -0.10734605, y: -0, z: -0, w: 0.99422175}
   m_LocalPosition: {x: 0, y: 0.73399997, z: 2.622}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1781002620066574847}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -12.325, y: 0, z: 0}
 --- !u!1001 &394861399366982852
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -238,5 +238,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af517c8d52fcac0469a9943bf98f06bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shotSpeed: 30
+  shotRandomness: 5
   cannonball: {fileID: 2631466561471378240, guid: f29794cba0ec6194b8a0aa2d02281b21, type: 3}
   muzzleFlash: {fileID: 1337198075554910, guid: 25c7aa9ad705fe143a4d71c1c8deb7d4, type: 3}
