@@ -14,19 +14,10 @@ public class Ability : MonoBehaviour
                          //AP = 0, HP = 1, Morale = 2, Gold = 3, Food = 4, etc.
     public int range;
     public int ID; //every ability has a unique ID. Can be used for randomly assigning abilities to characters/enemies
+    public string displayName; //Display name for UI
+    public List<Vector2Int> shape; //Shape in tiles (0,0) is the center
 
     [SerializeField] public GameObject DarkSlash;
-
-    public Ability(bool friendly, int totalDMG, int totalHP, int cost, int costType, int range, int ID) {
-        this.friendly = friendly;
-        this.totalDMG = totalDMG;
-        this.totalHP = totalHP;
-        this.cost = cost;
-        this.cost = costType;
-        this.range = range;
-        this.ID = ID;
-        
-    }
 
     // Start is called before the first frame update
     void Start()
@@ -40,12 +31,12 @@ public class Ability : MonoBehaviour
 
     }
 
-    // Apply ability to this list of characters
+    // Apply ability to target character
     public void affectCharacter(GameObject user, GameObject target) {
         callAbility(this.ID, user.GetComponent<CharacterStats>(), target.GetComponent<CharacterStats>());
     }
 
-    // Apply ability to this list of characters
+    // Apply ability to target list of characters
     public void affectCharacters(GameObject user, List<GameObject> targets) {
         foreach(GameObject target in targets) {
             callAbility(this.ID, user.GetComponent<CharacterStats>(), target.GetComponent<CharacterStats>());
@@ -55,10 +46,10 @@ public class Ability : MonoBehaviour
     public int callAbility(int ID, CharacterStats user, CharacterStats target){
         //switch statement with all IDs calling the specified function
         switch(ID){
-            case 0: case 1: 
+            case 0: case 1: case 2: 
                 if(Generic(user, target) == 1) return 1;
                 break;
-            case 2:
+            /*case 2:
                 if(Siphon(user, target) == 1){
                     return 1; //Not enough AP
                 }
@@ -75,7 +66,7 @@ public class Ability : MonoBehaviour
                     return 1;
                 }
             
-            break;
+            break;*/
             default:
                 return 1; //error
 

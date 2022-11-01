@@ -2,11 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 //Main controller for the battle system
 //Note that this system must be activated and will not perform any logic until it is
 public class BattleEngine : MonoBehaviour 
  {
+    //Prefabs
+    public GameObject buttonPrefab;
+
     public List<GameObject> units = new List<GameObject>();
     public GameObject grid;
     public PathTreeNode gridPaths;
@@ -25,8 +29,10 @@ public class BattleEngine : MonoBehaviour
     private List<GameObject> unitsBySpeed = new List<GameObject>(); //Units sorted from lowest to highest speed values
     private List<GameObject> turnQueue = new List<GameObject>(); //Stored units in the turn queue (units can repeat)
 
-    //Button references
+    //UI references
+    public GameObject canvas;
     private Button attackButton, moveButton, endButton;
+    private List<GameObject> actionButtons = new List<GameObject>();
     private GameObject victoryText, defeatText;
 
     //Click Detection
@@ -322,12 +328,12 @@ public class BattleEngine : MonoBehaviour
     public void selectAction() {
         moving = false;
         attackButton.Select();
-        selectedAbility = getBasicAttack(activeUnit); //TODO: Temporary default to basic attack for now
-        setupAction(activeUnitTile);
+        showActionsList();
     }
 
     public void selectMove() 
     {
+        hideActionsList();
         moving = true;
         moveButton.Select();
         setupMove(activeUnitTile);
@@ -373,6 +379,24 @@ public class BattleEngine : MonoBehaviour
         if(!isPlayerTurn) doAITurn();
         else 
         {
+            int count = 0;
+            //Setup action buttons
+            foreach(GameObject abilityObject in activeUnit.GetComponent<CharacterStats>().getBattleAbilities()) {
+                Ability ability = abilityObject.GetComponent<Ability>();
+                GameObject actionButton = Instantiate(buttonPrefab); //This is copying stuff from AttackButton idk why
+                actionButton.transform.SetParent(canvas.transform, false);
+                actionButton.transform.position = new Vector3(actionButton.transform.position.x + 110, actionButton.transform.position.y - 30 * count, actionButton.transform.position.z);
+                Button button = actionButton.GetComponent<Button>();
+                button.onClick.SetPersistentListenerState(0, UnityEventCallState.Off);
+                button.onClick.AddListener(() => { //Listen to setup ability when clicked
+                    selectedAbility = ability;
+                    setupAction(activeUnitTile);
+                });
+                var tmp = actionButton.GetComponentInChildren<TMPro.TextMeshProUGUI>();
+                tmp.text = ability.displayName; //Set button name to ability name
+                actionButtons.Add(actionButton);
+                count++;
+            }
             selectMove(); //Default to move (generally units move before acting)
         }
     }
@@ -402,8 +426,9 @@ public class BattleEngine : MonoBehaviour
             Debug.Log("AI Enqueue: " + playerActions.Peek().GetCharacter().Name + " " + playerActions.Peek().GetAbility().ID + " " + playerActions.Peek().GetMovement() 
             + "\n" + "Queue Size: " + playerActions.Count());
         }
-        
-
+        foreach(GameObject button in actionButtons) Destroy(button);
+        actionButtons.Clear();
+        hideActionsList();
         pickNewTurn();
     }
 
@@ -519,6 +544,18 @@ public class BattleEngine : MonoBehaviour
         if(!moved) selectMove(); //Move to move state if available
         update();
         return true;
+    }
+
+    public void showActionsList() {
+        foreach(GameObject button in actionButtons) {
+            button.SetActive(true);
+        }
+    }
+
+    public void hideActionsList() {
+        foreach(GameObject button in actionButtons) {
+            button.SetActive(false);
+        }
     }
 
     //Try to perform a combo attack from the specified character to the target

@@ -208,6 +208,14 @@ public class CharacterStats : MonoBehaviour
         return HP <= 0;
     }
 
+    // Return selectable abilities in battle (combo attack not included)
+    public List<GameObject> getBattleAbilities() {
+        List<GameObject> list = new List<GameObject>();
+        list.Add(basicAttack);
+        foreach(GameObject ability in abilities) list.Add(ability);
+        return list;
+    }
+
     // HP changed (either taking damage (negative) or healing (positive))
     public void adjustHP(int change)
     {

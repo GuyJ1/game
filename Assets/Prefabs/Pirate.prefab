@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 6886658739876458237}
   - component: {fileID: 8884561808067556798}
   - component: {fileID: 1640716338498495246}
-  - component: {fileID: 3188320006004272978}
+  - component: {fileID: -4097838735445531169}
   m_Layer: 0
-  m_Name: Character
+  m_Name: Pirate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -77,12 +77,13 @@ MonoBehaviour:
   Name: Dummy
   basicAttack: {fileID: 5751798234688528242, guid: dfebc8a26e6c41845a3b9ea13ddcb1b0, type: 3}
   comboAttack: {fileID: 5751798234688528242, guid: 340a031d05ed20443bfb33cc3da77785, type: 3}
-  abilities: []
+  abilities:
+  - {fileID: 5751798234688528242, guid: a3061c5fb22fe7f438aef4cf591f1383, type: 3}
   healthBarScale: 2
   healthBar: {fileID: 4151192400801874901}
   healthBarYOffset: 1
   canvas: {fileID: 0}
-  gridPosition: {x: 7, y: 19}
+  gridPosition: {x: 6, y: 15}
   crew: {fileID: 8677408311475748420, guid: ff7e742bfec002a4c80690599f895dce, type: 3}
   weapon: {fileID: 0}
   armor: {fileID: 0}
@@ -147,7 +148,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
---- !u!82 &3188320006004272978
+--- !u!82 &-4097838735445531169
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

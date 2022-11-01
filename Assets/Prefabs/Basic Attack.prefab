@@ -52,4 +52,7 @@ MonoBehaviour:
   costType: 0
   range: 1
   ID: 0
+  displayName: Basic
+  shape:
+  - {x: 0, y: 0}
   DarkSlash: {fileID: 696958063292329688, guid: 00092c09e25beb54f813012f561ea1c0, type: 3}
