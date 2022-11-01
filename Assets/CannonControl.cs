@@ -17,8 +17,13 @@ public class CannonControl : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.F))
-        {
+        {   
+            // Fire cannonball
             fireCannonball();
+            
+            // Play audio
+            var audioData = GetComponent<AudioSource>();
+            audioData.Play(0);
         }
     }
 

@@ -19,13 +19,36 @@ public class FollowPath : MonoBehaviour
     private float distToTarget;
     private float moveDist;
 
-
     // Flags
     private bool tileSet = false;
+
+    // Audio
+    AudioSource audioData;
+
+    // Initialization
+    void Start()
+    {
+        audioData = GetComponent<AudioSource>();
+        audioData.Play();
+        audioData.Pause();
+    }
 
     // Update is called once per frame
     void Update()
     {
+        // Audio
+        if (pathToFollow.Count > 0)
+        {
+            if (audioData.isPlaying == false)
+            {
+                audioData.UnPause();
+            }
+        }
+        else
+        {
+            audioData.Pause();
+        }
+
         // Get a new tile to travel to when these conditions are met
         while (pathToFollow != null && pathToFollow.Count > 0 && tileSet == false)
         {

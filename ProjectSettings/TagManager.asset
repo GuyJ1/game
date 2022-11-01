@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Tile
+  - Ship
+  - Ocean
   layers:
   - Default
   - TransparentFX
