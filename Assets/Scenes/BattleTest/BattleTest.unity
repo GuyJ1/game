@@ -427,14 +427,6 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Ship
       objectReference: {fileID: 0}
-    - target: {fileID: 2918592252996794388, guid: a1dcd447bfbb3bc45821f8b436c031d2, type: 3}
-      propertyPath: tiltSpeed
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 2918592252996794388, guid: a1dcd447bfbb3bc45821f8b436c031d2, type: 3}
-      propertyPath: tiltAmount
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 3175006483863775634, guid: a1dcd447bfbb3bc45821f8b436c031d2, type: 3}
       propertyPath: m_TagString
       value: Ship
@@ -603,7 +595,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 895783583088928199, guid: a1dcd447bfbb3bc45821f8b436c031d2, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: a1dcd447bfbb3bc45821f8b436c031d2, type: 3}
 --- !u!1 &190423197
 GameObject:
@@ -1691,7 +1684,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -293.6, y: -197.8}
+  m_AnchoredPosition: {x: -293.6, y: -181.4}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1772665604

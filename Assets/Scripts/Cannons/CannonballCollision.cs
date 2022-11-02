@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class CannonballCollision : MonoBehaviour
 {
+    [SerializeField] public int damage;
+    [SerializeField] public bool isEnemyOwned;
     [SerializeField] GameObject ExplosionEffect;
     [SerializeField] GameObject SplashEffect;
 
@@ -18,6 +20,16 @@ public class CannonballCollision : MonoBehaviour
             GameObject explosion = Instantiate(ExplosionEffect);
             explosion.transform.position = this.transform.position;
             Destroy(gameObject);
+
+            // Get script of the colliding ship
+            Transform otherShip = other.gameObject.transform.parent;
+            var otherShipStats = otherShip.GetComponent<ShipStats>();
+
+            // Adjust HP of colliding ship if applicable
+            if (isEnemyOwned != otherShipStats.isEnemy)
+            {
+                otherShipStats.adjustHP(-damage);
+            }
         }
     }
 

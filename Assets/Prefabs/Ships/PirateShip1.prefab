@@ -4040,8 +4040,10 @@ GameObject:
   m_Component:
   - component: {fileID: 9036149285931199850}
   - component: {fileID: 2918592252996794388}
+  - component: {fileID: 6868611701135178612}
+  - component: {fileID: 2752115821006640458}
   m_Layer: 0
-  m_Name: StylShip_Unity
+  m_Name: PirateShip1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4121,9 +4123,45 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 0
   moveDirection: {x: 0, y: 0, z: 1}
-  tiltSpeed: 5
-  tiltAmount: 2
+  tiltSpeed: 10
+  tiltAmount: 1
   tiltDirection: {x: 1, y: 2, z: 5}
+--- !u!114 &6868611701135178612
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8515472688152868816}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 666dd6aa235b6514fb7cbd27ec742748, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HP: 500
+  HPMAX: 500
+  isEnemy: 1
+  dus: 0
+  shipSinkAnim: {fileID: 2752115821006640458}
+  myMoveScript: {fileID: 2918592252996794388}
+  waterCollider: {fileID: 7524198869669570551, guid: 00bb22ed195b02e438741c83d92782c4, type: 3}
+  foamCollider: {fileID: 5530040058716571913}
+--- !u!111 &2752115821006640458
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8515472688152868816}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: a80c4ca7ab679c64ab0ce278564b71a1, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: a80c4ca7ab679c64ab0ce278564b71a1, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &8650887875610879589
 GameObject:
   m_ObjectHideFlags: 0
@@ -4549,7 +4587,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7316087251409829, guid: 34e4afe442b789a4f926fd55f48aeefd, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 34e4afe442b789a4f926fd55f48aeefd, type: 3}
 --- !u!4 &991232462003145200 stripped
 Transform:
