@@ -27,11 +27,7 @@ public class ShipStats : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Sink when HP equals 0
-        if(HP == 0 && isSinking == false)
-        {
-            Sink();
-        }
+
     }
 
     // HP changed (either by taking damage (negative) or repairing (positive))
@@ -67,6 +63,10 @@ public class ShipStats : MonoBehaviour
         shipSinkAnim.Play();
         myMoveScript.tiltAmount = 50;
         myMoveScript.tiltSpeed = 15;
+
+        // Audio audio
+        var audioData = GetComponent<AudioSource>();
+        audioData.Play(0);
 
         // Flags
         isSinking = true;   

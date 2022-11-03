@@ -15,6 +15,7 @@ public class GridBehavior : MonoBehaviour
     // Grid vars
     public GameObject Tile; // A cell or tile that makes up the grid
     public GameObject [,] grid; // The actual grid, represented by a 2d array
+    public GameObject cannonObj; // /*debug*/ a cannon object to test object spawning
     private uint availableTiles;
     public uint height, width;
 
@@ -44,6 +45,8 @@ public class GridBehavior : MonoBehaviour
                 SpawnCharacter(character);
             }
         }
+
+        SpawnObject(cannonObj, new Vector2Int(0,3), false);
     }
 
     // --------------------------------------------------------------
@@ -81,8 +84,7 @@ public class GridBehavior : MonoBehaviour
                 // Check the grid map for impassible tiles
                 if (passableTiles.GetFlagAtPos(xy))
                 {
-                    newTileScript.passable = false;
-                    newTile.GetComponent<Renderer>().material = impassible;
+                    SetTileToImpassible(newTile);
                 }
 
                 // Link the new tile to a position on the grid
@@ -94,7 +96,7 @@ public class GridBehavior : MonoBehaviour
         availableTiles = width*height;
     }
     // --------------------------------------------------------------
-    // @desc: Create a grid object for every tile position
+    // @desc: Spawn a character on the grid
     // @arg: character - the character prefab object to spawn
     // --------------------------------------------------------------
     public bool SpawnCharacter(GameObject character)
@@ -149,7 +151,7 @@ public class GridBehavior : MonoBehaviour
     }
 
     // --------------------------------------------------------------
-    // @desc: Create a grid object for every tile position
+    // @desc: Spawn a character on the grid
     // @arg: character - the character prefab object to spawn
     // @arg: spawnPos  - the logical grid position to spawn on
     // --------------------------------------------------------------
@@ -158,46 +160,93 @@ public class GridBehavior : MonoBehaviour
         GameObject spawningTile;
         bool characterSpawned = false;
         
-        // Check if there's a tile available
-        if (availableTiles > 0)
+        // Get the respective tile on the grid
+        spawningTile = grid[spawnPos.x, spawnPos.y];
+
+        // Get data from tile object
+        var tilesScript = spawningTile.GetComponent<TileScript>();
+
+        // Check whether the tile already has a character on it
+        // + whether the tile is a passable tile
+        if (tilesScript.hasCharacter == false && tilesScript.passable)
         {
-            // Get the respective tile on the grid
-            spawningTile = grid[spawnPos.x, spawnPos.y];
+            // Spawn the character if valid
+            Vector3 tilePos = spawningTile.transform.position;
+            Vector3 pos = new Vector3(tilePos.x, tilePos.y+0.5f, tilePos.z);
+            Debug.Log("Spawning character as position " + spawnPos.x + " " + spawnPos.y);
+            character.GetComponent<CharacterStats>().gridPosition = spawnPos;
 
-            // Get data from tile object
-            var tilesScript = spawningTile.GetComponent<TileScript>();
+            // Set tile data
+            tilesScript.characterOn = Instantiate(character, pos, transform.rotation, this.transform);
+            tilesScript.hasCharacter = true;
 
-            // Check whether the tile already has a character on it
-            // + whether the tile is a passable tile
-            if (tilesScript.hasCharacter == false && tilesScript.passable)
-            {
-                // Spawn the character if valid
-                Vector3 tilePos = spawningTile.transform.position;
-                Vector3 pos = new Vector3(tilePos.x, tilePos.y+0.5f, tilePos.z);
-                Debug.Log("Spawning character as position " + spawnPos.x + " " + spawnPos.y);
-                character.GetComponent<CharacterStats>().gridPosition = spawnPos;
+            // Update flag and # of available tiles
+            availableTiles--;
 
-                // Set tile data
-                tilesScript.characterOn = Instantiate(character, pos, transform.rotation, this.transform);
-                tilesScript.hasCharacter = true;
-
-                // Update flag and # of available tiles
-                availableTiles--;
-
-                // Whether the character has spawned
-                characterSpawned = true;
-            }
-            else
-            {
-                Debug.Log("Grid spawnCharacter(): Error! Can't spawn a character on top of another character");
-            }
+            // Whether the character has spawned
+            characterSpawned = true;
         }
         else
         {
-            Debug.Log("Grid spawnCharacter(): Error! Couldn't spawn character since there are no available tiles");
+            Debug.Log("Grid spawnCharacter(): Error! Can't spawn a character on top of another character");
         }
 
         return characterSpawned;
+    }
+
+    // --------------------------------------------------------------
+    // @desc: Spawn an object on the grid
+    // @arg: object   - the prefab object to spawn
+    // @arg: spawnPos - the logical grid position to spawn on
+    // --------------------------------------------------------------
+    public bool SpawnObject(GameObject obj, Vector2Int spawnPos, bool overlapCharacter = false)
+    {
+        GameObject spawningTile;
+        bool objectSpawned = false;
+        bool canSpawn = true;
+
+        // Get the respective tile on the grid
+        spawningTile = grid[spawnPos.x, spawnPos.y];
+        Debug.Log("Spawning object at position " + spawnPos.x + " " + spawnPos.y);
+
+        // Get data from tile object
+        var tilesScript = spawningTile.GetComponent<TileScript>();
+    
+        // Check range
+        if (TilePosInRange(spawnPos))
+        {
+            // If this object cannot overlap a character, then check whether
+            // this tile has a character on it
+            if (overlapCharacter == false && tilesScript.hasCharacter == true)
+            {
+                canSpawn = false;
+            }
+        }
+        
+        // If the object can spawn
+        if (canSpawn)
+        {
+            // Spawn object if valid
+            Vector3 tilePos = spawningTile.transform.position;
+
+            // Set tile data
+            tilesScript.objectOn = Instantiate(obj, tilePos, transform.rotation, this.transform);
+            tilesScript.hasObject = true;
+
+            if (overlapCharacter == false)
+            {
+                SetTileToImpassible(spawningTile);
+            }
+
+            // Set flag
+            objectSpawned = true;
+        }
+        else
+        {
+            Debug.Log("Grid spawnCharacter(): Error! Object cannot spawn here");
+        }
+
+        return objectSpawned;
     }
 
     public bool RemoveCharacter(GameObject character) {
@@ -274,6 +323,25 @@ public class GridBehavior : MonoBehaviour
         }
         
         return moveSuccess;
+    }
+
+    // --------------------------------------------------------------
+    // @desc: Makes a tile impassible
+    // @arg: GameObject - tile to make impassible
+    // --------------------------------------------------------------
+    public void SetTileToImpassible(GameObject tile)
+    {
+        // Get script from tile
+        var tileScript = tile.GetComponent<TileScript>();
+
+        // Set tile to impassible
+        tileScript.passable = false;
+
+        // Change material
+        tile.GetComponent<Renderer>().material = impassible;
+
+        // Update available tiles
+        availableTiles--;
     }
 
     // --------------------------------------------------------------

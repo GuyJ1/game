@@ -12,11 +12,13 @@ public class TileScript : MonoBehaviour
     // Position
     [SerializeField] public Vector2Int position;
 
-    // Character game object reference
+    // Game object references
     public GameObject characterOn = null;
+    public GameObject objectOn = null;
 
     // Flags
     public bool hasCharacter = false;
+    public bool hasObject = false;
     public bool highlighted = false;
     public bool passable = true;
 
