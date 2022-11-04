@@ -41,6 +41,7 @@ public class CharacterStats : MonoBehaviour
 
     // Character's logical position on the grid
     public Vector2Int gridPosition;
+    public GameObject myGrid;
 
     // Crew that this character belongs to (should be set by CrewSystem)
     public GameObject crew;

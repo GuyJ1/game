@@ -127,6 +127,7 @@ public class GridBehavior : MonoBehaviour
                     Vector3 pos = new Vector3(tilePos.x, tilePos.y+0.5f, tilePos.z);
                     Debug.Log("Spawning character as position " + randX + " " + randY);
                     character.GetComponent<CharacterStats>().gridPosition = new Vector2Int(randX, randY);
+                    character.GetComponent<CharacterStats>().myGrid = this.gameObject;
 
                     // Set tile data
                     tilesScript.characterOn = Instantiate(character, pos, transform.rotation, this.transform);
@@ -172,6 +173,7 @@ public class GridBehavior : MonoBehaviour
             Vector3 pos = new Vector3(tilePos.x, tilePos.y+0.5f, tilePos.z);
             Debug.Log("Spawning character as position " + spawnPos.x + " " + spawnPos.y);
             character.GetComponent<CharacterStats>().gridPosition = spawnPos;
+            character.GetComponent<CharacterStats>().myGrid = this.gameObject;
 
             // Set tile data
             tilesScript.characterOn = Instantiate(character, pos, transform.rotation, this.transform);
