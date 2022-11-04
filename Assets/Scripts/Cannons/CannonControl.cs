@@ -6,6 +6,7 @@ public class CannonControl : MonoBehaviour
 {
     // Values
     [SerializeField] public float shotSpeed;
+    [SerializeField] public int   shotDamage;
     [SerializeField] public float shotRandomness;
 
     // Assets
@@ -43,8 +44,11 @@ public class CannonControl : MonoBehaviour
         mFlash.transform.position = muzzle.position;
 
         // ----- Cannonball Spawning -----
-        GameObject newCannonball = Instantiate(cannonball, muzzle);
+        GameObject newCannonball = Instantiate(cannonball);
+        newCannonball.transform.position = mFlash.transform.position;
+        newCannonball.transform.rotation = mFlash.transform.rotation;
         var rb = newCannonball.GetComponent<Rigidbody>();
+        newCannonball.GetComponent<CannonballCollision>().damage = shotDamage;
 
         // Calculate cannonball velocity
         Vector3 shotVelocity = muzzle.forward * shotSpeed;
