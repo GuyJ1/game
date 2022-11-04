@@ -12,7 +12,7 @@ public class BattleEngine : MonoBehaviour
     public GameObject buttonPrefab;
 
     public List<GameObject> units = new List<GameObject>();
-    public GameObject grid;
+    //public GameObject grid;
     public PathTreeNode gridPaths;
     public bool active = false; //Activation flag to be set by other systems
 

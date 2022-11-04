@@ -15,7 +15,6 @@ public class GridBehavior : MonoBehaviour
     // Grid vars
     public GameObject Tile; // A cell or tile that makes up the grid
     public GameObject [,] grid; // The actual grid, represented by a 2d array
-    public GameObject cannonObj; // /*debug*/ a cannon object to test object spawning
     private uint availableTiles;
     public uint height, width;
 
@@ -45,8 +44,6 @@ public class GridBehavior : MonoBehaviour
                 SpawnCharacter(character);
             }
         }
-
-        SpawnObject(cannonObj, new Vector2Int(0,3), false);
     }
 
     // --------------------------------------------------------------
@@ -130,6 +127,7 @@ public class GridBehavior : MonoBehaviour
                     Vector3 pos = new Vector3(tilePos.x, tilePos.y+0.5f, tilePos.z);
                     Debug.Log("Spawning character as position " + randX + " " + randY);
                     character.GetComponent<CharacterStats>().gridPosition = new Vector2Int(randX, randY);
+                    character.GetComponent<CharacterStats>().myGrid = this.gameObject;
 
                     // Set tile data
                     tilesScript.characterOn = Instantiate(character, pos, transform.rotation, this.transform);
@@ -175,6 +173,7 @@ public class GridBehavior : MonoBehaviour
             Vector3 pos = new Vector3(tilePos.x, tilePos.y+0.5f, tilePos.z);
             Debug.Log("Spawning character as position " + spawnPos.x + " " + spawnPos.y);
             character.GetComponent<CharacterStats>().gridPosition = spawnPos;
+            character.GetComponent<CharacterStats>().myGrid = this.gameObject;
 
             // Set tile data
             tilesScript.characterOn = Instantiate(character, pos, transform.rotation, this.transform);
@@ -195,59 +194,68 @@ public class GridBehavior : MonoBehaviour
     }
 
     // --------------------------------------------------------------
-    // @desc: Spawn an object on the grid
-    // @arg: object   - the prefab object to spawn
-    // @arg: spawnPos - the logical grid position to spawn on
+    // @desc: Attach an object to the grid
+    // @arg: obj     - the object to attach
+    // @arg: gridPos - the logical grid position to move the object to
+    // @arg: overlapCharacter - whether this object can overlap a character
+    // @ret: bool    - whether this method was successful or not
     // --------------------------------------------------------------
-    public bool SpawnObject(GameObject obj, Vector2Int spawnPos, bool overlapCharacter = false)
+    public bool AttachObjectToGrid(GameObject obj, Vector2Int gridPos, bool overlapCharacter = false)
     {
-        GameObject spawningTile;
-        bool objectSpawned = false;
-        bool canSpawn = true;
+        GameObject tile;
+        bool objectAttached = false;
+        bool isValid = true;
 
         // Get the respective tile on the grid
-        spawningTile = grid[spawnPos.x, spawnPos.y];
-        Debug.Log("Spawning object at position " + spawnPos.x + " " + spawnPos.y);
+        tile = grid[gridPos.x, gridPos.y];
+        Debug.Log("Attaching object to position " + gridPos.x + " " + gridPos.y);
 
         // Get data from tile object
-        var tilesScript = spawningTile.GetComponent<TileScript>();
+        var tilesScript = tile.GetComponent<TileScript>();
     
         // Check range
-        if (TilePosInRange(spawnPos))
+        if (TilePosInRange(gridPos))
         {
             // If this object cannot overlap a character, then check whether
             // this tile has a character on it
             if (overlapCharacter == false && tilesScript.hasCharacter == true)
             {
-                canSpawn = false;
+                isValid = false;
             }
         }
         
         // If the object can spawn
-        if (canSpawn)
+        if (isValid)
         {
-            // Spawn object if valid
-            Vector3 tilePos = spawningTile.transform.position;
+            // Get tile pos
+            Vector3 tilePos = tile.transform.position;
 
-            // Set tile data
-            tilesScript.objectOn = Instantiate(obj, tilePos, transform.rotation, this.transform);
+            // Move object to tile pos
+            obj.transform.parent   = tile.transform;
+            obj.transform.position = tilePos;
+
+            // Attach object to tile
+            tilesScript.objectOn = obj;
             tilesScript.hasObject = true;
 
+            // Set impasssible if applicable
             if (overlapCharacter == false)
             {
-                SetTileToImpassible(spawningTile);
+                SetTileToImpassible(tile);
             }
 
             // Set flag
-            objectSpawned = true;
+            objectAttached = true;
         }
         else
         {
             Debug.Log("Grid spawnCharacter(): Error! Object cannot spawn here");
         }
 
-        return objectSpawned;
+        return objectAttached;
     }
+
+    // --------------------------------------------------------------
 
     public bool RemoveCharacter(GameObject character) {
         Vector2Int tilePos = character.GetComponent<CharacterStats>().gridPosition;
@@ -507,79 +515,5 @@ public class GridBehavior : MonoBehaviour
         }
 
         return charaterAtPos;
-    }
-}
-
-public class PathTreeNode
-{
-    // Parent node
-    public PathTreeNode parent = null;
-
-    // Cardinal directions
-    public PathTreeNode up = null;
-    public PathTreeNode down = null;
-    public PathTreeNode left = null;
-    public PathTreeNode right = null;
-
-    // My tile
-    public GameObject myTile = null;
-
-    // Tile range
-    public int tileRange;
-
-    // Constructors
-    public PathTreeNode() {}
-    public PathTreeNode(PathTreeNode p, GameObject t, int range)
-    {
-        parent = p;
-        myTile = t;
-        myTile.GetComponent<TileScript>().pathRef = this;
-        tileRange = range;
-    }
-
-    // Get path to root
-    public Stack<PathTreeNode> PathToRoot()
-    {
-        Stack<PathTreeNode> path = new Stack<PathTreeNode>(); // Create path stack
-        PathTreeNode currentNode = this; // Set current node to this node
-
-        // Push Self
-        path.Push(this);
-
-        // Do this until the root is found
-        while (currentNode.parent != null)
-        {
-            // Add the current node's parent to path
-            path.Push(currentNode.parent);
-
-            Debug.Log("Adding tile at position " + currentNode.myTile.transform.position.ToString() + " to path");
-
-            // Go to parent
-            currentNode = currentNode.parent;
-        }
-        
-        return path;
-    }
-
-    // Puts a path of nodes, to the root, onto a stack
-    public void PathToRootOnStack(Stack<PathTreeNode> stack)
-    {
-        // Set current node to this node
-        PathTreeNode currentNode = this;
-
-        // Push Self
-        stack.Push(this);
-
-        // Do this until the root is found
-        while (currentNode.parent != null)
-        {
-            // Add the current node's parent to path
-            stack.Push(currentNode.parent);
-
-            Debug.Log("Adding tile at position " + currentNode.myTile.transform.position.ToString() + " to path");
-
-            // Go to parent
-            currentNode = currentNode.parent;
-        }
     }
 }
