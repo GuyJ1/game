@@ -11,8 +11,8 @@ public class BattleEngine : MonoBehaviour
     //Prefabs
     public GameObject buttonPrefab;
 
-    public List<GameObject> units = new List<GameObject>();
-    //public GameObject grid;
+    public List<GameObject> units = new List<GameObject>(); //All units
+    public List<GameObject> grids = new List<GameObject>(); //All grids
     public PathTreeNode gridPaths;
     public bool active = false; //Activation flag to be set by other systems
 
@@ -24,6 +24,7 @@ public class BattleEngine : MonoBehaviour
     private bool acted = false; //Whether an action was taken
     private uint turnCount = 0;
     public GameObject activeUnit, activeUnitTile;
+    private GameObject grid; //Active grid that unit is on
     public Vector2Int activeUnitPos;
     public List<GameObject> deadUnits = new List<GameObject>();
     private List<GameObject> unitsBySpeed = new List<GameObject>(); //Units sorted from lowest to highest speed values
@@ -81,16 +82,18 @@ public class BattleEngine : MonoBehaviour
             ray = cam.ScreenPointToRay(Input.mousePosition);
             if(!init) {
                 Debug.Log("BattleEngine initializing...");
-                var gridTiles = grid.GetComponent<GridBehavior>();
-                int i = 0;
-                //Populate units from grid
-                for(int x = 0; x < gridTiles.width; x++) {
-                    for(int y = 0; y < gridTiles.height; y++) {
-                        GameObject tile = gridTiles.grid[x, y];
-                        var tileScript = tile.GetComponent<TileScript>();
-                        if(tileScript.characterOn != null) {
-                            units.Add(tileScript.characterOn);
-                            i++;
+                foreach(GameObject gridObject in grids) {
+                    var gridTiles = gridObject.GetComponent<GridBehavior>();
+                    int i = 0;
+                    //Populate units from grid
+                    for(int x = 0; x < gridTiles.width; x++) {
+                        for(int y = 0; y < gridTiles.height; y++) {
+                            GameObject tile = gridTiles.grid[x, y];
+                            var tileScript = tile.GetComponent<TileScript>();
+                            if(tileScript.characterOn != null) {
+                                units.Add(tileScript.characterOn);
+                                i++;
+                            }
                         }
                     }
                 }
@@ -101,7 +104,8 @@ public class BattleEngine : MonoBehaviour
                 updateTurnOrder();
                 pickNewTurn();
                 //Make sure active tile is updated
-                gridTiles.grid[activeUnitPos.x, activeUnitPos.y].GetComponent<Renderer>().material = gridTiles.activeUnselected;
+                var activeGrid = grid.GetComponent<GridBehavior>();
+                activeGrid.grid[activeUnitPos.x, activeUnitPos.y].GetComponent<Renderer>().material = activeGrid.activeUnselected;
                 init = true;
                 Debug.Log("BattleEngine initialized.");
             }
@@ -329,6 +333,9 @@ public class BattleEngine : MonoBehaviour
         moving = false;
         attackButton.Select();
         showActionsList();
+        selectedAbility = getBasicAttack(activeUnit);
+        setupAction(activeUnitTile);
+        actionButtons.ToArray()[0].GetComponent<Button>().Select(); //Temp highlight for basic attack button
     }
 
     public void selectMove() 
@@ -355,6 +362,7 @@ public class BattleEngine : MonoBehaviour
         acted = false;
         updateTurnOrder();
         activeUnit = turnQueue[0];
+        grid = activeUnit.GetComponent<CharacterStats>().myGrid; //Update active grid
         selectedAbility = null;
         var gridTiles = grid.GetComponent<GridBehavior>();
         //Search for unit on grid and save the position for later
@@ -504,9 +512,9 @@ public class BattleEngine : MonoBehaviour
     //Try to use the selected ability at the specified position on the grid. Returns true if action succeeds. Will not affect game state if simulate is true.
     public bool actUnit(Vector2Int tilePos, bool simulate) 
     {
+        if(moving || acted || selectedAbility == null) return false;
         var gridTiles = grid.GetComponent<GridBehavior>();
         var tileScript = gridTiles.GetTileAtPos(tilePos).GetComponent<TileScript>();
-        if(moving || acted) return false; //Can't act twice
         if(selectedAbility.requiresTarget) 
         { 
             //Check for valid target

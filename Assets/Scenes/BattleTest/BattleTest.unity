@@ -898,7 +898,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buttonPrefab: {fileID: 1373450123}
   units: []
-  grid: {fileID: 282761987}
+  grids:
+  - {fileID: 282761987}
   active: 1
   moving: 0
   activeUnit: {fileID: 0}
