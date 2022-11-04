@@ -49,24 +49,24 @@ public class Ability : MonoBehaviour
             case 0: case 1: case 2: 
                 if(Generic(user, target) == 1) return 1;
                 break;
-            /*case 2:
+            case 3:
                 if(Siphon(user, target) == 1){
                     return 1; //Not enough AP
                 }
                 
             break;
-            case 3:
+            case 4:
                 if(Pierce(user, target) == 1){
                     return 1;
                 }
                 
             break;
-            case 4:
+            case 5:
                 if(ShootingStar(user, target) == 1){
                     return 1;
                 }
             
-            break;*/
+            break;
             default:
                 return 1; //error
 
@@ -82,14 +82,14 @@ public class Ability : MonoBehaviour
     //Generic ability with no special effects
     int Generic(CharacterStats user, CharacterStats target) {
         if(!friendly)
-        {
+        {//attack the enemy
             GameObject hitParticle = Instantiate(DarkSlash);
             hitParticle.transform.position = target.transform.position;
 
             target.adjustHP(-totalDMG);
         }
         else
-        {
+        {//heal an ally
             target.adjustHP(totalHP);
         }
         return 0;

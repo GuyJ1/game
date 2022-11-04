@@ -11,6 +11,7 @@ public class Weapon : MonoBehaviour
     public int MGT; //Might. Total attack is increased/decreased with this stat.
     public int Durability; //Each use of this weapon will decrease its durability by 1. When this reaches 0, the weapon breaks.
     public int DurabilityMAX;
+    public int Range;
     public bool isBroken;
 
     // Start is called before the first frame update
