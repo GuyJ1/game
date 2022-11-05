@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   friendly: 0
-  requiresTarget: 1
+  requiresTarget: 0
   totalDMG: 120
   totalHP: 0
   cost: 0
@@ -55,4 +55,8 @@ MonoBehaviour:
   displayName: Pistol Shot
   shape:
   - {x: 0, y: 0}
+  - {x: 1, y: 0}
+  - {x: -1, y: 0}
+  - {x: 0, y: 1}
+  - {x: 0, y: -1}
   DarkSlash: {fileID: 696958063292329688, guid: 00092c09e25beb54f813012f561ea1c0, type: 3}

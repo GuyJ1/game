@@ -208,15 +208,28 @@ public class BattleEngine : MonoBehaviour
                             }
                         }
                         else if(!moving && !acted) { //Acting
-                            if (charHighlighted && highlightedCharPos != tilePos) {
-                                gridTiles.grid[highlightedCharPos.x, highlightedCharPos.y].GetComponent<Renderer>().material = isTileActive(highlightedCharPos) ? gridTiles.activeUnselected : gridTiles.abilityHighlighted;
+                            if(charHighlighted && highlightedCharPos != tilePos) {
+                                foreach(Vector2Int pos in selectedAbility.shape) {
+                                    var selPos = new Vector2Int(highlightedCharPos.x + pos.x, highlightedCharPos.y + pos.y);
+                                    var selTile = gridTiles.GetTileAtPos(selPos);
+                                    if(selTile != null && selTile.GetComponent<TileScript>().passable) gridTiles.grid[selPos.x, selPos.y].GetComponent<Renderer>().material = isTileActive(selPos) ? gridTiles.activeUnselected : (Mathf.Abs(activeUnitPos.x - selPos.x) + Mathf.Abs(activeUnitPos.y - selPos.y) > selectedAbility.range ? gridTiles.unselected : gridTiles.abilityHighlighted);
+                                }
                             }
-                            if(tileScript.passable && tileScript.highlighted) {
-                                if(tileScript.characterOn != activeUnit) {
-                                    tileScript.highlighted = true;
-                                    highlightedCharPos = tilePos;
-                                    charHighlighted = true;
-                                    gridTiles.grid[tilePos.x, tilePos.y].GetComponent<Renderer>().material = gridTiles.ability;
+                            if(selectedAbility != null && tileScript.highlighted && Mathf.Abs(activeUnitPos.x - tilePos.x) + Mathf.Abs(activeUnitPos.y - tilePos.y) <= selectedAbility.range) {
+                                foreach(Vector2Int pos in selectedAbility.shape) {
+                                    var selPos = new Vector2Int(tilePos.x + pos.x, tilePos.y + pos.y);
+                                    var selTile = gridTiles.GetTileAtPos(selPos);
+                                    if(selTile != null) {
+                                        var selTileScript = selTile.GetComponent<TileScript>();
+                                        if(selTileScript.passable && selTileScript.characterOn != activeUnit) {
+                                            if(pos.x == 0 && pos.y == 0) {
+                                                highlightedCharPos = selPos;
+                                                charHighlighted = true;
+                                            }
+                                            selTileScript.highlighted = true;
+                                            selTile.GetComponent<Renderer>().material = gridTiles.ability;
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -225,7 +238,14 @@ public class BattleEngine : MonoBehaviour
                 else {
                     if (charHighlighted)
                     {
-                        gridTiles.grid[highlightedCharPos.x, highlightedCharPos.y].GetComponent<Renderer>().material = isTileActive(highlightedCharPos) ? gridTiles.activeUnselected : (moving ? gridTiles.unselected : gridTiles.abilityHighlighted);
+                        if(moving) gridTiles.grid[highlightedCharPos.x, highlightedCharPos.y].GetComponent<Renderer>().material = isTileActive(highlightedCharPos) ? gridTiles.activeUnselected : gridTiles.unselected;
+                        else if(selectedAbility != null) {
+                            foreach(Vector2Int pos in selectedAbility.shape) {
+                                var selPos = new Vector2Int(highlightedCharPos.x + pos.x, highlightedCharPos.y + pos.y);
+                                var selTile = gridTiles.GetTileAtPos(selPos);
+                                if(selTile != null && selTile.GetComponent<TileScript>().passable) gridTiles.grid[selPos.x, selPos.y].GetComponent<Renderer>().material = isTileActive(selPos) ? gridTiles.activeUnselected : (Mathf.Abs(activeUnitPos.x - selPos.x) + Mathf.Abs(activeUnitPos.y - selPos.y) > selectedAbility.range ? gridTiles.unselected : gridTiles.abilityHighlighted);
+                            }
+                        }
                         charHighlighted = false;
                     }
                 }
@@ -260,8 +280,22 @@ public class BattleEngine : MonoBehaviour
     public void highlightActionTiles(Vector2Int pos, int range) {
         var gridTiles = grid.GetComponent<GridBehavior>();
         ResetAllHighlights();
-        gridPaths = gridTiles.GetAllPathsFromTile(gridTiles.GetTileAtPos(pos), range);
-        highlightPathTree(gridPaths, true);
+        //gridPaths = gridTiles.GetAllPathsFromTile(gridTiles.GetTileAtPos(pos), range);
+        //highlightPathTree(gridPaths, true);
+        for(int x = Mathf.Max(pos.x - range, 0); x <= pos.x + range; x++) {
+            for(int y = Mathf.Max(pos.y - range, 0); y <= pos.y + range; y++) {
+                if(Mathf.Abs(x - pos.x) + Mathf.Abs(y - pos.y) <= range) {
+                    var tilePos = new Vector2Int(x, y);
+                    var tile = gridTiles.GetTileAtPos(tilePos);
+                    if(tile == null) continue;
+                    var tileScript = tile.GetComponent<TileScript>();
+                    if(tileScript.passable) {
+                        tileScript.highlighted = true;
+                        tile.GetComponent<Renderer>().material = isTileActive(tilePos) ? gridTiles.activeHighlighted : gridTiles.abilityHighlighted;
+                    }
+                }
+            }
+        }
     }
 
     // Highlights available move tiles from a provided position and range
@@ -515,18 +549,31 @@ public class BattleEngine : MonoBehaviour
         if(moving || acted || selectedAbility == null) return false;
         var gridTiles = grid.GetComponent<GridBehavior>();
         var tileScript = gridTiles.GetTileAtPos(tilePos).GetComponent<TileScript>();
+        int dist = Mathf.Abs(activeUnitPos.x - tilePos.x) + Mathf.Abs(activeUnitPos.y - tilePos.y); //Take Manhattan distance
+        if(dist > selectedAbility.range) return false;
         if(selectedAbility.requiresTarget) 
         { 
             //Check for valid target
             if(!tileScript.hasCharacter) return false;
             if(selectedAbility.friendly && !isAllyUnit(gridTiles.GetCharacterAtPos(tilePos))) return false;
             if(!selectedAbility.friendly && isAllyUnit(gridTiles.GetCharacterAtPos(tilePos))) return false;
-            int dist = Mathf.Abs(activeUnitPos.x - tilePos.x) + Mathf.Abs(activeUnitPos.y - tilePos.y); //Take Manhattan distance
-            if(dist > selectedAbility.range) return false;
         }
         if(simulate) return true;
         List<GameObject> characters = new List<GameObject>();
-        if(tileScript.hasCharacter) characters.Add(tileScript.characterOn); //TODO: Make this dependent on ability. Just uses selected target for now.
+        //Select characters based on ability shape
+        foreach(Vector2Int pos in selectedAbility.shape)
+        {
+            Vector2Int selPos = new Vector2Int(tilePos.x + pos.x, tilePos.y + pos.y);
+            var selTile = gridTiles.GetTileAtPos(selPos);
+            if(selTile == null) continue;
+            var selTileScript = selTile.GetComponent<TileScript>();
+            if(selTileScript.hasCharacter)
+            {
+                if(selectedAbility.friendly && !isAllyUnit(gridTiles.GetCharacterAtPos(selPos))) continue;
+                if(!selectedAbility.friendly && isAllyUnit(gridTiles.GetCharacterAtPos(selPos))) continue;
+                characters.Add(selTileScript.characterOn);
+            }
+        }
         ResetAllHighlights();
         acted = true;
         attackButton.interactable = false;
@@ -535,19 +582,22 @@ public class BattleEngine : MonoBehaviour
         //Try combo attack
         int xDist = activeUnitPos.x - tilePos.x;
         int yDist = activeUnitPos.y - tilePos.y;
-        if(selectedAbility.requiresTarget && xDist != yDist) { //No diagonals
-            if(Mathf.Abs(xDist) > Mathf.Abs(yDist)) { //Horizontal cases
+        if(selectedAbility.requiresTarget && xDist != yDist) //No diagonals
+        {
+            if(Mathf.Abs(xDist) > Mathf.Abs(yDist))
+            { //Horizontal cases
                 if(xDist > 0) tryComboAttack(gridTiles.GetTileWest(tilePos), tileScript.characterOn);
                 else tryComboAttack(gridTiles.GetTileEast(tilePos), tileScript.characterOn);
             }
-            else { //Vertical cases
+            else
+            { //Vertical cases
                 if(yDist > 0) tryComboAttack(gridTiles.GetTileSouth(tilePos), tileScript.characterOn);
                 else tryComboAttack(gridTiles.GetTileNorth(tilePos), tileScript.characterOn);
             }
         }
 
         //AI: Forward the target(s) to AI handler for enqueue. Currently only forwards one character - for refactoring later
-        playerTarget = characters[0];
+        if(characters.Count > 0) playerTarget = characters[0];
 
         if(!moved) selectMove(); //Move to move state if available
         update();
