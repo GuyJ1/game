@@ -15,7 +15,7 @@ public class Ability : MonoBehaviour
     public int range;
     public int ID; //every ability has a unique ID. Can be used for randomly assigning abilities to characters/enemies
     public string displayName; //Display name for UI
-    public List<Vector2Int> shape; //Shape in tiles (0,0) is the center
+    public List<Vector2Int> shape; //Shape in tiles facing north (0,0) is the center
 
     [SerializeField] public GameObject DarkSlash;
 
