@@ -30,15 +30,15 @@ public class CannonControl : MonoBehaviour
         {   
             // Fire cannonball
             fireCannonball();
-            
-            // Play audio
-            var audioData = GetComponent<AudioSource>();
-            audioData.Play(0);
         }
     }
 
     public void fireCannonball()
     {
+        // ----- Audio -----
+        var audioData = GetComponent<AudioSource>();
+        audioData.Play(0);
+
         // ----- Muzzle Flash -----
         GameObject mFlash = Instantiate(muzzleFlash);
         mFlash.transform.position = muzzle.position;

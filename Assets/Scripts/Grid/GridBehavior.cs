@@ -27,8 +27,8 @@ public class GridBehavior : MonoBehaviour
     // Crews
     public List<GameObject> crews;
     
-    // Start is called before the first frame update
-    void Start()
+    // Awake is called before Start()
+    void Awake()
     {
         // Generate the grid by instantiating tile objects
         GenerateGrid(gridNum);

@@ -6,6 +6,7 @@ public class CameraControl : MonoBehaviour
 {
     // Control Speed
     [SerializeField] public float ControlSpeed, PanSpeed; // WASD Speed and Pan Speed
+    [SerializeField] public float MinHeight, MaxHeight; // Min and Max Heights
 
     // Viewing offset
     private Vector3 offset;
@@ -109,9 +110,13 @@ public class CameraControl : MonoBehaviour
             }
             else
             {
-                transform.position += (target - transform.position) * Time.deltaTime * PanSpeed;
+                transform.position += (target - transform.position) *    Time.deltaTime * PanSpeed;
             }
         }
+
+        // Clamping
+        float newY = Mathf.Clamp(transform.position.y, MinHeight, MaxHeight);
+        transform.position = new Vector3(transform.position.x, newY, transform.position.z);
     }
 
     // Look at a position by setting the target

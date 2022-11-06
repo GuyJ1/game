@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: -4097838735445531169}
   m_Layer: 0
   m_Name: Pirate
-  m_TagString: Untagged
+  m_TagString: Character
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -84,6 +84,7 @@ MonoBehaviour:
   healthBarYOffset: 1
   canvas: {fileID: 0}
   gridPosition: {x: 6, y: 15}
+  myGrid: {fileID: 0}
   crew: {fileID: 8677408311475748420, guid: ff7e742bfec002a4c80690599f895dce, type: 3}
   weapon: {fileID: 0}
   armor: {fileID: 0}

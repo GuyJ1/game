@@ -58,12 +58,12 @@ public class FollowPath : MonoBehaviour
             // Test whether the target position is different from the current position
             distToTarget = Vector3.Distance(transform.position, targetPos);
 
-            Debug.Log("distToTarget: " + distToTarget);
+            //Debug.Log("distToTarget: " + distToTarget);
 
             if (distToTarget > 0.0f)
             {
                 // Debug msg
-                Debug.Log("Follow Path: moving " + this.name + " from " + transform.position.ToString() + " to " + targetPos.ToString());
+                //Debug.Log("Follow Path: moving " + this.name + " from " + transform.position.ToString() + " to " + targetPos.ToString());
 
                 // Target tile is set
                 tileSet = true;

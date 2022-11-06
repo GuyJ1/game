@@ -19,12 +19,12 @@ public class BattleEngine : MonoBehaviour
     public bool moving = false; //Whether the current mode is moving or acting
     private Ability selectedAbility;
     private bool init = false;
-    private bool isPlayerTurn;
+    public  bool isPlayerTurn;
     private bool moved = false; //Whether movement was taken
     private bool acted = false; //Whether an action was taken
     private uint turnCount = 0;
     public GameObject activeUnit, activeUnitTile;
-    private GameObject grid; //Active grid that unit is on
+    public GameObject grid; //Active grid that unit is on
     public Vector2Int activeUnitPos;
     public List<GameObject> deadUnits = new List<GameObject>();
     private List<GameObject> unitsBySpeed = new List<GameObject>(); //Units sorted from lowest to highest speed values
@@ -57,10 +57,15 @@ public class BattleEngine : MonoBehaviour
     // Start is called before the first frame update
     void Start() 
     {
+        // Get Camera
         cam = Camera.main;
+
+        // Get Button Options
         attackButton = GameObject.Find("AttackButton").GetComponent<Button>();
         moveButton = GameObject.Find("MoveButton").GetComponent<Button>();
         endButton = GameObject.Find("EndButton").GetComponent<Button>();
+
+        // Get and Set Victory and Defeat Text
         victoryText = GameObject.Find("VictoryText");
         victoryText.SetActive(false);
         defeatText = GameObject.Find("DefeatText");
@@ -76,38 +81,20 @@ public class BattleEngine : MonoBehaviour
             Debug.Log("Exiting Adrift..."); //For testing purposes, text shows in log
             Application.Quit(); //exits and quits the game application
         }
+
+        // Keyboard control
+        if (Input.GetKeyDown(KeyCode.Alpha1)) { selectAction(); }
+        if (Input.GetKeyDown(KeyCode.Alpha2)) { selectMove(); }
+        if (Input.GetKeyDown(KeyCode.Alpha3)) { endTurn(); }
         
-        if(!active) return;
-        else {
+        // Check whether the battle system is active
+        if(active)
+        {
             ray = cam.ScreenPointToRay(Input.mousePosition);
-            if(!init) {
-                Debug.Log("BattleEngine initializing...");
-                foreach(GameObject gridObject in grids) {
-                    var gridTiles = gridObject.GetComponent<GridBehavior>();
-                    int i = 0;
-                    //Populate units from grid
-                    for(int x = 0; x < gridTiles.width; x++) {
-                        for(int y = 0; y < gridTiles.height; y++) {
-                            GameObject tile = gridTiles.grid[x, y];
-                            var tileScript = tile.GetComponent<TileScript>();
-                            if(tileScript.characterOn != null) {
-                                units.Add(tileScript.characterOn);
-                                i++;
-                            }
-                        }
-                    }
-                }
-                //Sort speed list
-                foreach(GameObject unit in units) unitsBySpeed.Add(unit);
-                unitsBySpeed.Sort(compareBySpeed);
-                //Set up turns
-                updateTurnOrder();
-                pickNewTurn();
-                //Make sure active tile is updated
-                var activeGrid = grid.GetComponent<GridBehavior>();
-                activeGrid.grid[activeUnitPos.x, activeUnitPos.y].GetComponent<Renderer>().material = activeGrid.activeUnselected;
-                init = true;
-                Debug.Log("BattleEngine initialized.");
+            
+            if(!init)
+            {
+                InitializeBattleSystem();
             }
             else 
             {
@@ -233,6 +220,38 @@ public class BattleEngine : MonoBehaviour
         }
     }
 
+    private void InitializeBattleSystem()
+    {
+        Debug.Log("BattleEngine initializing...");
+        // ------------------------------------
+
+        // Add all characters to be controlled by the battle system
+        GameObject[] characters = GameObject.FindGameObjectsWithTag("Character");
+        foreach (GameObject character in characters)
+        {
+            units.Add(character);
+        }
+
+        //Sort speed list
+        foreach(GameObject unit in units)
+        {
+            unitsBySpeed.Add(unit);
+        }
+        unitsBySpeed.Sort(compareBySpeed);
+
+        //Set up turns
+        updateTurnOrder();
+        pickNewTurn();
+
+        //Make sure active tile is updated
+        var activeGrid = grid.GetComponent<GridBehavior>();
+        activeGrid.grid[activeUnitPos.x, activeUnitPos.y].GetComponent<Renderer>().material = activeGrid.activeUnselected;
+        init = true;
+
+        // ------------------------------------
+        Debug.Log("BattleEngine initialized.");
+    }
+
     public void ResetAllHighlights()
     {
         GameObject currentTile;
@@ -267,11 +286,17 @@ public class BattleEngine : MonoBehaviour
     // Highlights available move tiles from a provided position and range
     public void highlightValidMoves(Vector2Int pos, int range)
     {
-        var gridTiles = grid.GetComponent<GridBehavior>();
-        if(gridTiles.GetCharacterAtPos(pos) != activeUnit) return; //Can't move anywhere unless unit is active
-        ResetAllHighlights();
-        gridPaths = gridTiles.GetAllPathsFromTile(gridTiles.GetTileAtPos(pos), range);
-        highlightPathTree(gridPaths, false);
+        // Get script from grid
+        var gridScript = grid.GetComponent<GridBehavior>();
+
+        // Only hightlight if the character as pos is the active unit
+        if(gridScript.GetCharacterAtPos(pos) == activeUnit)
+        {
+            // Highlight move tiles
+            ResetAllHighlights();
+            gridPaths = gridScript.GetAllPathsFromTile(gridScript.GetTileAtPos(pos), range);
+            highlightPathTree(gridPaths, false);
+        }
     }
 
     public void highlightPathTree(PathTreeNode root, bool action) {
@@ -313,22 +338,6 @@ public class BattleEngine : MonoBehaviour
         }
     }
 
-    public static bool isUnitAlive(GameObject unit) {
-        return !unit.GetComponent<CharacterStats>().isDead();
-    }
-
-    public static bool isAllyUnit(GameObject unit) {
-        return unit.GetComponent<CharacterStats>().crew.GetComponent<CrewSystem>().isPlayer;
-    }
-
-    public static Ability getBasicAttack(GameObject unit) {
-        return unit.GetComponent<CharacterStats>().basicAttack.GetComponent<Ability>();
-    }
-
-    public static Ability getComboAttack(GameObject unit) {
-        return unit.GetComponent<CharacterStats>().comboAttack.GetComponent<Ability>();
-    }
-
     public void selectAction() {
         moving = false;
         attackButton.Select();
@@ -356,38 +365,47 @@ public class BattleEngine : MonoBehaviour
     }
 
     //Start a new turn for the active unit
-    public void startTurn() {
+    public void startTurn()
+    {
+        // Increment turn count and update turn order
         turnCount++;
+        updateTurnOrder();
+
+        // Update flags
         moved = false;
         acted = false;
-        updateTurnOrder();
+
+        // Get active unit script
         activeUnit = turnQueue[0];
-        grid = activeUnit.GetComponent<CharacterStats>().myGrid; //Update active grid
+        var activeUnitScript = activeUnit.GetComponent<CharacterStats>();
+
+        // Get data from active unit
+        grid = activeUnitScript.myGrid;
+        var gridScript = grid.GetComponent<GridBehavior>();
+        activeUnitPos = activeUnitScript.gridPosition;
+
+        // Deselect ability
         selectedAbility = null;
-        var gridTiles = grid.GetComponent<GridBehavior>();
-        //Search for unit on grid and save the position for later
-        for(int x = 0; x < gridTiles.width; x++) {
-            for(int y = 0; y < gridTiles.height; y++) {
-                if(gridTiles.GetCharacterAtPos(new Vector2Int(x,y)) == activeUnit) 
-                {
-                    activeUnitPos = new Vector2Int(x,y);
-                    //Make sure active tile is updated
-                    activeUnitTile = gridTiles.grid[activeUnitPos.x, activeUnitPos.y];
-                    activeUnitTile.GetComponent<Renderer>().material = gridTiles.activeUnselected;
-                    cam.GetComponent<CameraControl>().LookAtPos(activeUnitTile.transform.position);
-                    break;
-                }
-            }
-        }
-        ResetAllHighlights();
+        
+        // Set the tile of which the character is on to be active
+        activeUnitTile = gridScript.grid[activeUnitPos.x, activeUnitPos.y];
+        activeUnitTile.GetComponent<Renderer>().material = gridScript.activeUnselected;
+        cam.GetComponent<CameraControl>().LookAtPos(activeUnitTile.transform.position);
+
+        // Setup buttons based on whether it's the player's turn
         isPlayerTurn = isAllyUnit(activeUnit);
         attackButton.interactable = isPlayerTurn;
         moveButton.interactable = isPlayerTurn;
         endButton.interactable = isPlayerTurn;
-        if(!isPlayerTurn) doAITurn();
+
+        if(!isPlayerTurn)
+        {
+            doAITurn();
+        }
         else 
         {
             int count = 0;
+
             //Setup action buttons
             foreach(GameObject abilityObject in activeUnit.GetComponent<CharacterStats>().getBattleAbilities()) {
                 Ability ability = abilityObject.GetComponent<Ability>();
@@ -440,54 +458,21 @@ public class BattleEngine : MonoBehaviour
         pickNewTurn();
     }
 
-    public bool hasMoved() {
-        return moved;
-    }
-
-    public bool hasActed() {
-        return acted;
-    }
-
-    public void doAITurn() {
-        //TODO: AI stuff here
-        endTurn();
-    }
-
-    public uint getTurnCount() {
-        return turnCount;
-    }
-
     public void setupMove(GameObject objectTile) 
     {
-        var gridTiles = grid.GetComponent<GridBehavior>();
-        var selectRend  = objectTile.GetComponent<Renderer>();
-        var tileScript  = objectTile.GetComponent<TileScript>();
-        Vector2Int tilePos = tileScript.position;
-
-        // Unselect currently selected character
-        if(charSelected) 
-        {
-            Debug.Log("Unselecting character on " + selectedCharPos.x + " " + selectedCharPos.y);
-            gridTiles.grid[selectedCharPos.x, selectedCharPos.y].GetComponent<Renderer>().material = isTileActive(selectedCharPos) ? gridTiles.activeUnselected : gridTiles.unselected;
-        }
-
-        ResetAllHighlights();
-        // Select new tile at tile pos
-        if(!moved) highlightValidMoves(tilePos, tileScript.characterOn.GetComponent<CharacterStats>().MV);
-        selectRend.material = isTileActive(tilePos) ? gridTiles.activeSelected : gridTiles.selected;
-        selectedCharPos = tilePos;
-
-        Debug.Log("Character on " + objectTile.name + " has been selected");
-
-        // Selection Logic
-        charSelected = true;
-        charHighlighted = false;
+        setupActionOrMove(objectTile, false);
     }
 
-    public void setupAction(GameObject objectTile) {
+    public void setupAction(GameObject objectTile)
+    {
+        setupActionOrMove(objectTile, true);
+    }
+
+    private void setupActionOrMove(GameObject tile, bool isAction)
+    {
         var gridTiles = grid.GetComponent<GridBehavior>();
-        var selectRend  = objectTile.GetComponent<Renderer>();
-        var tileScript  = objectTile.GetComponent<TileScript>();
+        var selectRend  = tile.GetComponent<Renderer>();
+        var tileScript  = tile.GetComponent<TileScript>();
         Vector2Int tilePos = tileScript.position;
 
         // Unselect currently selected character
@@ -497,12 +482,21 @@ public class BattleEngine : MonoBehaviour
         }
 
         ResetAllHighlights();
-        if(!acted) highlightActionTiles(tilePos, selectedAbility.range);
+
+        if (isAction)
+        {
+            if(!acted) { highlightActionTiles(tilePos, selectedAbility.range); }
+        }
+        else
+        {
+            if(!moved) { highlightValidMoves(tilePos, tileScript.characterOn.GetComponent<CharacterStats>().MV); }
+        }
+
         // Select new tile at tile pos
         selectRend.material = isTileActive(tilePos) ? gridTiles.activeSelected : gridTiles.selected;
         selectedCharPos = tilePos;
 
-        Debug.Log("Character on " + objectTile.name + " has been selected");
+        Debug.Log("Character on " + tile.name + " has been selected");
 
         // Selection Logic
         charSelected = true;
@@ -532,19 +526,39 @@ public class BattleEngine : MonoBehaviour
         attackButton.interactable = false;
         selectedAbility.affectCharacters(activeUnit, characters);
 
-        //Try combo attack
+        // ----- Combo Attacks ------
         int xDist = activeUnitPos.x - tilePos.x;
         int yDist = activeUnitPos.y - tilePos.y;
-        if(selectedAbility.requiresTarget && xDist != yDist) { //No diagonals
-            if(Mathf.Abs(xDist) > Mathf.Abs(yDist)) { //Horizontal cases
-                if(xDist > 0) tryComboAttack(gridTiles.GetTileWest(tilePos), tileScript.characterOn);
-                else tryComboAttack(gridTiles.GetTileEast(tilePos), tileScript.characterOn);
+
+        //No diagonals
+        if(selectedAbility.requiresTarget && xDist != yDist)
+        {
+            //Horizontal cases
+            if(Mathf.Abs(xDist) > Mathf.Abs(yDist))
+            { 
+                if(xDist > 0)
+                {
+                    tryComboAttack(gridTiles.GetTileWest(tilePos), tileScript.characterOn);
+                }
+                else
+                {
+                    tryComboAttack(gridTiles.GetTileEast(tilePos), tileScript.characterOn);
+                }
             }
-            else { //Vertical cases
-                if(yDist > 0) tryComboAttack(gridTiles.GetTileSouth(tilePos), tileScript.characterOn);
-                else tryComboAttack(gridTiles.GetTileNorth(tilePos), tileScript.characterOn);
+            //Vertical cases
+            else
+            {
+                if(yDist > 0)
+                {
+                    tryComboAttack(gridTiles.GetTileSouth(tilePos), tileScript.characterOn);
+                }
+                else
+                {
+                    tryComboAttack(gridTiles.GetTileNorth(tilePos), tileScript.characterOn);
+                }
             }
         }
+        // --------------------------
 
         //AI: Forward the target(s) to AI handler for enqueue. Currently only forwards one character - for refactoring later
         playerTarget = characters[0];
@@ -552,18 +566,6 @@ public class BattleEngine : MonoBehaviour
         if(!moved) selectMove(); //Move to move state if available
         update();
         return true;
-    }
-
-    public void showActionsList() {
-        foreach(GameObject button in actionButtons) {
-            button.SetActive(true);
-        }
-    }
-
-    public void hideActionsList() {
-        foreach(GameObject button in actionButtons) {
-            button.SetActive(false);
-        }
     }
 
     //Try to perform a combo attack from the specified character to the target
@@ -677,5 +679,50 @@ public class BattleEngine : MonoBehaviour
         moveButton.interactable = false;
         endButton.interactable = false;
         deadUnits.Clear();
+    }
+
+    public static bool isUnitAlive(GameObject unit) {
+        return !unit.GetComponent<CharacterStats>().isDead();
+    }
+
+    public static bool isAllyUnit(GameObject unit) {
+        return unit.GetComponent<CharacterStats>().crew.GetComponent<CrewSystem>().isPlayer;
+    }
+
+    public static Ability getBasicAttack(GameObject unit) {
+        return unit.GetComponent<CharacterStats>().basicAttack.GetComponent<Ability>();
+    }
+
+    public static Ability getComboAttack(GameObject unit) {
+        return unit.GetComponent<CharacterStats>().comboAttack.GetComponent<Ability>();
+    }
+
+    public void showActionsList() {
+        foreach(GameObject button in actionButtons) {
+            button.SetActive(true);
+        }
+    }
+
+    public void hideActionsList() {
+        foreach(GameObject button in actionButtons) {
+            button.SetActive(false);
+        }
+    }
+
+    public bool hasMoved() {
+        return moved;
+    }
+
+    public bool hasActed() {
+        return acted;
+    }
+
+    public void doAITurn() {
+        //TODO: AI stuff here
+        endTurn();
+    }
+
+    public uint getTurnCount() {
+        return turnCount;
     }
 }

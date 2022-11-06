@@ -9,6 +9,24 @@ public class CannonballCollision : MonoBehaviour
     [SerializeField] GameObject ExplosionEffect;
     [SerializeField] GameObject SplashEffect;
 
+    // Camera Ref
+    private CameraControl camScript;
+
+    void Start()
+    { 
+        // Get Camera Control Script
+        camScript = Camera.main.GetComponent<CameraControl>();
+        
+        // Set Cam Follow
+        camScript.SetCameraFollow(this.gameObject);
+    }
+
+    void OnDestroy()
+    {
+        // Stop Cam Follow
+        camScript.StopCameraFollow();
+    }
+
     // Do this when colliding w/ a ship
     void OnCollisionEnter(Collision other)
     {

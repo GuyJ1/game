@@ -8,6 +8,7 @@ TagManager:
   - Ship
   - Ocean
   - Cannon
+  - Character
   layers:
   - Default
   - TransparentFX

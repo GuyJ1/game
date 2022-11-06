@@ -99,7 +99,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0}
   characterOn: {fileID: 0}
+  objectOn: {fileID: 0}
   hasCharacter: 0
+  hasObject: 0
   highlighted: 0
   passable: 1
 --- !u!64 &7577591352756845599

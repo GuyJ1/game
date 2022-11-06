@@ -44,7 +44,7 @@ public class PathTreeNode
             // Add the current node's parent to path
             path.Push(currentNode.parent);
 
-            Debug.Log("Adding tile at position " + currentNode.myTile.transform.position.ToString() + " to path");
+            //Debug.Log("Adding tile at position " + currentNode.myTile.transform.position.ToString() + " to path");
 
             // Go to parent
             currentNode = currentNode.parent;
@@ -68,7 +68,7 @@ public class PathTreeNode
             // Add the current node's parent to path
             stack.Push(currentNode.parent);
 
-            Debug.Log("Adding tile at position " + currentNode.myTile.transform.position.ToString() + " to path");
+            //Debug.Log("Adding tile at position " + currentNode.myTile.transform.position.ToString() + " to path");
 
             // Go to parent
             currentNode = currentNode.parent;

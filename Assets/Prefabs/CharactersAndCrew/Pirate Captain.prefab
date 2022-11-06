@@ -96,12 +96,16 @@ PrefabInstance:
       value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 6886658739876458237, guid: 35e9b644f5a473148bedf512f2340242, type: 3}
+      propertyPath: myGrid
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6886658739876458237, guid: 35e9b644f5a473148bedf512f2340242, type: 3}
       propertyPath: gridPosition.x
-      value: 0
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 6886658739876458237, guid: 35e9b644f5a473148bedf512f2340242, type: 3}
       propertyPath: gridPosition.y
-      value: 15
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8884561808067556798, guid: 35e9b644f5a473148bedf512f2340242, type: 3}
       propertyPath: m_Materials.Array.data[0]
