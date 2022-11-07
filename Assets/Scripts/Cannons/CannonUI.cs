@@ -17,10 +17,17 @@ public class CannonUI : MonoBehaviour
     private float sleepTimer;
     private bool setSleep = false;
 
+    // Camera Ref
+    private CameraControl camScript;
+
     // Start is called before the first frame update
     void Start()
     {
+        // Get Battle Engine Script
         battleScript = BattleEngine.GetComponent<BattleEngine>();
+
+        // Get Camera Control Script
+        camScript = Camera.main.GetComponent<CameraControl>();
     }
 
     // Update is called once per frame
@@ -44,8 +51,10 @@ public class CannonUI : MonoBehaviour
             if (sleepTimer <= 0.0f)
             {
                 battleScript.active = true;
+                battleScript.interactable = true;
                 battleScript.endTurn();
                 setSleep = false;
+                //camScript.StopCameraFollow();
             }
             else
             {
@@ -63,6 +72,7 @@ public class CannonUI : MonoBehaviour
 
             // Sleep Battle Engine for a Moment
             battleScript.active = false;
+            battleScript.interactable = false;
             sleepTimer = battleSleepTime;
             setSleep = true;
         }
@@ -70,7 +80,28 @@ public class CannonUI : MonoBehaviour
 
     public void fireSelf()
     {
+        if (battleScript.active)
+        {
+            // Fire Effect
+            var cannonScript = currCannon.transform.GetChild(0).GetComponent<CannonControl>();
+            //cannonScript.fireEffect();
 
+            // Fire Active Character
+            Transform modelTrans = battleScript.activeUnit.transform.GetChild(0);
+            //modelTrans.GetComponent<Animation>().Play();
+            var modelScript = modelTrans.GetComponent<PlayerCollision>();
+            modelScript.wakeRigidBody();
+            cannonScript.fireObject(modelTrans.gameObject);
+
+            // Set Camera Follow
+            camScript.SetCameraFollow(modelTrans.gameObject);
+
+            // Sleep Battle Engine for a Moment
+            //battleScript.active = false;
+            battleScript.interactable = false;
+            sleepTimer = battleSleepTime;
+            setSleep = true;
+        }
     }
 
     private void getAdjacentCannon()

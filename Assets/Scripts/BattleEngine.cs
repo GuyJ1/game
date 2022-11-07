@@ -15,6 +15,7 @@ public class BattleEngine : MonoBehaviour
     public List<GameObject> grids = new List<GameObject>(); //All grids
     public PathTreeNode gridPaths;
     public bool active = false; //Activation flag to be set by other systems
+    public bool interactable = true; //Flag used for locking actions during events
 
     public bool moving = false; //Whether the current mode is moving or acting
     private Ability selectedAbility;
@@ -373,20 +374,26 @@ public class BattleEngine : MonoBehaviour
     }
 
     public void selectAction() {
-        moving = false;
-        attackButton.Select();
-        showActionsList();
-        selectedAbility = getBasicAttack(activeUnit);
-        setupAction(activeUnitTile);
-        actionButtons.ToArray()[0].GetComponent<Button>().Select(); //Temp highlight for basic attack button
+        if (interactable)
+        {
+            moving = false;
+            attackButton.Select();
+            showActionsList();
+            selectedAbility = getBasicAttack(activeUnit);
+            setupAction(activeUnitTile);
+            actionButtons.ToArray()[0].GetComponent<Button>().Select(); //Temp highlight for basic attack button
+        }
     }
 
     public void selectMove() 
     {
-        hideActionsList();
-        moving = true;
-        moveButton.Select();
-        setupMove(activeUnitTile);
+        if (interactable)
+        {
+            hideActionsList();
+            moving = true;
+            moveButton.Select();
+            setupMove(activeUnitTile);
+        }
     }
 
     public void pickNewTurn() {
@@ -464,32 +471,35 @@ public class BattleEngine : MonoBehaviour
     //End the active unit's turn
     public void endTurn() 
     {
-        var gridTiles = grid.GetComponent<GridBehavior>();
-        gridTiles.GetTileAtPos(activeUnitPos).GetComponent<TileScript>().highlighted = false;
-        gridTiles.GetTileAtPos(activeUnitPos).GetComponent<Renderer>().material = gridTiles.unselected;
-
-        //Player turn enqueue handling - passes in the current active unit (if it is a player controlled unit), 
-        //the target of this turn's action (if any), the type of action taken this turn (if any), and whether the character moved
-        if(isPlayerTurn && selectedAbility != null)
+        if (interactable)
         {
-            //Add the new PlayerAction to the playerActions queue, using the overloaded constructor
-            playerActions.add(new PlayerAction(activeUnit.GetComponent<CharacterStats>(), selectedAbility, moved));
-        }
+            var gridTiles = grid.GetComponent<GridBehavior>();
+            gridTiles.GetTileAtPos(activeUnitPos).GetComponent<TileScript>().highlighted = false;
+            gridTiles.GetTileAtPos(activeUnitPos).GetComponent<Renderer>().material = gridTiles.unselected;
 
-        //Logging to display what is being enqueued
-        //Debug.Log("AI Enqueue: " + activeUnit.GetComponent<CharacterStats>().Name + " " + playerTarget.GetComponent<CharacterStats>().Name + " " + selectedAbility + " " + moved);
+            //Player turn enqueue handling - passes in the current active unit (if it is a player controlled unit), 
+            //the target of this turn's action (if any), the type of action taken this turn (if any), and whether the character moved
+            if(isPlayerTurn && selectedAbility != null)
+            {
+                //Add the new PlayerAction to the playerActions queue, using the overloaded constructor
+                playerActions.add(new PlayerAction(activeUnit.GetComponent<CharacterStats>(), selectedAbility, moved));
+            }
 
-        //Logging to show what is at the top of the playerActions queue
-        if(!playerActions.isEmpty())
-        {
-            //Usually shows the same thing over and over again, since player actions aren't being dequeued until the 50th turn
-            Debug.Log("AI Enqueue: " + playerActions.Peek().GetCharacter().Name + " " + playerActions.Peek().GetAbility().ID + " " + playerActions.Peek().GetMovement() 
-            + "\n" + "Queue Size: " + playerActions.Count());
+            //Logging to display what is being enqueued
+            //Debug.Log("AI Enqueue: " + activeUnit.GetComponent<CharacterStats>().Name + " " + playerTarget.GetComponent<CharacterStats>().Name + " " + selectedAbility + " " + moved);
+
+            //Logging to show what is at the top of the playerActions queue
+            if(!playerActions.isEmpty())
+            {
+                //Usually shows the same thing over and over again, since player actions aren't being dequeued until the 50th turn
+                Debug.Log("AI Enqueue: " + playerActions.Peek().GetCharacter().Name + " " + playerActions.Peek().GetAbility().ID + " " + playerActions.Peek().GetMovement() 
+                + "\n" + "Queue Size: " + playerActions.Count());
+            }
+            foreach(GameObject button in actionButtons) Destroy(button);
+            actionButtons.Clear();
+            hideActionsList();
+            pickNewTurn();
         }
-        foreach(GameObject button in actionButtons) Destroy(button);
-        actionButtons.Clear();
-        hideActionsList();
-        pickNewTurn();
     }
 
     public void setupMove(GameObject objectTile) 

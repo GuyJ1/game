@@ -111,11 +111,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af517c8d52fcac0469a9943bf98f06bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shotSpeed: 30
+  shotSpeed: 20
   shotDamage: 40
   shotRandomness: 5
   cannonball: {fileID: 2631466561471378240, guid: f29794cba0ec6194b8a0aa2d02281b21, type: 3}
   muzzleFlash: {fileID: 1337198075554910, guid: 25c7aa9ad705fe143a4d71c1c8deb7d4, type: 3}
+  muzzle: {fileID: 0}
 --- !u!82 &8618445829169447160
 AudioSource:
   m_ObjectHideFlags: 0

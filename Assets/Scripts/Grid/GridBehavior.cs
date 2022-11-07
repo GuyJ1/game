@@ -95,8 +95,10 @@ public class GridBehavior : MonoBehaviour
     // --------------------------------------------------------------
     // @desc: Spawn a character on the grid
     // @arg: character - the character prefab object to spawn
+    // @arg: newCharacter - whether we need to spawn this character
+    //  we can turn this off for attaching characters instead
     // --------------------------------------------------------------
-    public bool SpawnCharacter(GameObject character)
+    public bool SpawnCharacter(GameObject character, bool newCharacter = true)
     {
         GameObject spawningTile;
         bool characterSpawned = false;
@@ -130,7 +132,21 @@ public class GridBehavior : MonoBehaviour
                     character.GetComponent<CharacterStats>().myGrid = this.gameObject;
 
                     // Set tile data
-                    tilesScript.characterOn = Instantiate(character, pos, transform.rotation, this.transform);
+                    if (newCharacter)
+                    {
+                        tilesScript.characterOn = Instantiate(character, pos, transform.rotation, this.transform);
+                    }
+                    else
+                    {
+                        // Set Tilescript Character
+                        tilesScript.characterOn = character;
+
+                        // Modify Character Transformation
+                        character.transform.position = pos;
+                        character.transform.rotation = transform.rotation;
+                        character.transform.parent = this.transform;
+                    }
+
                     tilesScript.hasCharacter = true;
 
                     // Update flag and # of available tiles

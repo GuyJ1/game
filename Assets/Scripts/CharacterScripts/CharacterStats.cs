@@ -39,6 +39,9 @@ public class CharacterStats : MonoBehaviour
     // Canvas reference
     public GameObject canvas;
 
+    // Model reference
+    public GameObject model;
+
     // Character's logical position on the grid
     public Vector2Int gridPosition;
     public GameObject myGrid;
@@ -184,7 +187,7 @@ public class CharacterStats : MonoBehaviour
         Vector3 posOffset = new Vector3(0, healthBarYOffset, 0);
 
         // --------- Update healthbar position ---------
-        healthBar.transform.position = Camera.main.WorldToScreenPoint(transform.position + posOffset);
+        healthBar.transform.position = Camera.main.WorldToScreenPoint(model.transform.position + posOffset);
 
         // --------- Update scale based on camera position ---------
         float camDist = Vector3.Distance(Camera.main.transform.position, this.transform.position);

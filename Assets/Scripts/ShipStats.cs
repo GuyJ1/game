@@ -15,6 +15,8 @@ public class ShipStats : MonoBehaviour
     [SerializeField] public GameObject waterCollider;
     [SerializeField] public GameObject foamCollider;
 
+    [SerializeField] public GameObject deckGrid;
+
     private bool isSinking = false;
 
     // Start is called before the first frame update

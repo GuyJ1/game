@@ -14,7 +14,7 @@ public class CannonControl : MonoBehaviour
     public GameObject muzzleFlash;
 
     // Muzzle Object
-    private Transform muzzle;
+    public Transform muzzle;
 
     // Start is called before the first frame update
     void Start()
@@ -33,24 +33,48 @@ public class CannonControl : MonoBehaviour
         }
     }
 
-    public void fireCannonball()
+    public void fireEffect()
     {
-        // ----- Audio -----
+         // ----- Audio -----
         var audioData = GetComponent<AudioSource>();
         audioData.Play(0);
 
         // ----- Muzzle Flash -----
         GameObject mFlash = Instantiate(muzzleFlash);
         mFlash.transform.position = muzzle.position;
+    }
+
+    public void fireCannonball()
+    {
+        fireEffect();
 
         // ----- Cannonball Spawning -----
         GameObject newCannonball = Instantiate(cannonball);
-        newCannonball.transform.position = mFlash.transform.position;
-        newCannonball.transform.rotation = mFlash.transform.rotation;
+        newCannonball.transform.position = muzzle.position;
+        newCannonball.transform.rotation = muzzle.rotation;
         var rb = newCannonball.GetComponent<Rigidbody>();
         newCannonball.GetComponent<CannonballCollision>().damage = shotDamage;
 
         // Calculate cannonball velocity
+        Vector3 shotVelocity = muzzle.forward * shotSpeed;
+        shotVelocity.x += (Random.value * shotRandomness) - shotRandomness/2;
+        shotVelocity.y += (Random.value * shotRandomness) - shotRandomness/2;
+        shotVelocity.z += (Random.value * shotRandomness) - shotRandomness/2;
+
+        // Apply calculated velocity
+        rb.velocity = shotVelocity;
+    }
+
+    public void fireObject(GameObject obj)
+    {
+        fireEffect();
+
+        // ----- Object Positioning -----
+        obj.transform.position = muzzle.position;
+        obj.transform.rotation = muzzle.rotation;
+        var rb = obj.GetComponent<Rigidbody>();
+
+        // Calculate Object velocity
         Vector3 shotVelocity = muzzle.forward * shotSpeed;
         shotVelocity.x += (Random.value * shotRandomness) - shotRandomness/2;
         shotVelocity.y += (Random.value * shotRandomness) - shotRandomness/2;
