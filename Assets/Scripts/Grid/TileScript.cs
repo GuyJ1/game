@@ -15,12 +15,15 @@ public class TileScript : MonoBehaviour
     // Game object references
     public GameObject characterOn = null;
     public GameObject objectOn = null;
+    public GridBehavior targetGrid = null;
+    public GridBehavior targetTile = null;
 
     // Flags
     public bool hasCharacter = false;
     public bool hasObject = false;
     public bool highlighted = false;
     public bool passable = true;
+    public bool hasGridLink = false;
 
     // Path to root
     public PathTreeNode pathRef;

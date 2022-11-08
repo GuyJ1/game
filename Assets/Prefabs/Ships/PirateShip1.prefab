@@ -4147,6 +4147,7 @@ MonoBehaviour:
   myMoveScript: {fileID: 2918592252996794388}
   waterCollider: {fileID: 7524198869669570551, guid: 00bb22ed195b02e438741c83d92782c4, type: 3}
   foamCollider: {fileID: 5530040058716571913}
+  deckGrid: {fileID: 0}
 --- !u!111 &2752115821006640458
 Animation:
   m_ObjectHideFlags: 0
@@ -4569,6 +4570,10 @@ PrefabInstance:
       value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2223838504842600106, guid: 34e4afe442b789a4f926fd55f48aeefd, type: 3}
+      propertyPath: link
+      value: 
+      objectReference: {fileID: 2100000, guid: 14dec791a4099484e81d768bbee9eb2a, type: 2}
+    - target: {fileID: 2223838504842600106, guid: 34e4afe442b789a4f926fd55f48aeefd, type: 3}
       propertyPath: ability
       value: 
       objectReference: {fileID: 2100000, guid: 0e31bc8d5de7c1140a992c4f29cd57ae, type: 2}
@@ -4577,9 +4582,21 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2223838504842600106, guid: 34e4afe442b789a4f926fd55f48aeefd, type: 3}
+      propertyPath: linkBox
+      value: 
+      objectReference: {fileID: 2479917175239567991, guid: 56dc31b76257f0b44b298a6758a33c10, type: 3}
+    - target: {fileID: 2223838504842600106, guid: 34e4afe442b789a4f926fd55f48aeefd, type: 3}
       propertyPath: cannonObj
       value: 
       objectReference: {fileID: 3062333837081549251, guid: 531dcccc80cf5914caef1277ca4cebe1, type: 3}
+    - target: {fileID: 2223838504842600106, guid: 34e4afe442b789a4f926fd55f48aeefd, type: 3}
+      propertyPath: linkSelected
+      value: 
+      objectReference: {fileID: 2100000, guid: 6d04a36ace52b39408521ff2d18fa5ec, type: 2}
+    - target: {fileID: 2223838504842600106, guid: 34e4afe442b789a4f926fd55f48aeefd, type: 3}
+      propertyPath: linkHighlight
+      value: 
+      objectReference: {fileID: 2100000, guid: 6d1c2744fde9f7a4298c1c958a208bb6, type: 2}
     - target: {fileID: 2223838504842600106, guid: 34e4afe442b789a4f926fd55f48aeefd, type: 3}
       propertyPath: crews.Array.size
       value: 2

@@ -9,6 +9,8 @@ using UnityEngine;
 
 public class GridBehavior : MonoBehaviour
 {
+    [SerializeField] public GridBehavior cabinGrid; // GridRef
+    [SerializeField] public GameObject linkBox; // Used as a linking visual
     [SerializeField] public int gridNum; // Grid number 
     [SerializeField] public int tilesize; // Size of each tile
 
@@ -22,7 +24,9 @@ public class GridBehavior : MonoBehaviour
     private Camera cam;
 
     // Materials
-    [SerializeField] public Material unselected, highlighted, selected, activeUnselected, activeHighlighted, activeSelected, ability, abilityHighlighted, impassible;
+    [SerializeField] public Material unselected, highlighted, selected,
+                                     activeUnselected, activeHighlighted, activeSelected,
+                                     ability, abilityHighlighted, impassible;
 
     // Crews
     public List<GameObject> crews;
@@ -44,6 +48,10 @@ public class GridBehavior : MonoBehaviour
                 SpawnCharacter(character);
             }
         }
+
+        // Create links
+        CreateLinkTile(new Vector2Int(4,0), new Vector2Int(4,0), cabinGrid.GetComponent<GridBehavior>());
+        CreateLinkTile(new Vector2Int(3,0), new Vector2Int(3,0), cabinGrid.GetComponent<GridBehavior>());
     }
 
     // --------------------------------------------------------------
@@ -366,6 +374,54 @@ public class GridBehavior : MonoBehaviour
 
         // Update available tiles
         availableTiles--;
+    }
+
+    // --------------------------------------------------------------
+    // @desc: Designate a tile from a tile pos to link to another
+    // grid so characters can travel to it
+    // @arg: sourceTilePos - logical grid position of the source tile
+    // @arg: destTilePos   - logical grid position of the destination tile
+    // @arg: targetGridScript - the target grid to link the source tile to
+    // @ret: bool - whether the link was successful or not
+    // --------------------------------------------------------------
+    public bool CreateLinkTile(Vector2Int sourceTilePos, Vector2Int destTilePos, GridBehavior targetGridScript)
+    {
+        bool linkSuccess = false;
+
+        // Get tiles from positions
+        GameObject sourceTile = GetTileAtPos(sourceTilePos);
+        GameObject destTile   = targetGridScript.GetTileAtPos(destTilePos);
+
+        // Check get
+        if (sourceTile != null && destTile != null)
+        {
+            // Get tile scripts
+            var sourceScript = sourceTile.GetComponent<TileScript>();
+            var destScript = destTile.GetComponent<TileScript>();
+
+            // Spawn boxes for visual element
+            GameObject sourceBox = Instantiate(linkBox);
+            GameObject destBox = Instantiate(linkBox);
+            AttachObjectToGrid(sourceBox, sourceTilePos, true);
+            AttachObjectToGrid(destBox, destTilePos, true);
+
+            // Set links
+            sourceScript.hasGridLink = true;
+            sourceScript.targetGrid = targetGridScript;
+            sourceScript.targetTile = destScript;
+            destScript.hasGridLink = true;
+            destScript.targetGrid = this;
+            destScript.targetTile = sourceScript;
+
+            // Set flag
+            linkSuccess = true;
+        }
+        else
+        {
+            Debug.Log("CreateLinkTile: Error! could not get source and destination tiles");
+        }
+
+        return linkSuccess;
     }
 
     // --------------------------------------------------------------

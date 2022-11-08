@@ -31,6 +31,13 @@ public class PlayerCollision : MonoBehaviour
             Transform otherShip = other.gameObject.transform.parent;
             var otherShipStats = otherShip.GetComponent<ShipStats>();
 
+            // Remove self from current ship
+            Vector2Int tilePos = transform.parent.transform.GetComponent<CharacterStats>().gridPosition;
+            GameObject myTile = transform.parent.transform.GetComponent<CharacterStats>().myGrid.GetComponent<GridBehavior>().GetTileAtPos(tilePos);
+            var tileScript = myTile.GetComponent<TileScript>();
+            tileScript.characterOn = null;
+            tileScript.hasCharacter = false;
+
             // Get onto ship
             otherShipStats.deckGrid.GetComponent<GridBehavior>().SpawnCharacter(transform.parent.gameObject, false);
 

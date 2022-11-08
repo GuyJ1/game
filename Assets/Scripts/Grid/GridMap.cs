@@ -36,13 +36,13 @@ public class GridMap
     public static bool[,] GridOnePassableFlags = 
     {
         {false, false, false, false, false, false, false, false, false},
+        {true , false, false, false, false, false, false, false, true },
         {false, false, false, false, false, false, false, false, false},
-        {false, false, false, false, false, false, false, false, false},
+        {false, false, true , true , true , true , true , false, false},
+        {true , false, true , true , true , true , true , false, true },
         {false, false, true , true , true , true , true , false, false},
         {false, false, true , true , true , true , true , false, false},
-        {false, false, true , true , true , true , true , false, false},
-        {false, false, true , true , true , true , true , false, false},
-        {false, false, true , true , true , true , true , false, false},
+        {true , false, true , true , true , true , true , false, true },
         {false, false, true , true , true , true , true , false, false},
         {false, false, false, false, false, false, false, false, false},
         {false, false, false, false, false, false, false, false, false},
