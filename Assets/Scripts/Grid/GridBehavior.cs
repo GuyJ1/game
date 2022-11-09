@@ -48,10 +48,16 @@ public class GridBehavior : MonoBehaviour
                 SpawnCharacter(character);
             }
         }
+    }
 
+    void Start()
+    {
         // Create links
-        CreateLinkTile(new Vector2Int(4,0), new Vector2Int(4,0), cabinGrid.GetComponent<GridBehavior>());
-        CreateLinkTile(new Vector2Int(3,0), new Vector2Int(3,0), cabinGrid.GetComponent<GridBehavior>());
+        if (cabinGrid != null)
+        {
+            CreateLinkTile(new Vector2Int(4,0), new Vector2Int(4,0), cabinGrid);
+            CreateLinkTile(new Vector2Int(3,0), new Vector2Int(3,0), cabinGrid);
+        }
     }
 
     // --------------------------------------------------------------
@@ -177,7 +183,7 @@ public class GridBehavior : MonoBehaviour
     // @arg: character - the character prefab object to spawn
     // @arg: spawnPos  - the logical grid position to spawn on
     // --------------------------------------------------------------
-    public bool SpawnCharacter(GameObject character, Vector2Int spawnPos)
+    public bool SpawnCharacter(GameObject character, Vector2Int spawnPos, bool newCharacter = true)
     {
         GameObject spawningTile;
         bool characterSpawned = false;
@@ -200,7 +206,21 @@ public class GridBehavior : MonoBehaviour
             character.GetComponent<CharacterStats>().myGrid = this.gameObject;
 
             // Set tile data
-            tilesScript.characterOn = Instantiate(character, pos, transform.rotation, this.transform);
+            if (newCharacter)
+            {
+                tilesScript.characterOn = Instantiate(character, pos, transform.rotation, this.transform);
+            }
+            else
+            {
+                // Set Tilescript Character
+                tilesScript.characterOn = character;
+
+                // Modify Character Transformation
+                character.transform.position = pos;
+                character.transform.rotation = transform.rotation;
+                character.transform.parent = this.transform;
+            }
+
             tilesScript.hasCharacter = true;
 
             // Update flag and # of available tiles
@@ -403,7 +423,7 @@ public class GridBehavior : MonoBehaviour
             GameObject sourceBox = Instantiate(linkBox);
             GameObject destBox = Instantiate(linkBox);
             AttachObjectToGrid(sourceBox, sourceTilePos, true);
-            AttachObjectToGrid(destBox, destTilePos, true);
+            targetGridScript.AttachObjectToGrid(destBox, destTilePos, true);
 
             // Set links
             sourceScript.hasGridLink = true;

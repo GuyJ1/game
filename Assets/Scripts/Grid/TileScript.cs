@@ -16,7 +16,7 @@ public class TileScript : MonoBehaviour
     public GameObject characterOn = null;
     public GameObject objectOn = null;
     public GridBehavior targetGrid = null;
-    public GridBehavior targetTile = null;
+    public TileScript targetTile = null;
 
     // Flags
     public bool hasCharacter = false;

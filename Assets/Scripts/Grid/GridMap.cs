@@ -175,7 +175,7 @@ public class GridMap
         switch(gridSelected)
         {
             case 0:
-                offsetAtPos = GridOneHeightOffsets[pos.y, pos.x];
+                offsetAtPos = 0.0f;
                 break;
             case 1:
                 offsetAtPos = GridOneHeightOffsets[pos.y, pos.x];

@@ -19,7 +19,7 @@ public class BattleEngine : MonoBehaviour
 
     public bool moving = false; //Whether the current mode is moving or acting
     private Ability selectedAbility;
-    private bool init = false;
+    public bool init = false;
     public  bool isPlayerTurn;
     private bool moved = false; //Whether movement was taken
     private bool acted = false; //Whether an action was taken

@@ -5,12 +5,11 @@ using UnityEngine.UI;
 
 public class CannonUI : MonoBehaviour
 {
-    [SerializeField] public GameObject BattleEngine;
+    [SerializeField] public BattleEngine battleScript;
     [SerializeField] public Button fireCannonball;
     [SerializeField] public Button fireCharacter;
     [SerializeField] public float battleSleepTime;
 
-    private BattleEngine battleScript;
     private GameObject currCannon = null;
     private GameObject grid;
     private Vector2Int activePos = new Vector2Int(-1,-1);
@@ -18,17 +17,7 @@ public class CannonUI : MonoBehaviour
     private bool setSleep = false;
 
     // Camera Ref
-    private CameraControl camScript;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        // Get Battle Engine Script
-        battleScript = BattleEngine.GetComponent<BattleEngine>();
-
-        // Get Camera Control Script
-        camScript = Camera.main.GetComponent<CameraControl>();
-    }
+    [SerializeField] public CameraControl camScript;
 
     // Update is called once per frame
     void Update()
@@ -107,7 +96,7 @@ public class CannonUI : MonoBehaviour
     private void getAdjacentCannon()
     {
         // Only get if the active character grid pos has changed
-        if (battleScript.isPlayerTurn && activePos != battleScript.activeUnitPos)
+        if (activePos != battleScript.activeUnitPos && battleScript.init == true)
         {
             Debug.Log("Searching for cannon at " + activePos.ToString());
 
