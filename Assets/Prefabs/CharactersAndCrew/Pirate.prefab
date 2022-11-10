@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 3184128909727716670}
   - component: {fileID: 7423630811633973848}
   - component: {fileID: 7842272855460689232}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -267,7 +267,7 @@ GameObject:
   - component: {fileID: 6886658739876458237}
   - component: {fileID: 1640716338498495246}
   - component: {fileID: -4097838735445531169}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Pirate
   m_TagString: Character
   m_Icon: {fileID: 0}
@@ -329,7 +329,7 @@ MonoBehaviour:
   healthBarYOffset: 1
   canvas: {fileID: 0}
   model: {fileID: 4349290728497671086}
-  gridPosition: {x: 2, y: 15}
+  gridPosition: {x: 7, y: 11}
   myGrid: {fileID: 0}
   crew: {fileID: 8677408311475748420, guid: ff7e742bfec002a4c80690599f895dce, type: 3}
   weapon: {fileID: 0}

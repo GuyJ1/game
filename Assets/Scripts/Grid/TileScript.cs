@@ -25,6 +25,9 @@ public class TileScript : MonoBehaviour
     public bool passable = true;
     public bool hasGridLink = false;
 
+    // Layer
+    public int myLayer;
+
     // Path to root
     public PathTreeNode pathRef;
 }

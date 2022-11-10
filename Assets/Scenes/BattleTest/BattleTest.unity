@@ -1060,6 +1060,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 3062333837081549251, guid: 531dcccc80cf5914caef1277ca4cebe1, type: 3}
     - target: {fileID: 2223838504842600106, guid: 34e4afe442b789a4f926fd55f48aeefd, type: 3}
+      propertyPath: gridLayer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2223838504842600106, guid: 34e4afe442b789a4f926fd55f48aeefd, type: 3}
       propertyPath: crews.Array.size
       value: 0
       objectReference: {fileID: 0}
@@ -2919,16 +2923,60 @@ PrefabInstance:
       value: CannonUI
       objectReference: {fileID: 0}
     - target: {fileID: 3520659746938885975, guid: 603b9d13419fbad469b00e6e63649d0b, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3520659746938885975, guid: 603b9d13419fbad469b00e6e63649d0b, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3520659746938885975, guid: 603b9d13419fbad469b00e6e63649d0b, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3520659746938885975, guid: 603b9d13419fbad469b00e6e63649d0b, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3520659746938885975, guid: 603b9d13419fbad469b00e6e63649d0b, type: 3}
       propertyPath: m_SizeDelta.x
-      value: -1369.0999
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 3520659746938885975, guid: 603b9d13419fbad469b00e6e63649d0b, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 3520659746938885975, guid: 603b9d13419fbad469b00e6e63649d0b, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3520659746938885975, guid: 603b9d13419fbad469b00e6e63649d0b, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3520659746938885975, guid: 603b9d13419fbad469b00e6e63649d0b, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3520659746938885975, guid: 603b9d13419fbad469b00e6e63649d0b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3520659746938885975, guid: 603b9d13419fbad469b00e6e63649d0b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3520659746938885975, guid: 603b9d13419fbad469b00e6e63649d0b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3520659746938885975, guid: 603b9d13419fbad469b00e6e63649d0b, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -577.65
+      value: -577.5
       objectReference: {fileID: 0}
     - target: {fileID: 3520659746938885975, guid: 603b9d13419fbad469b00e6e63649d0b, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 175.13501
+      value: 248.8
       objectReference: {fileID: 0}
     - target: {fileID: 3683310498704466437, guid: 603b9d13419fbad469b00e6e63649d0b, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -4141,6 +4189,10 @@ PrefabInstance:
       propertyPath: cannonObj
       value: 
       objectReference: {fileID: 3062333837081549251, guid: 531dcccc80cf5914caef1277ca4cebe1, type: 3}
+    - target: {fileID: 2223838504842600106, guid: 34e4afe442b789a4f926fd55f48aeefd, type: 3}
+      propertyPath: gridLayer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 2223838504842600106, guid: 34e4afe442b789a4f926fd55f48aeefd, type: 3}
       propertyPath: crews.Array.size
       value: 0

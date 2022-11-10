@@ -100,6 +100,7 @@ public class BattleEngine : MonoBehaviour
             else 
             {
                 var gridTiles = grid.GetComponent<GridBehavior>();
+
                 // Use physics to detect a "collision" from a ray
                 if (Physics.Raycast(ray, out hit, 1000f, gridMask) == true)
                 {
@@ -425,13 +426,17 @@ public class BattleEngine : MonoBehaviour
         var gridScript = grid.GetComponent<GridBehavior>();
         activeUnitPos = activeUnitScript.gridPosition;
 
+        // Camera Culling
+        var camScript = cam.GetComponent<CameraControl>();
+        camScript.SetLayerMode((CameraControl.LAYERMODE)activeUnit.layer);
+
         // Deselect ability
         selectedAbility = null;
         
         // Set the tile of which the character is on to be active
         activeUnitTile = gridScript.grid[activeUnitPos.x, activeUnitPos.y];
         activeUnitTile.GetComponent<Renderer>().material = gridScript.activeUnselected;
-        cam.GetComponent<CameraControl>().LookAtPos(activeUnitTile.transform.position);
+        camScript.LookAtPos(activeUnitTile.transform.position);
 
         // Setup buttons based on whether it's the player's turn
         isPlayerTurn = isAllyUnit(activeUnit);

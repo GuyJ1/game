@@ -9,6 +9,7 @@ TagManager:
   - Ocean
   - Cannon
   - Character
+  - Healthbar
   layers:
   - Default
   - TransparentFX

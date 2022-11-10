@@ -60,15 +60,19 @@ public class GridTraverseUI : MonoBehaviour
             // Add character to target grid
             currTile.targetGrid.SpawnCharacter(currTile.characterOn, currTile.targetTile.position, false);
 
-            // Remove character from current grid
-            currTile.characterOn = null;
-            currTile.hasCharacter = false;
+            // Camera culling
+            currTile.characterOn.layer = currTile.targetGrid.gridLayer;
+            camScript.SetLayerMode((CameraControl.LAYERMODE)currTile.characterOn.layer);
 
             // Sleep Battle Engine for a Moment
             battleScript.active = false;
             battleScript.interactable = false;
             sleepTimer = battleSleepTime;
             setSleep = true;
+
+            // Remove character from current grid
+            currTile.characterOn = null;
+            currTile.hasCharacter = false;
         //}
     }
 

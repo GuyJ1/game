@@ -4590,6 +4590,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 3062333837081549251, guid: 531dcccc80cf5914caef1277ca4cebe1, type: 3}
     - target: {fileID: 2223838504842600106, guid: 34e4afe442b789a4f926fd55f48aeefd, type: 3}
+      propertyPath: gridLayer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 2223838504842600106, guid: 34e4afe442b789a4f926fd55f48aeefd, type: 3}
       propertyPath: linkSelected
       value: 
       objectReference: {fileID: 2100000, guid: 6d04a36ace52b39408521ff2d18fa5ec, type: 2}

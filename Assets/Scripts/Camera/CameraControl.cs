@@ -22,10 +22,10 @@ public class CameraControl : MonoBehaviour
     // Layer modes
     public enum LAYERMODE
     {
-        SAILS,
-        HELM,
-        DECK,
-        CABIN
+        SAILS = 7,
+        HELM = 8,
+        DECK = 9,
+        CABIN = 10
     }
 
     // Start is called before the first frame update
@@ -35,7 +35,7 @@ public class CameraControl : MonoBehaviour
         offset = transform.position;
         target = offset;
 
-        SetLayerMode(LAYERMODE.HELM);
+        //SetLayerMode(LAYERMODE.HELM);
     }
     
     void Update()
@@ -110,7 +110,7 @@ public class CameraControl : MonoBehaviour
             }
             else
             {
-                transform.position += (target - transform.position) *    Time.deltaTime * PanSpeed;
+                transform.position += (target - transform.position) * Time.deltaTime * PanSpeed;
             }
         }
 
@@ -139,7 +139,7 @@ public class CameraControl : MonoBehaviour
 
     public void SetLayerMode(LAYERMODE lm)
     {
-        // Initialize LayerMask
+        // Vars
         int layerMask = 0;
 
         // Add base layers to LayerMask
@@ -173,6 +173,25 @@ public class CameraControl : MonoBehaviour
                 break;
         }
 
+        // Painfully render appropiate objects to be invisible
+        GameObject[] objects = GameObject.FindGameObjectsWithTag("Tile");
+        foreach (GameObject tile in objects)
+        {
+            var tileScript = tile.GetComponent<TileScript>();
+
+            if ((LAYERMODE)tileScript.myLayer >= lm)
+            {
+                tile.GetComponent<Renderer>().enabled = true;
+                tile.layer = 6; // Grid layer
+            }
+            else
+            {
+                tile.GetComponent<Renderer>().enabled = false;
+                tile.layer = 11; // Invisible layer
+            }
+        }
+
+        // Apply culling
         this.GetComponent<Camera>().cullingMask = layerMask;
     }
 }

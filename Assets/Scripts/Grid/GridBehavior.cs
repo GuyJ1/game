@@ -13,6 +13,7 @@ public class GridBehavior : MonoBehaviour
     [SerializeField] public GameObject linkBox; // Used as a linking visual
     [SerializeField] public int gridNum; // Grid number 
     [SerializeField] public int tilesize; // Size of each tile
+    [SerializeField] public int gridLayer; // Layer used for camera culling
 
     // Grid vars
     public GameObject Tile; // A cell or tile that makes up the grid
@@ -91,6 +92,7 @@ public class GridBehavior : MonoBehaviour
                 var newTileScript = newTile.GetComponent<TileScript>();
                 newTileScript.position.x = x;
                 newTileScript.position.y = y;
+                newTileScript.myLayer = gridLayer;
 
                 // Check the grid map for impassible tiles
                 if (passableTiles.GetFlagAtPos(xy))
@@ -144,6 +146,7 @@ public class GridBehavior : MonoBehaviour
                     Debug.Log("Spawning character as position " + randX + " " + randY);
                     character.GetComponent<CharacterStats>().gridPosition = new Vector2Int(randX, randY);
                     character.GetComponent<CharacterStats>().myGrid = this.gameObject;
+                    character.transform.GetChild(0).gameObject.layer = gridLayer;
 
                     // Set tile data
                     if (newCharacter)
@@ -162,6 +165,7 @@ public class GridBehavior : MonoBehaviour
                     }
 
                     tilesScript.hasCharacter = true;
+                    character.layer = gridLayer;
 
                     // Update flag and # of available tiles
                     availableTiles--;
@@ -204,6 +208,7 @@ public class GridBehavior : MonoBehaviour
             Debug.Log("Spawning character as position " + spawnPos.x + " " + spawnPos.y);
             character.GetComponent<CharacterStats>().gridPosition = spawnPos;
             character.GetComponent<CharacterStats>().myGrid = this.gameObject;
+            character.transform.GetChild(0).gameObject.layer = gridLayer;
 
             // Set tile data
             if (newCharacter)
@@ -222,6 +227,7 @@ public class GridBehavior : MonoBehaviour
             }
 
             tilesScript.hasCharacter = true;
+            character.layer = gridLayer;
 
             // Update flag and # of available tiles
             availableTiles--;
@@ -424,6 +430,10 @@ public class GridBehavior : MonoBehaviour
             GameObject destBox = Instantiate(linkBox);
             AttachObjectToGrid(sourceBox, sourceTilePos, true);
             targetGridScript.AttachObjectToGrid(destBox, destTilePos, true);
+
+            // Set layers
+            sourceBox.transform.GetChild(0).gameObject.layer = gridLayer;
+            destBox.transform.GetChild(0).gameObject.layer = targetGridScript.gridLayer;
 
             // Set links
             sourceScript.hasGridLink = true;
