@@ -7,6 +7,7 @@ public class Amulet : Accessory
     [SerializeField]
     public int HPmodifier;
     public int LCKmodifier;
+    public int HealModifier;
 
     // Start is called before the first frame update
     void Start()
@@ -20,5 +21,6 @@ public class Amulet : Accessory
 
         target.HPMAX += HPmodifier;
         target.LCK += LCKmodifier;
+        
     }
 }

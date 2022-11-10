@@ -7,6 +7,7 @@ public class Bracelet : Accessory
     [SerializeField]
     public int APmodifier;
     public int LCKmodifier;
+    public int HealModifier;
 
     // Start is called before the first frame update
     void Start()

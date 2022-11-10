@@ -18,6 +18,7 @@ public class Aura : Accessory
     public int LCKmodifier;
     public int MVmodifier;
     public int MoraleModifier;
+    public int HealModifier;
 
 
     // Start is called before the first frame update

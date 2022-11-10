@@ -15,9 +15,9 @@ public class CharacterStats : MonoBehaviour
     public int LCK; //Luck
     public int MV; //Movement
     public int AP; //Ability Points (possible currency for abilities)
-    public int APMAX; //Maximum ability points
+    public int APMAX; //Maximum ability points, default value is 100
     public int Morale; //Morale (from 0 - 100), 
-                        //depending on this value, ATK/CRIT are boosted from +1 to +5 and HIT/AVO is boosted by +2 to +10
+                        //depending on this value, ATK/CRIT are boosted from +1 to +5 , HIT/AVO is boosted by +2 to +10 , and Healing is boosted by +1 to +10
     public int MoraleMAX; //Maximum Morale
     public int MoraleMIN; //Minimum Morale (used for Shoes)
     public int ATK; //Attack power (= STR - Enemy's DEF)
@@ -54,8 +54,8 @@ public class CharacterStats : MonoBehaviour
     public Armor armor; //increases DEF
     public Hat hat; //can increase STR, DEF, SPD, and/or DEX
     public Ring ring; //can increase ATK, HIT, CRIT, and/or AVO
-    public Amulet amulet; //can increase max HP and/or LCK
-    public Bracelet bracelet; //can increase max AP and/or LCK
+    public Amulet amulet; //can increase max HP, LCK, and/or healing ability
+    public Bracelet bracelet; //can increase max AP, LCK, and/or healing ability
     public Shoes shoes; //can increase MV and/or Morale
     public Aura aura; //can increase any stat
 
@@ -287,15 +287,26 @@ public class CharacterStats : MonoBehaviour
 
     //Attack the enemy, possibly with a critical hit
     //Note: Critical hits triple the total damage
-    public int Attack(CharacterStats target){
+    //Type 1 = general attack, nothing changes
+    //Type 2 = no defenses, attack while target.DEF is ignored
+    public int Attack(CharacterStats target, int type){
 
-        HIT = ((((DEX * 3 + LCK) / 2) + (2 * (Morale / 5))) - target.AVO) + accessoryBonus(1);
-        CRIT = ((((DEX / 2) - 5) + (Morale / 5)) - target.LCK) + accessoryBonus(2);
+        HIT = ((((DEX * 3 + LCK) / 2) + (2 * (Morale / 20))) - target.AVO) + accessoryBonus(1);
+        CRIT = ((((DEX / 2) - 5) + (Morale / 20)) - target.LCK) + accessoryBonus(2);
 
         if(determineCRIT(CRIT)){
 
-            ATK = ((STR + (Morale / 5) + weaponBonus() + accessoryBonus(0)) - target.DEF) * 3; //CRITICAL HIT!
-            target.adjustHP(-ATK);
+            if(type == 2){
+
+                ATK = (STR + (Morale / 20) + weaponBonus() + accessoryBonus(0)) * 3;
+            }
+            else{
+
+                ATK = ((STR + (Morale / 20) + weaponBonus() + accessoryBonus(0)) - target.DEF) * 3; //CRITICAL HIT!
+
+
+            }
+            //target.adjustHP(-ATK);
 
             if(weapon != null){
 
@@ -305,8 +316,21 @@ public class CharacterStats : MonoBehaviour
 
         }
         else if(determineHIT(HIT)){
-            ATK = (STR + (Morale / 5) + weaponBonus() + accessoryBonus(0)) - target.DEF; //HIT!
-            target.adjustHP(-ATK);
+
+            if(type == 2){
+
+                ATK = (STR + (Morale / 5) + weaponBonus() + accessoryBonus(0)); //HIT!
+
+
+            }
+            else{
+
+                ATK = (STR + (Morale / 5) + weaponBonus() + accessoryBonus(0)) - target.DEF; //HIT!
+
+
+
+            }
+            //target.adjustHP(-ATK);
 
             if(weapon != null){
 
@@ -395,7 +419,31 @@ public class CharacterStats : MonoBehaviour
             totalMod += aura.AVOmodifier;
         }
 
-        AVO = ((SPD*3 + LCK) / 2) + (2 * (Morale / 5)) + totalMod;
+        AVO = ((SPD*3 + LCK) / 2) + (2 * (Morale / 20)) + totalMod;
+
+    }
+
+    public int Heal(CharacterStats target){
+
+        int healBonus = 0;
+        if(amulet != null){
+            healBonus += amulet.HealModifier;
+        }
+
+        if(bracelet != null){
+            healBonus += bracelet.HealModifier;
+        }
+
+        if(aura != null){
+
+            healBonus += aura.HealModifier;
+        }
+
+        healBonus += Morale / 10;
+
+        return healBonus;
+
+
 
     }
 
