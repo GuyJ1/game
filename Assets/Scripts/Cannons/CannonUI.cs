@@ -8,6 +8,8 @@ public class CannonUI : MonoBehaviour
     [SerializeField] public BattleEngine battleScript;
     [SerializeField] public Button fireCannonball;
     [SerializeField] public Button fireCharacter;
+    [SerializeField] public Image fireCannonballImage;
+    [SerializeField] public Image fireCharacterImage;
     [SerializeField] public float battleSleepTime;
 
     private GameObject currCannon = null;
@@ -49,6 +51,45 @@ public class CannonUI : MonoBehaviour
             {
                 sleepTimer -= Time.deltaTime;
             }
+        }
+    }
+
+    void LateUpdate()
+    {
+        // Show UI above current cannon
+        if (currCannon != null)
+        {
+            fireCannonball.enabled = true;
+            fireCharacter.enabled = true;
+            fireCannonballImage.enabled = true;
+            fireCharacterImage.enabled = true;
+
+            // Offsets
+            Vector3 cannonOffset = new Vector3(-0.8f, 3.0f, 0);
+            Vector3 characterOffset = new Vector3(0.8f, 3.0f, 0);
+
+            // Update position
+            fireCannonball.transform.position = Camera.main.WorldToScreenPoint(currCannon.transform.position + cannonOffset);
+            fireCharacter.transform.position = Camera.main.WorldToScreenPoint(currCannon.transform.position + characterOffset);
+
+            // Update Scale
+            float camDist = Vector3.Distance(Camera.main.transform.position, currCannon.transform.position);
+            float newScale = 0.0f;
+
+            if (camDist != 0.0f)
+            {
+                newScale = Mathf.Max(9.0f / camDist, 0.1f);
+            }
+
+            fireCannonball.transform.localScale = new Vector3(newScale, newScale, newScale);
+            fireCharacter.transform.localScale = new Vector3(newScale, newScale, newScale);
+        }
+        else
+        {
+            fireCannonball.enabled = false;
+            fireCharacter.enabled = false;
+            fireCannonballImage.enabled = false;
+            fireCharacterImage.enabled = false;
         }
     }
 

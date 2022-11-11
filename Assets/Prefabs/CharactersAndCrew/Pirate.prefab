@@ -329,7 +329,7 @@ MonoBehaviour:
   healthBarYOffset: 1
   canvas: {fileID: 0}
   model: {fileID: 4349290728497671086}
-  gridPosition: {x: 7, y: 11}
+  gridPosition: {x: 8, y: 16}
   myGrid: {fileID: 0}
   crew: {fileID: 8677408311475748420, guid: ff7e742bfec002a4c80690599f895dce, type: 3}
   weapon: {fileID: 0}
