@@ -50,7 +50,7 @@ public class CharacterStats : MonoBehaviour
     public GameObject crew;
 
     //Equipment
-    public Weapon weapon; //increases ATK
+    public Weapon weapon; //increases ATK and can modify max HP, DEF, SPD, DEX, and LCK (either melee or ranged)
     public Armor armor; //increases DEF
     public Hat hat; //can increase STR, DEF, SPD, and/or DEX
     public Ring ring; //can increase ATK, HIT, CRIT, and/or AVO
@@ -126,6 +126,10 @@ public class CharacterStats : MonoBehaviour
 
             MoraleMIN = 80;
 
+        }
+
+        if(weapon != null){
+            weapon.modifyStats(this);
         }
 
         if(armor != null){
@@ -293,6 +297,11 @@ public class CharacterStats : MonoBehaviour
 
         HIT = ((((DEX * 3 + LCK) / 2) + (2 * (Morale / 20))) - target.AVO) + accessoryBonus(1);
         CRIT = ((((DEX / 2) - 5) + (Morale / 20)) - target.LCK) + accessoryBonus(2);
+
+        if(type == 2 && (weapon != null && weapon.deadlyPierce)){//Deadly Pierce grants +10 CRIT
+
+            CRIT += 10;
+        }
 
         if(determineCRIT(CRIT)){
 

@@ -92,12 +92,29 @@ public class Ability : MonoBehaviour
     void Generic(CharacterStats user, CharacterStats target) {
         if(!friendly)
         {//attack the enemy
-            GameObject hitParticle = Instantiate(DarkSlash);
-            hitParticle.transform.position = target.transform.position;
+            if(user.weapon != null && (user.weapon.doubleAttack && (user.SPD - target.SPD >= 5))){//if the equipped weapon can double attack
 
-            totalDMG = user.Attack(target, 1);
+                for(int i = 0; i < 2; i++){
 
-            target.adjustHP(-totalDMG);
+                    GameObject hitParticle = Instantiate(DarkSlash);
+                    hitParticle.transform.position = target.transform.position;
+
+                    totalDMG = user.Attack(target, 1);
+
+                    target.adjustHP(-totalDMG);
+
+                }
+            }
+            else{
+
+
+                GameObject hitParticle = Instantiate(DarkSlash);
+                hitParticle.transform.position = target.transform.position;
+
+                totalDMG = user.Attack(target, 1);
+
+                target.adjustHP(-totalDMG);
+            }
         }
         else
         {//heal an ally
@@ -136,15 +153,21 @@ public class Ability : MonoBehaviour
     //Attack the enemy and then heal (= Attack Power)
     void Siphon(CharacterStats user, CharacterStats target){
 
+        int modifier = 0;
+
         GameObject hitParticle = Instantiate(DarkSlash);
         hitParticle.transform.position = target.transform.position;
 
         totalDMG = user.Attack(target, 1);
 
-        user.adjustHP(totalDMG);
+        target.adjustHP(-totalDMG);
 
-        
+        if(user.weapon != null && user.weapon.strongSiphon){//Strong Siphon gives 20% more HP
 
+            modifier = (totalDMG * 2) / 10;
+        }
+
+        user.adjustHP(totalDMG + modifier);
 
     }
 
