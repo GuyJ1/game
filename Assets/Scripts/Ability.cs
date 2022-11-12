@@ -17,7 +17,7 @@ public class Ability : MonoBehaviour
     public string displayName; //Display name for UI
     public List<Vector2Int> shape; //Shape in tiles facing north (0,0) is the center
 
-    [SerializeField] public GameObject DarkSlash; //visual effect
+    [SerializeField] public GameObject targetEffect; //visual effect
 
     // Start is called before the first frame update
     void Start()
@@ -29,6 +29,22 @@ public class Ability : MonoBehaviour
     void Update()
     {
 
+    }
+
+    // Return shape rotated dependent on which way user is facing
+    public List<Vector2Int> getRelativeShape(int xDist, int yDist) {
+        List<Vector2Int> list = new List<Vector2Int>();
+        foreach(Vector2Int pos in shape) {
+            //Rotate position relative to user
+            if(Mathf.Abs(xDist) >= Mathf.Abs(yDist))
+            {
+                if(xDist > 0) list.Add(new Vector2Int(-pos.y, pos.x)); //West
+                else list.Add(new Vector2Int(pos.y, pos.x)); //East
+            }
+            else if(yDist > 0) list.Add(new Vector2Int(-pos.x, -pos.y)); //South
+            else list.Add(pos); //North
+        }
+        return list;
     }
 
     // Apply ability to target character
@@ -86,7 +102,7 @@ public class Ability : MonoBehaviour
 
     }
 
-    //ability implementations
+    //Ability implementations
 
     //Generic ability with no special effects
     void Generic(CharacterStats user, CharacterStats target) {
@@ -96,7 +112,7 @@ public class Ability : MonoBehaviour
 
                 for(int i = 0; i < 2; i++){
 
-                    GameObject hitParticle = Instantiate(DarkSlash);
+                    GameObject hitParticle = Instantiate(targetEffect);
                     hitParticle.transform.position = target.transform.position;
 
                     totalDMG = user.Attack(target, 1);
@@ -108,7 +124,7 @@ public class Ability : MonoBehaviour
             else{
 
 
-                GameObject hitParticle = Instantiate(DarkSlash);
+                GameObject hitParticle = Instantiate(targetEffect);
                 hitParticle.transform.position = target.transform.position;
 
                 totalDMG = user.Attack(target, 1);
@@ -144,7 +160,7 @@ public class Ability : MonoBehaviour
 
         
 
-        user.adjustHP(-totalDMG);
+        target.adjustHP(-totalDMG);
         
 
 
@@ -155,7 +171,7 @@ public class Ability : MonoBehaviour
 
         int modifier = 0;
 
-        GameObject hitParticle = Instantiate(DarkSlash);
+        GameObject hitParticle = Instantiate(targetEffect);
         hitParticle.transform.position = target.transform.position;
 
         totalDMG = user.Attack(target, 1);
@@ -174,7 +190,7 @@ public class Ability : MonoBehaviour
     //attack while ignorning enemy defenses
     void Pierce(CharacterStats user, CharacterStats target){
 
-        GameObject hitParticle = Instantiate(DarkSlash);
+        GameObject hitParticle = Instantiate(targetEffect);
         hitParticle.transform.position = target.transform.position;
 
         totalDMG = user.Attack(target, 2);
@@ -193,7 +209,7 @@ public class Ability : MonoBehaviour
 
         for(int i = 0; i < 5; i++){
 
-            hitParticle = Instantiate(DarkSlash);//?
+            hitParticle = Instantiate(targetEffect);//?
             hitParticle.transform.position = target.transform.position;
 
             totalDMG = user.Attack(target, 1) / 5;

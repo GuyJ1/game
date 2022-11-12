@@ -574,6 +574,18 @@ public class GridBehavior : MonoBehaviour
         return valid;
     }
 
+    public List<GameObject> GetAllTiles() {
+        var list = new List<GameObject>();
+        for(int x = 0; x < width; x++)
+        {
+            for(int y = 0; y < height; y++)
+            {
+                list.Add(grid[x,y]);
+            }
+        }
+        return list;
+    }
+
     // Get a tile game object from a grid position
     public GameObject GetTileAtPos(Vector2Int pos)
     {

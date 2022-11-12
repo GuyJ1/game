@@ -49,6 +49,7 @@ public class BattleEngine : MonoBehaviour
     private bool charHighlighted = false;
     private Vector2Int selectedCharPos;
     private Vector2Int highlightedCharPos;
+    private int lastXDist, lastYDist; //Last distance between user and target for ability selection
 
     //AI Variables
     private PlayerActionList playerActions = new PlayerActionList();
@@ -109,6 +110,8 @@ public class BattleEngine : MonoBehaviour
                     var selectRend  = objectHit.GetComponent<Renderer>();
                     var tileScript  = objectHit.GetComponent<TileScript>();
                     Vector2Int tilePos = tileScript.position;
+                    int xDist = activeUnitPos.x - tilePos.x;
+                    int yDist = activeUnitPos.y - tilePos.y;
 
                     // ----------------------------
                     // Character Movement & Actions
@@ -198,14 +201,13 @@ public class BattleEngine : MonoBehaviour
                         }
                         else if(!moving && !acted) { //Acting
                             if(charHighlighted && highlightedCharPos != tilePos) {
-                                foreach(Vector2Int pos in selectedAbility.shape) {
-                                    var selPos = new Vector2Int(highlightedCharPos.x + pos.x, highlightedCharPos.y + pos.y);
-                                    var selTile = gridTiles.GetTileAtPos(selPos);
-                                    if(selTile != null && selTile.GetComponent<TileScript>().passable) gridTiles.grid[selPos.x, selPos.y].GetComponent<Renderer>().material = isTileActive(selPos) ? gridTiles.activeUnselected : (Mathf.Abs(activeUnitPos.x - selPos.x) + Mathf.Abs(activeUnitPos.y - selPos.y) > selectedAbility.range ? gridTiles.unselected : gridTiles.abilityHighlighted);
+                                foreach(GameObject selTile in gridTiles.GetAllTiles()) {
+                                    var selPos = selTile.GetComponent<TileScript>().position;
+                                    if(selPos != activeUnitPos && selTile.GetComponent<TileScript>().passable) selTile.GetComponent<Renderer>().material = isTileActive(selPos) ? gridTiles.activeUnselected : (Mathf.Abs(activeUnitPos.x - selPos.x) + Mathf.Abs(activeUnitPos.y - selPos.y) > selectedAbility.range ? gridTiles.unselected : gridTiles.abilityHighlighted);
                                 }
                             }
                             if(selectedAbility != null && tileScript.highlighted && Mathf.Abs(activeUnitPos.x - tilePos.x) + Mathf.Abs(activeUnitPos.y - tilePos.y) <= selectedAbility.range) {
-                                foreach(Vector2Int pos in selectedAbility.shape) {
+                                foreach(Vector2Int pos in selectedAbility.getRelativeShape(xDist, yDist)) {
                                     var selPos = new Vector2Int(tilePos.x + pos.x, tilePos.y + pos.y);
                                     var selTile = gridTiles.GetTileAtPos(selPos);
                                     if(selTile != null) {
@@ -223,13 +225,15 @@ public class BattleEngine : MonoBehaviour
                             }
                         }
                     }
+                    lastXDist = xDist;
+                    lastYDist = yDist;
                 }
                 else {
                     if (charHighlighted)
                     {
                         if(moving) gridTiles.grid[highlightedCharPos.x, highlightedCharPos.y].GetComponent<Renderer>().material = isTileActive(highlightedCharPos) ? gridTiles.activeUnselected : gridTiles.unselected;
                         else if(selectedAbility != null) {
-                            foreach(Vector2Int pos in selectedAbility.shape) {
+                            foreach(Vector2Int pos in selectedAbility.getRelativeShape(lastXDist, lastYDist)) {
                                 var selPos = new Vector2Int(highlightedCharPos.x + pos.x, highlightedCharPos.y + pos.y);
                                 var selTile = gridTiles.GetTileAtPos(selPos);
                                 if(selTile != null && selTile.GetComponent<TileScript>().passable) gridTiles.grid[selPos.x, selPos.y].GetComponent<Renderer>().material = isTileActive(selPos) ? gridTiles.activeUnselected : (Mathf.Abs(activeUnitPos.x - selPos.x) + Mathf.Abs(activeUnitPos.y - selPos.y) > selectedAbility.range ? gridTiles.unselected : gridTiles.abilityHighlighted);
@@ -568,9 +572,11 @@ public class BattleEngine : MonoBehaviour
             if(!selectedAbility.friendly && isAllyUnit(gridTiles.GetCharacterAtPos(tilePos))) return false;
         }
         if(simulate) return true;
+        int xDist = activeUnitPos.x - tilePos.x;
+        int yDist = activeUnitPos.y - tilePos.y;
         List<GameObject> characters = new List<GameObject>();
         //Select characters based on ability shape
-        foreach(Vector2Int pos in selectedAbility.shape)
+        foreach(Vector2Int pos in selectedAbility.getRelativeShape(xDist, yDist))
         {
             Vector2Int selPos = new Vector2Int(tilePos.x + pos.x, tilePos.y + pos.y);
             var selTile = gridTiles.GetTileAtPos(selPos);
@@ -589,8 +595,6 @@ public class BattleEngine : MonoBehaviour
         selectedAbility.affectCharacters(activeUnit, characters);
 
         // ----- Combo Attacks ------
-        int xDist = activeUnitPos.x - tilePos.x;
-        int yDist = activeUnitPos.y - tilePos.y;
         if(selectedAbility.requiresTarget && xDist != yDist) //No diagonals
         {
             if(Mathf.Abs(xDist) > Mathf.Abs(yDist))
