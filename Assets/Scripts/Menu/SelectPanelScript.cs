@@ -12,11 +12,17 @@ public class SelectPanelScript : MonoBehaviour
     //variablez
     private float scrollSpeed = 0f;
     int tPos;
+    GameObject wheel;
 
     public Button Button1;
     public Button Button2;
     public Button Button3;
     public Button Button4;
+
+    void Start()
+    {
+        wheel = GameObject.Find("FunnyWheel");
+    }
 
     // Update is called once per frame
     void Update()
@@ -29,12 +35,14 @@ public class SelectPanelScript : MonoBehaviour
         if (Input.GetAxis("Mouse ScrollWheel") > 0f && rt.offsetMin.y > -85f)
         {
             scrollSpeed = -250f;
+            wheel.GetComponent<SpinWheel>().SetWheelOtherWay();
             //transform.Translate(0, -1f * scrollSpeed * Time.deltaTime, 0, Space.World);
         }
         //scroll down
         if (Input.GetAxis("Mouse ScrollWheel") < 0f && rt.offsetMin.y < 210f)
         {
             scrollSpeed = 250f;
+            wheel.GetComponent<SpinWheel>().SetWheel();
             //transform.Translate(0, scrollSpeed * Time.deltaTime, 0, Space.World);
         }
 

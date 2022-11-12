@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System;
 
 public class SpinWheel : MonoBehaviour
 {
@@ -23,8 +24,8 @@ public class SpinWheel : MonoBehaviour
             //rotate by current speed, decrease speed by 0.05 each frame
             //to guarantee the wheel stops, set to 0 if it goes below 1
             transform.Rotate(0f, 0f, speedofWheel * Time.deltaTime, Space.Self);
-            speedofWheel -= 0.05f;
-            if (speedofWheel < 1f)
+            speedofWheel -= speedofWheel > 0f ? 0.05f : -0.05f;
+            if (Math.Abs(speedofWheel) < 1f)
             {
                 speedofWheel = 0f;
             }
@@ -36,6 +37,12 @@ public class SpinWheel : MonoBehaviour
     public void SetWheel()
     {
         speedofWheel = 50f;
+    }
+
+    //other way
+    public void SetWheelOtherWay()
+    {
+        speedofWheel = -50f;
     }
 
     //stop the wheel / reset
