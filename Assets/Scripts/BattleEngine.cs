@@ -11,8 +11,9 @@ public class BattleEngine : MonoBehaviour
     //Prefabs
     public GameObject buttonPrefab;
 
-    public List<GameObject> units = new List<GameObject>(); //All units
     public List<GameObject> grids = new List<GameObject>(); //All grids
+    public GameObject playerShip, enemyShip;
+    public List<GameObject> units = new List<GameObject>(); //All units
     public PathTreeNode gridPaths;
     public bool active = false; //Activation flag to be set by other systems
     public bool interactable = true; //Flag used for locking actions during events
@@ -501,7 +502,7 @@ public class BattleEngine : MonoBehaviour
             if(!playerActions.isEmpty())
             {
                 //Usually shows the same thing over and over again, since player actions aren't being dequeued until the 50th turn
-                Debug.Log("AI Enqueue: " + playerActions.Peek().GetCharacter().Name + " " + playerActions.Peek().GetAbility().ID + " " + playerActions.Peek().GetMovement() 
+                Debug.Log("AI Enqueue: " + playerActions.Peek().GetCharacter().Name + " " + playerActions.Peek().GetAbility().displayName + " " + playerActions.Peek().GetMovement() 
                 + "\n" + "Queue Size: " + playerActions.Count());
             }
             foreach(GameObject button in actionButtons) Destroy(button);
@@ -699,6 +700,7 @@ public class BattleEngine : MonoBehaviour
                 break;
             }
         }
+        if(enemyShip.GetComponent<ShipStats>().HP <= 0) won = true;
         //End on win
         if(won) {
             onEnd();
@@ -716,6 +718,7 @@ public class BattleEngine : MonoBehaviour
                 break;
             }
         }
+        if(playerShip.GetComponent<ShipStats>().HP <= 0) loss = true;
         //End on loss
         if(loss) {
             onEnd();

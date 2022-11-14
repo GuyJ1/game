@@ -46,12 +46,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   friendly: 0
   requiresTarget: 0
-  totalDMG: 120
+  totalDMG: 80
   totalHP: 0
-  cost: 0
-  costType: 0
+  cost: 2
   range: 4
-  ID: 2
   displayName: Pistol Shot
   shape:
   - {x: 0, y: 0}

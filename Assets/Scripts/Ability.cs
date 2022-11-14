@@ -10,10 +10,7 @@ public class Ability : MonoBehaviour
     public int totalDMG; //total damage dealt 
     public int totalHP; //total HP healed
     public int cost; //raw cost value
-    public int costType; //Depending on this value, the a different resource will be used fot this ability
-                         //AP = 0, HP = 1, Morale = 2, Gold = 3, Food = 4, etc.
-    public int range;
-    public int ID; //every ability has a unique ID. Can be used for randomly assigning abilities to characters/enemies
+    public int range; //distance from the user this ability can be used at
     public string displayName; //Display name for UI
     public List<Vector2Int> shape; //Shape in tiles facing north (0,0) is the center
 
@@ -49,25 +46,20 @@ public class Ability : MonoBehaviour
 
     // Apply ability to target character
     public void affectCharacter(GameObject user, GameObject target) {
-        callAbility(this.ID, user.GetComponent<CharacterStats>(), target.GetComponent<CharacterStats>());
+        callAbility(user.GetComponent<CharacterStats>(), target.GetComponent<CharacterStats>());
     }
 
     // Apply ability to target list of characters
     public void affectCharacters(GameObject user, List<GameObject> targets) {
         foreach(GameObject target in targets) {
-            callAbility(this.ID, user.GetComponent<CharacterStats>(), target.GetComponent<CharacterStats>());
+            callAbility(user.GetComponent<CharacterStats>(), target.GetComponent<CharacterStats>());
         }
     }
 
-    public int callAbility(int ID, CharacterStats user, CharacterStats target){
+    public int callAbility(CharacterStats user, CharacterStats target){
         //switch statement with all IDs calling the specified function
-
-        if(costType == 0 && user.AP < cost){
-
-            return 1; //not enough AP
-        }
-  
-        switch(ID){
+        Generic(user, target);
+        /*switch(ID){
             case 0: 
                 Generic(user,target);
                 break;
@@ -95,7 +87,7 @@ public class Ability : MonoBehaviour
             default:
                 return 1; //error
 
-        }
+        }*/
 
         return 0;
             
@@ -121,9 +113,8 @@ public class Ability : MonoBehaviour
 
                 }
             }
-            else{
-
-
+            else
+            {
                 GameObject hitParticle = Instantiate(targetEffect);
                 hitParticle.transform.position = target.transform.position;
 
@@ -135,7 +126,8 @@ public class Ability : MonoBehaviour
         else
         {//heal an ally
 
-            //particle effect here
+            GameObject hitParticle = Instantiate(targetEffect);
+            hitParticle.transform.position = target.transform.position;
 
             totalHP += user.Heal(target);
 

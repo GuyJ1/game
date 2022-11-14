@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2797077193110064003}
   - component: {fileID: -1126076218509836862}
   m_Layer: 0
-  m_Name: Basic Attack
+  m_Name: Whirling Steel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -45,12 +45,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   friendly: 0
-  requiresTarget: 1
-  totalDMG: 40
+  requiresTarget: 0
+  totalDMG: 60
   totalHP: 0
-  cost: 0
-  range: 1
-  displayName: Basic
+  cost: 2
+  range: 0
+  displayName: Whirling Steel
   shape:
-  - {x: 0, y: 0}
+  - {x: 1, y: 0}
+  - {x: -1, y: 0}
+  - {x: -1, y: -1}
+  - {x: -1, y: 1}
+  - {x: 1, y: 1}
+  - {x: 1, y: -1}
+  - {x: 0, y: 1}
+  - {x: 0, y: -1}
   targetEffect: {fileID: 696958063292329688, guid: 00092c09e25beb54f813012f561ea1c0, type: 3}

@@ -43,6 +43,7 @@ public class CannonUI : MonoBehaviour
             {
                 battleScript.active = true;
                 battleScript.interactable = true;
+                battleScript.checkOutcome();
                 battleScript.endTurn();
                 setSleep = false;
                 //camScript.StopCameraFollow();

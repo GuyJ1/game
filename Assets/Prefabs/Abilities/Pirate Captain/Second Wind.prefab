@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2797077193110064003}
   - component: {fileID: -1126076218509836862}
   m_Layer: 0
-  m_Name: Basic Attack
+  m_Name: Second Wind
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44,13 +44,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51fcb3cb7e2a5f24d84d8061e64ea368, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  friendly: 0
+  friendly: 1
   requiresTarget: 1
-  totalDMG: 40
-  totalHP: 0
-  cost: 0
-  range: 1
-  displayName: Basic
+  totalDMG: 0
+  totalHP: 50
+  cost: 1
+  range: 0
+  displayName: Second Wind
   shape:
   - {x: 0, y: 0}
   targetEffect: {fileID: 696958063292329688, guid: 00092c09e25beb54f813012f561ea1c0, type: 3}

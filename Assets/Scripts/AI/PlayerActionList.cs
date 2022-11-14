@@ -111,14 +111,14 @@ public class PlayerActionList
     }
 
     /// <summary>
-    /// Sorts player action by ability ID
+    /// Sorts player action by ability name
     /// </summary>
     /// <returns></returns>
     public List<PlayerAction> sortPlayerActionsByAbilityId()
     {
         PlayerAction[] list1 = _playerActions.ToArray();
         List<PlayerAction> realList = new List<PlayerAction>(list1);
-        realList.Sort((a, b) => a.GetAbility().ID.CompareTo(b.GetAbility().ID));
+        realList.Sort((a, b) => a.GetAbility().displayName.CompareTo(b.GetAbility().displayName));
 
         
 

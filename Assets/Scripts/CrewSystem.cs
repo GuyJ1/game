@@ -18,6 +18,7 @@ public class CrewSystem : MonoBehaviour
 {
     public bool isPlayer; //Whether this crew is a player crew (do not change this in code)
     public List<GameObject> characters; //List of all characters in this crew
+    public int morale = 100;
 
     public int inventory_gold =1 ;
     public int inventory_wood =2 ;

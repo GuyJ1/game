@@ -1007,12 +1007,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buttonPrefab: {fileID: 1373450123}
-  units: []
   grids:
   - {fileID: 282761987}
   - {fileID: 1104996477}
   - {fileID: 1078946866}
   - {fileID: 2079094073}
+  playerShip: {fileID: 981864171}
+  enemyShip: {fileID: 664758444}
+  units: []
   active: 1
   interactable: 1
   moving: 0
@@ -1826,6 +1828,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8830488236965993383, guid: 603b9d13419fbad469b00e6e63649d0b, type: 3}
   m_PrefabInstance: {fileID: 609044120}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &664758444 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8515472688152868816, guid: a1dcd447bfbb3bc45821f8b436c031d2, type: 3}
+  m_PrefabInstance: {fileID: 157698713}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &707999352
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2297,6 +2304,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 531dcccc80cf5914caef1277ca4cebe1, type: 3}
+--- !u!1 &981864171 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8515472688152868816, guid: a1dcd447bfbb3bc45821f8b436c031d2, type: 3}
+  m_PrefabInstance: {fileID: 1078946864}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &994123396
 GameObject:
   m_ObjectHideFlags: 0
@@ -3630,7 +3642,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Attack
+  m_text: Action
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
