@@ -8,7 +8,6 @@ public class ShipStats : MonoBehaviour
     [SerializeField] public int HPMAX; // Maximum health
     [SerializeField] public bool isEnemy;
 
-    [SerializeField] public float dus;
     [SerializeField] public Animation shipSinkAnim;
     [SerializeField] public ShipMove myMoveScript;
 

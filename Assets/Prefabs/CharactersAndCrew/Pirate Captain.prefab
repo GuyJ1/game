@@ -109,7 +109,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6886658739876458237, guid: 35e9b644f5a473148bedf512f2340242, type: 3}
       propertyPath: gridPosition.y
-      value: 18
+      value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 6886658739876458237, guid: 35e9b644f5a473148bedf512f2340242, type: 3}
       propertyPath: abilities.Array.size

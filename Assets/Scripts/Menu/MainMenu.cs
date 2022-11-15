@@ -36,7 +36,7 @@ public class MainMenu : MonoBehaviour
 
         public void LoadMenuScene()
         {
-          SceneManager.LoadScene("TitleMenuScene");
+          SceneManager.LoadScene("TitleMenuWheel");
         }
     public void ExitGame () //method exit the game, attach to exitgamebutton
       {
