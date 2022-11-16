@@ -33,6 +33,7 @@ public class BattleEngine : MonoBehaviour
     private List<GameObject> turnQueue = new List<GameObject>(); //Stored units in the turn queue (units can repeat)
 
     //UI references
+    [SerializeField] public CharacterCardUI charCard;
     public GameObject canvas;
     private Button attackButton, moveButton, endButton;
     private List<GameObject> actionButtons = new List<GameObject>();
@@ -142,6 +143,7 @@ public class BattleEngine : MonoBehaviour
                                     selectRend.material = isTileActive(tilePos) ? gridTiles.activeUnselected : gridTiles.unselected;
                                     Debug.Log("Character on " + objectHit.name + " has been unselected");
                                     charSelected = false;
+                                    charCard.close();
                                 }
                                 // Case 3: if the character is different than the currently selected character,
                                 // then deselect the current character and select the new one
@@ -554,6 +556,7 @@ public class BattleEngine : MonoBehaviour
 
         // Selection Logic
         charSelected = true;
+        charCard.open(activeUnit.GetComponent<CharacterStats>());
         charHighlighted = false;
     }
 
@@ -651,6 +654,7 @@ public class BattleEngine : MonoBehaviour
                 activeUnitTile = gridTiles.GetTileAtPos(tilePos);
                 gridTiles.grid[selectedCharPos.x, selectedCharPos.y].GetComponent<Renderer>().material = isTileActive(selectedCharPos) ? gridTiles.activeUnselected : gridTiles.unselected;
                 charSelected = false;
+                charCard.close();
                 charHighlighted = false;
                 ResetAllHighlights();
                 moved = true;
