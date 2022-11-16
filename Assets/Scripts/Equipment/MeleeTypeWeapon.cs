@@ -6,7 +6,7 @@ public class MeleeTypeWeapon : Weapon
 {
 
     [SerializeField]
-    int type; //0 = Sword, 1 = Scimitar, 2 = Saber 
+    int type; //0 = Sword, 1 = Scimitar, 2 = Saber, 3 = Dagger
     List<GameObject> meleeAbilities; //depending on the rarity, the amount of abilities will = 1 to 3. Could possibly be randomly chosen
     
 

@@ -16,7 +16,7 @@ public class CharacterStats : MonoBehaviour
     public int MV; //Movement
     public int AP; //Ability Points (possible currency for abilities)
     public int APMAX; //Maximum ability points, default value is 100
-    public int Morale; //Morale (from 0 - 100), 
+    public int Morale; //Morale (from 0 - 100), (from crew)
                         //depending on this value, ATK/CRIT are boosted from +1 to +5 , HIT/AVO is boosted by +2 to +10 , and Healing is boosted by +1 to +10
     public int MoraleMAX; //Maximum Morale
     public int MoraleMIN; //Minimum Morale (used for Shoes)
@@ -181,6 +181,7 @@ public class CharacterStats : MonoBehaviour
         }
 
         updateAVO(ring, aura);
+        //update equipment
 
     }
 

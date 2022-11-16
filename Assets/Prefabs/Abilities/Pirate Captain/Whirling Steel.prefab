@@ -48,7 +48,7 @@ MonoBehaviour:
   requiresTarget: 0
   totalDMG: 60
   totalHP: 0
-  cost: 2
+  cost: 50
   range: 0
   displayName: Whirling Steel
   shape:

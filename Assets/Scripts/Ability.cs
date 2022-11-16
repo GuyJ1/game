@@ -9,6 +9,8 @@ public class Ability : MonoBehaviour
     public bool requiresTarget; //Whether this ability requires a selected target to execute
     public int totalDMG; //total damage dealt 
     public int totalHP; //total HP healed
+    public int baseDMG;
+    public int baseHP;
     public int cost; //raw cost value
     public int range; //distance from the user this ability can be used at
     public string displayName; //Display name for UI
@@ -59,6 +61,7 @@ public class Ability : MonoBehaviour
     public int callAbility(CharacterStats user, CharacterStats target){
         //switch statement with all IDs calling the specified function
         Generic(user, target);
+        //make use of displayName
         /*switch(ID){
             case 0: 
                 Generic(user,target);
