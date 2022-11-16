@@ -324,12 +324,13 @@ MonoBehaviour:
   comboAttack: {fileID: 5751798234688528242, guid: 340a031d05ed20443bfb33cc3da77785, type: 3}
   abilities:
   - {fileID: 5751798234688528242, guid: a3061c5fb22fe7f438aef4cf591f1383, type: 3}
+  - {fileID: 5751798234688528242, guid: 79df8a1d39b82b14fa2bab96da32d630, type: 3}
   healthBarScale: 2
   healthBar: {fileID: 4151192400801874901}
   healthBarYOffset: 1
   canvas: {fileID: 0}
   model: {fileID: 4349290728497671086}
-  gridPosition: {x: 7, y: 8}
+  gridPosition: {x: 1, y: 1}
   myGrid: {fileID: 0}
   crew: {fileID: 8677408311475748420, guid: ff7e742bfec002a4c80690599f895dce, type: 3}
   weapon: {fileID: 0}

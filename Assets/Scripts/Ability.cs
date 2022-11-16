@@ -11,8 +11,9 @@ public class Ability : MonoBehaviour
     public int totalHP; //total HP healed
     public int baseDMG;
     public int baseHP;
-    public int cost; //raw cost value
-    public int range; //distance from the user this ability can be used at
+    public int cost; //AP cost
+    public int range; //Distance from the user this ability can be used at
+    public int movement; //Movement to apply to targets (positive is push, negative is pull)
     public string displayName; //Display name for UI
     public List<Vector2Int> shape; //Shape in tiles facing north (0,0) is the center
 
@@ -28,6 +29,16 @@ public class Ability : MonoBehaviour
     void Update()
     {
 
+    }
+
+    // Return movement value rotated dependent on which way user is facing
+    public Vector2Int getMovement(int xDist, int yDist) {
+        if(Mathf.Abs(xDist) >= Mathf.Abs(yDist)) {
+            if(xDist > 0) return new Vector2Int(-movement, 0);
+            else return new Vector2Int(movement, 0);
+        }
+        else if(yDist > 0) return new Vector2Int(0, -movement);
+        else return new Vector2Int(0, movement);
     }
 
     // Return shape rotated dependent on which way user is facing
@@ -112,7 +123,7 @@ public class Ability : MonoBehaviour
 
                     totalDMG = user.Attack(target, 1);
 
-                    target.adjustHP(-totalDMG);
+                    target.adjustHP(-totalDMG - baseDMG);
 
                 }
             }
@@ -123,7 +134,7 @@ public class Ability : MonoBehaviour
 
                 totalDMG = user.Attack(target, 1);
 
-                target.adjustHP(-totalDMG);
+                target.adjustHP(-totalDMG - baseDMG);
             }
         }
         else
@@ -132,9 +143,9 @@ public class Ability : MonoBehaviour
             GameObject hitParticle = Instantiate(targetEffect);
             hitParticle.transform.position = target.transform.position;
 
-            totalHP += user.Heal(target);
+            totalHP = user.Heal(target);
 
-            target.adjustHP(totalHP);
+            target.adjustHP(totalHP + baseHP);
         }
         
     }

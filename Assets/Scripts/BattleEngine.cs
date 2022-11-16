@@ -597,6 +597,22 @@ public class BattleEngine : MonoBehaviour
         acted = true;
         attackButton.interactable = false;
         selectedAbility.affectCharacters(activeUnit, characters);
+        //Pull and knockback
+        if(selectedAbility.movement != 0) {
+            foreach(GameObject character in characters) {
+                CharacterStats charStats = character.GetComponent<CharacterStats>();
+                Vector2Int movement = selectedAbility.getMovement(xDist, yDist);
+                gridTiles.GetAllPathsFromTile(gridTiles.GetTileAtPos(charStats.gridPosition), Mathf.Abs(movement.x) > Mathf.Abs(movement.y) ? Mathf.Abs(movement.x) : Mathf.Abs(movement.y));
+                //Look for longest path and try to take it
+                while(movement.x != 0 || movement.y != 0) {
+                    if(gridTiles.MoveCharacterOnTile(charStats.gridPosition, new Vector2Int(charStats.gridPosition.x + movement.x, charStats.gridPosition.y + movement.y), false)) break;
+                    if(movement.x < 0) movement.x++;
+                    else if(movement.x > 0) movement.x--;
+                    else if(movement.y < 0) movement.y++;
+                    else if(movement.y > 0) movement.y--;
+                }
+            }
+        }
 
         // ----- Combo Attacks ------
         if(selectedAbility.requiresTarget && xDist != yDist) //No diagonals
@@ -624,9 +640,10 @@ public class BattleEngine : MonoBehaviour
 
     //Try to perform a combo attack from the specified character to the target
     public void tryComboAttack(GameObject characterTile, GameObject targetCharacter) {
-        if(characterTile != null && characterTile.GetComponent<TileScript>()) {
+        if(characterTile != null && targetCharacter != null) {
             TileScript tile = characterTile.GetComponent<TileScript>();
-            if(tile.hasCharacter && isAllyUnit(tile.characterOn) != isAllyUnit(targetCharacter)) { //Need target on opposite team
+            Vector2Int targetPos = targetCharacter.GetComponent<CharacterStats>().gridPosition;
+            if(tile.hasCharacter && isAllyUnit(tile.characterOn) != isAllyUnit(targetCharacter) && Mathf.Abs(tile.position.x - targetPos.x) + Mathf.Abs(tile.position.y - targetPos.y) == 1) { //Need target on opposite team
                 Debug.Log("Triggering combo attack...");
                 getComboAttack(tile.characterOn).affectCharacter(tile.characterOn, targetCharacter);
             }
@@ -640,7 +657,7 @@ public class BattleEngine : MonoBehaviour
         if(!moved && moving && charSelected && activeUnit == gridTiles.GetCharacterAtPos(selectedCharPos) && tilePos != selectedCharPos) 
         {
             // Move character
-            if (gridTiles.MoveCharacterOnTile(gridPaths, selectedCharPos, tilePos, true) == false)
+            if (gridTiles.MoveCharacterOnTile(selectedCharPos, tilePos, true) == false)
             {
                 Debug.Log("Cannot move character to tile " + tilePos.x + " " + tilePos.y);
                 return false;

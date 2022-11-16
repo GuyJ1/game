@@ -321,12 +321,11 @@ public class GridBehavior : MonoBehaviour
 
     // --------------------------------------------------------------
     // @desc: Move a character on the grid based on tile positions
-    // @arg: pathTreeRef - reference to the path tree
     // @arg: sourcePos - logical grid position with a character on it
     // @arg: destPos   - logical grid position to move the character to
     // @ret: bool      - whether the move is successful or not
     // --------------------------------------------------------------
-    public bool MoveCharacterOnTile(PathTreeNode pathTreeRef, Vector2Int sourcePos, Vector2Int destPos, bool onlyHighlighted)
+    public bool MoveCharacterOnTile(Vector2Int sourcePos, Vector2Int destPos, bool onlyHighlighted)
     {
         GameObject charToMove = null;
         bool moveSuccess = false;
@@ -343,10 +342,10 @@ public class GridBehavior : MonoBehaviour
             var destTileScript = destTile.GetComponent<TileScript>();
 
             // Get character on source tile
-            if (sourceTileScipt.hasCharacter)
+            if (sourceTileScipt.hasCharacter && !destTileScript.hasCharacter)
             {
                 // Only move to highlighted tiles
-                if (onlyHighlighted && destTileScript.highlighted)
+                if (!onlyHighlighted || destTileScript.highlighted)
                 {
                     Debug.Log("Moving character to tile " + destPos.x + " " + destPos.y);
                     charToMove = sourceTileScipt.characterOn;
