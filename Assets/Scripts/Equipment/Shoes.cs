@@ -6,7 +6,7 @@ public class Shoes : Accessory
 {
     [SerializeField]
     public int MVmodifier;
-    public int MoraleModifier;
+    public int SPDmodifier;
 
     // Start is called before the first frame update
     void Start()
@@ -20,6 +20,12 @@ public class Shoes : Accessory
     public void statBonus(CharacterStats target){
 
         target.MV += MVmodifier;
-        target.MoraleMIN += MoraleModifier;
+        target.SPD += SPDmodifier;
+    }
+
+    public void removeBonus(CharacterStats target){
+
+        target.MV -= MVmodifier;
+        target.SPD -= SPDmodifier;
     }
 }

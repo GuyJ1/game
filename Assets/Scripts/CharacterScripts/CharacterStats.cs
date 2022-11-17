@@ -15,11 +15,12 @@ public class CharacterStats : MonoBehaviour
     public int LCK; //Luck
     public int MV; //Movement
     public int AP; //Ability Points (possible currency for abilities)
-    public int APMAX; //Maximum ability points, default value is 100
-    public int Morale; //Morale (from 0 - 100), (from crew)
-                        //depending on this value, ATK/CRIT are boosted from +1 to +5 , HIT/AVO is boosted by +2 to +10 , and Healing is boosted by +1 to +10
+    public int APMAX; //Maximum ability points, default value is 3
+
+    /*
     public int MoraleMAX; //Maximum Morale
-    public int MoraleMIN; //Minimum Morale (used for Shoes)
+    public int MoraleMIN; //Minimum Morale 
+    */
     public int ATK; //Attack power (= STR - Enemy's DEF)
     public int HIT; //Hit Rate (= (((DEX*3 + LCK) / 2) - Enemy's AVO)
     public int CRIT; //Critical Rate (= ((DEX / 2) - 5) - Enemy's LCK)
@@ -46,7 +47,7 @@ public class CharacterStats : MonoBehaviour
     public Vector2Int gridPosition;
     public GameObject myGrid;
 
-    // Crew that this character belongs to (should be set by CrewSystem)
+    // Crew that this character belongs to (should be set by CrewSystem, contains morale value)
     public GameObject crew;
 
     //Equipment
@@ -56,10 +57,13 @@ public class CharacterStats : MonoBehaviour
     public Ring ring; //can increase ATK, HIT, CRIT, and/or AVO
     public Amulet amulet; //can increase max HP, LCK, and/or healing ability
     public Bracelet bracelet; //can increase max AP, LCK, and/or healing ability
-    public Shoes shoes; //can increase MV and/or Morale
+    public Shoes shoes; //can increase MV and/or SPD
     public Aura aura; //can increase any stat
 
 
+    public int Morale;
+
+    
     
 
     // Start is called before the first frame update
@@ -87,12 +91,16 @@ public class CharacterStats : MonoBehaviour
 
         healthBar.gradient = grad;
 
-        MoraleMIN = 0;
+        // Morale is now pulled from CrewSystem.morale. All characters now use a univeral morale value, with the same boosts
+        Morale = crew.GetComponent<CrewSystem>().morale; //Morale (from 0 - 100), (from crew)
+        //depending on this value, ATK/CRIT are boosted from +1 to +5 , HIT/AVO is boosted by +2 to +10 , and Healing is boosted by +1 to +10
+
+        //MoraleMIN = 0;
 
         //Temporary name for player-controlled characters for logging: Will need to have functionality added later
         Name = "Pupperton";
 
-        // Set health, ability points, morale, etc.
+        // Set health, ability points, etc.
 
         if(hat != null){
 
@@ -121,15 +129,16 @@ public class CharacterStats : MonoBehaviour
 
 
 
-
+        /*
         if(MoraleMIN > 80){//minimum morale can't go higher than 80%
 
             MoraleMIN = 80;
 
         }
+        */
 
         if(weapon != null){
-            weapon.modifyStats(this);
+            weapon.modifyStats(this, true);
         }
 
         if(armor != null){
@@ -158,7 +167,7 @@ public class CharacterStats : MonoBehaviour
 
         healthBar.SetMaxHealth(HPMAX);
 
-        Morale = MoraleMAX;
+        //Morale = MoraleMAX;
 
         AP = APMAX;
 
@@ -180,7 +189,7 @@ public class CharacterStats : MonoBehaviour
             adjustHP(-20);
         }
 
-        updateAVO(ring, aura);
+        //updateAVO(ring, aura);
         //update equipment
 
     }
@@ -278,7 +287,7 @@ public class CharacterStats : MonoBehaviour
 
         return 0;
     }
-
+/*
     //Morale changed (either positive or negative)
     public void adjustMorale(int change){
         Morale += change;
@@ -289,6 +298,7 @@ public class CharacterStats : MonoBehaviour
             Morale = MoraleMAX;
         }
     }
+*/
 
     //Attack the enemy, possibly with a critical hit
     //Note: Critical hits triple the total damage

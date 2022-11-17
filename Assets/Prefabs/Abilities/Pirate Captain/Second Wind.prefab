@@ -47,9 +47,12 @@ MonoBehaviour:
   friendly: 1
   requiresTarget: 1
   totalDMG: 0
-  totalHP: 50
-  cost: 30
+  totalHP: 0
+  baseDMG: 0
+  baseHP: 50
+  cost: 1
   range: 0
+  movement: 0
   displayName: Second Wind
   shape:
   - {x: 0, y: 0}

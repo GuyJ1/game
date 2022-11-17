@@ -17,7 +17,7 @@ public class Aura : Accessory
     public int APmodifier;
     public int LCKmodifier;
     public int MVmodifier;
-    public int MoraleModifier;
+    //public int MoraleModifier;
     public int HealModifier;
 
 
@@ -39,7 +39,23 @@ public class Aura : Accessory
         target.APMAX += APmodifier;
         target.LCK += LCKmodifier;
         target.MV += MVmodifier;
-        target.MoraleMIN += MoraleModifier;
+        //target.MoraleMIN += MoraleModifier;
+        
+
+    }
+
+    public void removeBonus(CharacterStats target){
+
+        target.STR -= STRmodifier;
+        target.DEF -= DEFmodifier;
+        target.SPD -= SPDmodifier;
+        target.DEX -= DEXmodifier;
+        target.HPMAX -= HPmodifier;
+        target.APMAX -= APmodifier;
+        target.LCK -= LCKmodifier;
+        target.MV -= MVmodifier;
+        //target.MoraleMIN -= MoraleModifier;
+        target.AVO -= AVOmodifier;
         
 
     }

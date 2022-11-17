@@ -6,7 +6,7 @@ public class MeleeTypeWeapon : Weapon
 {
 
     [SerializeField]
-    int type; //0 = Sword, 1 = Scimitar, 2 = Saber, 3 = Dagger
+    int type; //0 = Sword, 1 = Scimitar, 2 = Saber
     List<GameObject> meleeAbilities; //depending on the rarity, the amount of abilities will = 1 to 3. Could possibly be randomly chosen
     
 
@@ -14,8 +14,6 @@ public class MeleeTypeWeapon : Weapon
     // Start is called before the first frame update
     void Start()
     {
-
-        //if used, should determine random abilities here
 
         //Determine modifiers
         switch(type){

@@ -22,6 +22,8 @@ public class Weapon : MonoBehaviour
     public int SPDmod;
     public int DEXmod;
     public int LCKmod;
+
+    public int Rarity; //from 1 to 3.
     
 
     
@@ -32,7 +34,6 @@ public class Weapon : MonoBehaviour
     public int MGT; //Might. Total attack is increased/decreased with this stat.
     public int DurabilityMAX;
     public int Range;
-    public int Rarity; //from 1 to 3. Determines the amount of abilities on this weapon.
     
 
     // Start is called before the first frame update
@@ -71,12 +72,27 @@ public class Weapon : MonoBehaviour
         }
     }
 
-    public void modifyStats(CharacterStats target){
+    public void modifyStats(CharacterStats target, bool isPositive){
 
-        target.HPMAX += HPmod;
-        target.DEF += DEFmod;
-        target.SPD += SPDmod;
-        target.DEX += DEXmod;
-        target.LCK += LCKmod;
+        
+        if(isPositive){
+
+            target.HPMAX += HPmod;
+            target.DEF += DEFmod;
+            target.SPD += SPDmod;
+            target.DEX += DEXmod;
+            target.LCK += LCKmod;
+        }
+        else{
+
+            target.HPMAX -= HPmod;
+            target.DEF -= DEFmod;
+            target.SPD -= SPDmod;
+            target.DEX -= DEXmod;
+            target.LCK -= LCKmod;
+
+
+
+        }
     }
 }

@@ -23,4 +23,10 @@ public class Bracelet : Accessory
         target.APMAX += APmodifier;
         target.LCK += LCKmodifier;
     }
+
+    public void removeBonus(CharacterStats target){
+
+        target.APMAX -= APmodifier;
+        target.LCK -= LCKmodifier;
+    }
 }

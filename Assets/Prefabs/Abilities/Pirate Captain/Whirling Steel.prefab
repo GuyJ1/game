@@ -46,10 +46,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   friendly: 0
   requiresTarget: 0
-  totalDMG: 60
+  totalDMG: 0
   totalHP: 0
-  cost: 50
+  baseDMG: 50
+  baseHP: 0
+  cost: 2
   range: 0
+  movement: 0
   displayName: Whirling Steel
   shape:
   - {x: 1, y: 0}

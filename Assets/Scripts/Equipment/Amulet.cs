@@ -23,4 +23,11 @@ public class Amulet : Accessory
         target.LCK += LCKmodifier;
         
     }
+
+    public void removeBonus(CharacterStats target){
+
+        target.HPMAX -= HPmodifier;
+        target.LCK -= LCKmodifier;
+        
+    }
 }

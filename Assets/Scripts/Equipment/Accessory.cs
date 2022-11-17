@@ -12,7 +12,7 @@ public class Accessory : MonoBehaviour
     //2: Ring, grants +ATK/HIT/CRIT/AVO
     //3: Amulet, grants +HP / +LCK
     //4: Bracelet, grants +AP / +LCK
-    //5: Shoes, grants +MV / +Morale
+    //5: Shoes, grants +MV / +SPD
     //6: Aura, can grant any of the above stats
 
 

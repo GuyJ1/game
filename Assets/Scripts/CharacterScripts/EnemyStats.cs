@@ -18,7 +18,7 @@ public class EnemyStats : CharacterStats
         // Set health and morale
         HP = HPMAX;
 
-        Morale = MoraleMAX;
+        //Morale = MoraleMAX;
         
         //Temporary name attributed to enemy characters: Will need to have functionality added later
         Name = "Angery Doggo";

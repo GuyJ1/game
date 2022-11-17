@@ -28,6 +28,15 @@ public class Hat : Accessory
 
     }
 
+    public void removeBonus(CharacterStats target){
+
+        target.STR -= STRmodifier;
+        target.DEF -= DEFmodifier;
+        target.SPD -= SPDmodifier;
+        target.DEX -= DEXmodifier;
+
+    }
+
 
 }
 

@@ -9,13 +9,16 @@ public class Ability : MonoBehaviour
     public bool requiresTarget; //Whether this ability requires a selected target to execute
     public int totalDMG; //total damage dealt 
     public int totalHP; //total HP healed
-    public int baseDMG;
-    public int baseHP;
+    public int totalACC; //chance the ability hits
+    public int baseDMG; //ability will always do a certain amount of damage regardless of DEF
+    public int baseHP; //ability will always heal a certain amount of HP
+    public int baseACC; //ability comes with a set accuracy
     public int cost; //AP cost
     public int range; //Distance from the user this ability can be used at
     public int movement; //Movement to apply to targets (positive is push, negative is pull)
     public string displayName; //Display name for UI
     public List<Vector2Int> shape; //Shape in tiles facing north (0,0) is the center
+    
 
     [SerializeField] public GameObject targetEffect; //visual effect
 
@@ -69,10 +72,44 @@ public class Ability : MonoBehaviour
         }
     }
 
-    public int callAbility(CharacterStats user, CharacterStats target){
+    public void callAbility(CharacterStats user, CharacterStats target){
         //switch statement with all IDs calling the specified function
-        Generic(user, target);
+        //Generic(user, target);
         //make use of displayName
+
+        if(displayName == "Basic"){
+
+            Generic(user, target);
+
+        }
+        else if(displayName == "Combo"){
+
+            Combo(user, target);
+
+        }
+        else if(displayName == "Pierce"){
+
+            Pierce(user, target);
+
+        }
+        else if(displayName == "Shooting Star"){
+
+            ShootingStar(user, target);
+
+        }
+        else if(displayName == "Siphon"){
+
+             Siphon(user, target);
+
+        }
+        else if(displayName == "Pistol Shot"){
+
+            PistolShot(user, target);
+
+        }
+
+
+
         /*switch(ID){
             case 0: 
                 Generic(user,target);
@@ -103,12 +140,14 @@ public class Ability : MonoBehaviour
 
         }*/
 
-        return 0;
+        
             
 
     }
 
     //Ability implementations
+
+//// GENERAL ABILITIES ///
 
     //Generic ability with no special effects
     void Generic(CharacterStats user, CharacterStats target) {
@@ -160,17 +199,23 @@ public class Ability : MonoBehaviour
 
     }
 
+/// PIRATE CLASS ABILITIES ///
+
     void PistolShot(CharacterStats user, CharacterStats target){
 
         //see above
 
         
 
-        target.adjustHP(-totalDMG);
+        target.adjustHP(-totalDMG - baseDMG);
         
 
 
     }
+
+
+
+/// GENERAL WEAPON ABILITIES ///
 
     //Attack the enemy and then heal (= Attack Power)
     void Siphon(CharacterStats user, CharacterStats target){
@@ -193,14 +238,14 @@ public class Ability : MonoBehaviour
 
     }
 
-    //attack while ignorning enemy defenses
+    //attack while ignorning enemy defenses (base damage = 10)
     void Pierce(CharacterStats user, CharacterStats target){
 
         GameObject hitParticle = Instantiate(targetEffect);
         hitParticle.transform.position = target.transform.position;
 
         totalDMG = user.Attack(target, 2);
-        target.adjustHP(-totalDMG);
+        target.adjustHP(-totalDMG - baseDMG);
 
         
 
@@ -226,6 +271,25 @@ public class Ability : MonoBehaviour
 
         
 
+    }
+
+/// PIRATE CAPTAIN ABILITIES ///
+
+    void WhirlingSteel(CharacterStats user, CharacterStats target){
+
+        //blank for now
+
+
+
+        target.adjustHP(-totalDMG - baseDMG);
+    }
+
+    void SecondWind(CharacterStats user){
+
+
+        totalHP = user.Heal(user);
+
+        user.adjustHP(totalHP + baseHP);
     }
 
 

@@ -34,6 +34,11 @@ public class Ring : Accessory
 
     }
 
+    public void removeBonus(CharacterStats target){
+
+        target.AVO -= AVOmodifier;
+    }
+
 
 
 

@@ -48,10 +48,11 @@ MonoBehaviour:
   requiresTarget: 1
   totalDMG: 0
   totalHP: 0
-  cost: 20
-  costType: 0
+  baseDMG: 10
+  baseHP: 0
+  cost: 2
   range: 1
-  ID: 4
+  movement: 0
   displayName: Pierce
   shape:
   - {x: 0, y: 0}
