@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: e3265ab4bf004d28a9537516768c1c75
+guid: 2425556de16cd1e46b1a80901c25b2f0
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -9,7 +9,7 @@ TrueTypeFontImporter:
   characterPadding: 1
   includeFontData: 1
   fontNames:
-  - Liberation Sans
+  - Prince Valiant
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0

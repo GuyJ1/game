@@ -40,6 +40,9 @@ public class CharacterStats : MonoBehaviour
     // Canvas reference
     public GameObject canvas;
 
+    // UI
+    public GameObject DamageText;
+
     // Model reference
     public GameObject model;
 
@@ -247,6 +250,12 @@ public class CharacterStats : MonoBehaviour
             HP = HPMAX;
         }
 
+        // Display Damage
+        DamageText.GetComponent<TextDamage>().damageToDisplay = change;
+        GameObject damageDisplay = Instantiate(DamageText, canvas.transform);
+        damageDisplay.transform.position = Camera.main.WorldToScreenPoint(model.transform.position);
+
+        // Update Healthbar
         healthBar.SetHealth(HP);
     }
 

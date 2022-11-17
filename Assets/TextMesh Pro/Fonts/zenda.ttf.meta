@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: e3265ab4bf004d28a9537516768c1c75
+guid: 4f8c4c94cc1cd594283c91c6a7c37be3
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -9,7 +9,7 @@ TrueTypeFontImporter:
   characterPadding: 1
   includeFontData: 1
   fontNames:
-  - Liberation Sans
+  - Zenda
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0
