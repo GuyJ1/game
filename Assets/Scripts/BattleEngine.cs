@@ -372,8 +372,8 @@ public class BattleEngine : MonoBehaviour
         else {
             if(unit2 == null) return 1;
             else {
-                int speed1 = unit1.GetComponent<CharacterStats>().SPD;
-                int speed2 = unit2.GetComponent<CharacterStats>().SPD;
+                int speed1 = unit1.GetComponent<CharacterStats>().getSpeed();
+                int speed2 = unit2.GetComponent<CharacterStats>().getSpeed();
                 if(speed1 > speed2) return 1;
                 else if(speed1 < speed2) return -1;
                 else return 0;
@@ -488,6 +488,9 @@ public class BattleEngine : MonoBehaviour
             var gridTiles = grid.GetComponent<GridBehavior>();
             gridTiles.GetTileAtPos(activeUnitPos).GetComponent<TileScript>().highlighted = false;
             gridTiles.GetTileAtPos(activeUnitPos).GetComponent<Renderer>().material = gridTiles.unselected;
+            
+            // Tick stat modifiers
+            activeUnit.GetComponent<CharacterStats>().tickModifiers();
 
             //Player turn enqueue handling - passes in the current active unit (if it is a player controlled unit), 
             //the target of this turn's action (if any), the type of action taken this turn (if any), and whether the character moved
@@ -545,7 +548,7 @@ public class BattleEngine : MonoBehaviour
         }
         else
         {
-            if(!moved) { highlightValidMoves(tilePos, tileScript.characterOn.GetComponent<CharacterStats>().MV); }
+            if(!moved) { highlightValidMoves(tilePos, tileScript.characterOn.GetComponent<CharacterStats>().getMovement()); }
         }
 
         // Select new tile at tile pos

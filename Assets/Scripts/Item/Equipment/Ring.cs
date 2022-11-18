@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Ring : Accessory
+public class Ring : EquippableItem
 {
     [SerializeField]
     public int ATKmodifier;
@@ -13,8 +13,7 @@ public class Ring : Accessory
     // Start is called before the first frame update
     void Start()
     {
-        Type = 2;
-        
+
     }
 
 
@@ -33,13 +32,4 @@ public class Ring : Accessory
         }
 
     }
-
-    public void removeBonus(CharacterStats target){
-
-        target.AVO -= AVOmodifier;
-    }
-
-
-
-
 }

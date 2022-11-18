@@ -342,7 +342,7 @@ public class GridBehavior : MonoBehaviour
             var destTileScript = destTile.GetComponent<TileScript>();
 
             // Get character on source tile
-            if (sourceTileScipt.hasCharacter && !destTileScript.hasCharacter)
+            if (sourceTileScipt.hasCharacter && !destTileScript.hasCharacter && destTileScript.passable)
             {
                 // Only move to highlighted tiles
                 if (!onlyHighlighted || destTileScript.highlighted)

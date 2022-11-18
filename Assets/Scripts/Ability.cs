@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEditor;
 
 public class Ability : MonoBehaviour
 {
@@ -18,8 +19,8 @@ public class Ability : MonoBehaviour
     public int movement; //Movement to apply to targets (positive is push, negative is pull)
     public string displayName; //Display name for UI
     public List<Vector2Int> shape; //Shape in tiles facing north (0,0) is the center
-    
-
+    public List<StatModifier> targetModifiers; //Stat modifiers to apply to targets
+    public List<StatModifier> selfModifiers; //Stat modifiers to apply to self
     [SerializeField] public GameObject targetEffect; //visual effect
 
     // Start is called before the first frame update
@@ -77,7 +78,7 @@ public class Ability : MonoBehaviour
         //Generic(user, target);
         //make use of displayName
 
-        if(displayName == "Basic"){
+        /*if(displayName == "Basic"){
 
             Generic(user, target);
 
@@ -87,7 +88,7 @@ public class Ability : MonoBehaviour
             Combo(user, target);
 
         }
-        else if(displayName == "Pierce"){
+        else*/ if(displayName == "Pierce"){
 
             Pierce(user, target);
 
@@ -102,11 +103,12 @@ public class Ability : MonoBehaviour
              Siphon(user, target);
 
         }
-        else if(displayName == "Pistol Shot"){
+        /*else if(displayName == "Pistol Shot"){
 
             PistolShot(user, target);
 
-        }
+        }*/
+        else Generic(user, target);
 
 
 
@@ -153,7 +155,7 @@ public class Ability : MonoBehaviour
     void Generic(CharacterStats user, CharacterStats target) {
         if(!friendly)
         {//attack the enemy
-            if(user.weapon != null && (user.weapon.doubleAttack && (user.SPD - target.SPD >= 5))){//if the equipped weapon can double attack
+            if(user.weapon != null && (user.weapon.doubleAttack && (user.getSpeed() - target.getSpeed() >= 5))){//if the equipped weapon can double attack
 
                 for(int i = 0; i < 2; i++){
 
@@ -186,7 +188,14 @@ public class Ability : MonoBehaviour
 
             target.adjustHP(totalHP + baseHP);
         }
-        
+        //Apply modifiers to self
+        foreach(StatModifier modifier in selfModifiers) {
+            if(modifier.chance > Random.Range(0.0F, 1.0F)) user.addModifier(modifier.clone());
+        }
+        //Apply modifiers to target
+        foreach(StatModifier modifier in targetModifiers) {
+            if(modifier.chance > Random.Range(0.0F, 1.0F)) target.addModifier(modifier.clone());
+        }
     }
 
     void Combo(CharacterStats user, CharacterStats target){

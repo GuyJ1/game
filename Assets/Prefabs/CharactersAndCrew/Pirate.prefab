@@ -302,19 +302,48 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a50fdbd8c5f86b46b6a74ac706fc930, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HPMAX:
+    baseValue: 200
+    min: 20
+    max: 1000
+    type: 0
+  APMAX:
+    baseValue: 3
+    min: 1
+    max: 9
+    type: 1
+  STR:
+    baseValue: 25
+    min: 5
+    max: 100
+    type: 2
+  DEF:
+    baseValue: 12
+    min: 5
+    max: 100
+    type: 3
+  SPD:
+    baseValue: 25
+    min: 5
+    max: 100
+    type: 4
+  DEX:
+    baseValue: 20
+    min: 5
+    max: 100
+    type: 5
+  LCK:
+    baseValue: 20
+    min: 5
+    max: 100
+    type: 6
+  MV:
+    baseValue: 5
+    min: 1
+    max: 10
+    type: 7
   HP: 200
-  HPMAX: 200
-  STR: 20
-  DEF: 20
-  SPD: 10
-  DEX: 0
-  LCK: 0
-  MV: 5
   AP: 0
-  APMAX: 0
-  Morale: 0
-  MoraleMAX: 0
-  MoraleMIN: 0
   ATK: 0
   HIT: 0
   CRIT: 0
@@ -331,7 +360,7 @@ MonoBehaviour:
   canvas: {fileID: 0}
   DamageText: {fileID: 8133978484208511556, guid: 87660d197cb3d9c4a90de7de09cea50e, type: 3}
   model: {fileID: 4349290728497671086}
-  gridPosition: {x: 1, y: 18}
+  gridPosition: {x: 4, y: 10}
   myGrid: {fileID: 0}
   crew: {fileID: 8677408311475748420, guid: ff7e742bfec002a4c80690599f895dce, type: 3}
   weapon: {fileID: 0}
@@ -342,6 +371,7 @@ MonoBehaviour:
   bracelet: {fileID: 0}
   shoes: {fileID: 0}
   aura: {fileID: 0}
+  Morale: 0
 --- !u!114 &1640716338498495246
 MonoBehaviour:
   m_ObjectHideFlags: 0

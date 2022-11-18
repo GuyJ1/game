@@ -1,22 +1,88 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
+public class Stat
+{
+    public int baseValue, min, max;
+    public StatType type;
+
+    //Return value adjusted with modifiers
+    public int getValue(List<StatModifier> modifiers)
+    {
+        float value = baseValue;
+        //Add flat values first
+        foreach(StatModifier modifier in modifiers)
+        {
+            if(modifier.type != type || modifier.op == OpType.MULTIPLY) continue;
+            value += modifier.value;
+        }
+        float scalar = 1;
+        //Combine into one large scalar for multiplication
+        foreach(StatModifier modifier in modifiers)
+        {
+            if(modifier.type != type || modifier.op == OpType.ADD) continue;
+            scalar += modifier.value;
+        }
+        //Multiply by scalar
+        value *= scalar;
+        return (int) Mathf.Round(Mathf.Clamp(value, min, max));
+    }
+}
+
+[Serializable]
+public class StatModifier
+{
+    public StatType type; //Target stat
+    public OpType op; //Whether to do addition or multiplication
+    public int duration; //Duration in turns (-1 for infinite)
+    public float value; //Value for operation
+    public float chance; //Chance to apply (0.0 to 1.0);
+
+    private StatModifier(StatType type, OpType op, int duration, float value, float chance) {
+        this.type = type;
+        this.op = op;
+        this.duration = duration;
+        this.value = value;
+        this.chance = chance;
+    }
+
+    //Return true if this modifier is a buff, false if a debuff
+    public bool isBuff() {
+        if(op == OpType.ADD) return value >= 0;
+        else return value >= 1;
+    }
+
+    public StatModifier clone() {
+        return new StatModifier(type, op, duration, value, chance);
+    }
+}
+
+public enum StatType {
+    HPMAX, APMAX, STR, DEF, SPD, DEX, LCK, MV
+}
+
+public enum OpType
+{
+    ADD, MULTIPLY
+}
+
 public class CharacterStats : MonoBehaviour
 {
-
     [SerializeField]
-    public int HP; //Current health
-    public int HPMAX; //Maximum health
-    public int STR; //Strength
-    public int DEF; //Defense
-    public int SPD; //Agility
-    public int DEX; //Dexterity
-    public int LCK; //Luck
-    public int MV; //Movement
-    public int AP; //Ability Points (possible currency for abilities)
-    public int APMAX; //Maximum ability points, default value is 3
+    public Stat HPMAX; //Maximum health
+    public Stat APMAX; //Maximum ability points, default value is 3
+    public Stat STR; //Strength
+    public Stat DEF; //Defense
+    public Stat SPD; //Agility
+    public Stat DEX; //Dexterity
+    public Stat LCK; //Luck
+    public Stat MV; //Movement
 
+    public int HP; //Current health
+    public int AP; //Current ability points
     /*
     public int MoraleMAX; //Maximum Morale
     public int MoraleMIN; //Minimum Morale 
@@ -25,6 +91,8 @@ public class CharacterStats : MonoBehaviour
     public int HIT; //Hit Rate (= (((DEX*3 + LCK) / 2) - Enemy's AVO)
     public int CRIT; //Critical Rate (= ((DEX / 2) - 5) - Enemy's LCK)
     public int AVO; //Avoid  (= (SPD*3 + LCK) / 2)
+
+    public List<StatModifier> statModifiers = new List<StatModifier>();
 
     public string Name;
 
@@ -63,11 +131,7 @@ public class CharacterStats : MonoBehaviour
     public Shoes shoes; //can increase MV and/or SPD
     public Aura aura; //can increase any stat
 
-
     public int Morale;
-
-    
-    
 
     // Start is called before the first frame update
     void Start()
@@ -105,46 +169,9 @@ public class CharacterStats : MonoBehaviour
 
         // Set health, ability points, etc.
 
-        if(hat != null){
+        refreshStats();
 
-            hat.statBonus(this);
-        }
-
-        if(amulet != null){
-            amulet.statBonus(this);
-        }
-
-        if(bracelet != null){
-
-            bracelet.statBonus(this);
-        }
-
-        if(shoes != null){
-
-            shoes.statBonus(this);
-
-        }
-
-        if(aura != null){
-
-            aura.statBonus(this);
-        }
-
-
-
-        /*
-        if(MoraleMIN > 80){//minimum morale can't go higher than 80%
-
-            MoraleMIN = 80;
-
-        }
-        */
-
-        if(weapon != null){
-            weapon.modifyStats(this, true);
-        }
-
-        if(armor != null){
+        /*if(armor != null){
             DEF += armor.RES;
             if(STR < armor.CON){
 
@@ -164,15 +191,15 @@ public class CharacterStats : MonoBehaviour
                 MV = 1;
             }
             
-        }
+        }*/
 
-        HP = HPMAX;
+        HP = getMaxHP();
 
-        healthBar.SetMaxHealth(HPMAX);
+        healthBar.SetMaxHealth(getMaxHP());
 
         //Morale = MoraleMAX;
 
-        AP = APMAX;
+        AP = getMaxAP();
 
         updateAVO(ring, aura);
 
@@ -237,6 +264,19 @@ public class CharacterStats : MonoBehaviour
         return list;
     }
 
+    // Clear all modifiers and re-apply equipment modifiers
+    public void refreshStats() {
+        clearModifiers();
+        if(weapon != null) weapon.applyModifiers(this);
+        if(hat != null) hat.applyModifiers(this);
+        if(ring != null) ring.applyModifiers(this);
+        if(amulet != null) amulet.applyModifiers(this);
+        if(bracelet != null) bracelet.applyModifiers(this);
+        if(shoes != null) shoes.applyModifiers(this);
+        if(aura != null) aura.applyModifiers(this);
+        if(armor != null) armor.applyModifiers(this);
+    }
+
     // HP changed (either taking damage (negative) or healing (positive))
     public void adjustHP(int change)
     {
@@ -246,8 +286,8 @@ public class CharacterStats : MonoBehaviour
             HP = 0;
         }
 
-        if(HP > HPMAX){
-            HP = HPMAX;
+        if(HP > getMaxHP()){
+            HP = getMaxHP();
         }
 
         // Display Damage
@@ -290,12 +330,36 @@ public class CharacterStats : MonoBehaviour
 
             return 0;
         }
-        if(AP > APMAX){
-            AP = APMAX;
+        if(AP > getMaxAP()){
+            AP = getMaxAP();
         }
 
         return 0;
     }
+
+    public void tickModifiers() {
+        List<StatModifier> removals = new List<StatModifier>();
+        foreach(StatModifier modifier in statModifiers) {
+            if(modifier.duration > -1) modifier.duration--;
+            if(modifier.duration == 0) removals.Add(modifier);
+        }
+        foreach(StatModifier modifier in removals) statModifiers.Remove(modifier);
+    }
+
+    public void addModifier(StatModifier modifier) {
+        statModifiers.Add(modifier);
+    }
+
+    public void addModifiers(List<StatModifier> modifiers) {
+        foreach(StatModifier modifier in modifiers) {
+            addModifier(modifier);
+        }
+    }
+
+    public void clearModifiers() {
+        statModifiers.Clear();
+    }
+
 /*
     //Morale changed (either positive or negative)
     public void adjustMorale(int change){
@@ -314,9 +378,9 @@ public class CharacterStats : MonoBehaviour
     //Type 1 = general attack, nothing changes
     //Type 2 = no defenses, attack while target.DEF is ignored
     public int Attack(CharacterStats target, int type){
-
+        int DEX = getDexterity(), STR = getStrength(), LCK = getLuck();
         HIT = ((((DEX * 3 + LCK) / 2) + (2 * (Morale / 20))) - target.AVO) + accessoryBonus(1);
-        CRIT = ((((DEX / 2) - 5) + (Morale / 20)) - target.LCK) + accessoryBonus(2);
+        CRIT = ((((DEX / 2) - 5) + (Morale / 20)) - target.getLuck()) + accessoryBonus(2);
 
         if(type == 2 && (weapon != null && weapon.deadlyPierce)){//Deadly Pierce grants +10 CRIT
 
@@ -331,7 +395,7 @@ public class CharacterStats : MonoBehaviour
             }
             else{
 
-                ATK = ((STR + (Morale / 20) + weaponBonus() + accessoryBonus(0)) - target.DEF) * 3; //CRITICAL HIT!
+                ATK = ((STR + (Morale / 20) + weaponBonus() + accessoryBonus(0)) - target.getDefense()) * 3; //CRITICAL HIT!
 
 
             }
@@ -354,7 +418,7 @@ public class CharacterStats : MonoBehaviour
             }
             else{
 
-                ATK = (STR + (Morale / 5) + weaponBonus() + accessoryBonus(0)) - target.DEF; //HIT!
+                ATK = (STR + (Morale / 5) + weaponBonus() + accessoryBonus(0)) - target.getDefense(); //HIT!
 
 
 
@@ -381,7 +445,7 @@ public class CharacterStats : MonoBehaviour
     public bool determineHIT(int HIT){
 
        
-        if(HIT >= Random.Range(0, 100)){
+        if(HIT >= UnityEngine.Random.Range(0, 100)){
             return true;
         }
         else{
@@ -392,7 +456,7 @@ public class CharacterStats : MonoBehaviour
     public bool determineCRIT(int CRIT){
 
         
-        if(CRIT >= Random.Range(0,100)){
+        if(CRIT >= UnityEngine.Random.Range(0,100)){
             return true;
         }
         else{
@@ -448,7 +512,7 @@ public class CharacterStats : MonoBehaviour
             totalMod += aura.AVOmodifier;
         }
 
-        AVO = ((SPD*3 + LCK) / 2) + (2 * (Morale / 20)) + totalMod;
+        AVO = ((getSpeed()*3 + getLuck()) / 2) + (2 * (Morale / 20)) + totalMod;
 
     }
 
@@ -476,11 +540,35 @@ public class CharacterStats : MonoBehaviour
 
     }
 
-    
+    public int getMaxHP() {
+        return HPMAX.getValue(statModifiers);
+    }
 
-    
+    public int getMaxAP() {
+        return APMAX.getValue(statModifiers);
+    }
 
+    public int getStrength() {
+        return STR.getValue(statModifiers);
+    }
 
+    public int getDefense() {
+        return DEF.getValue(statModifiers);
+    }
 
+    public int getSpeed() {
+        return SPD.getValue(statModifiers);
+    }
 
+    public int getDexterity() {
+        return DEX.getValue(statModifiers);
+    }
+
+    public int getLuck() {
+        return LCK.getValue(statModifiers);
+    }
+
+    public int getMovement() {
+        return MV.getValue(statModifiers);
+    }
 }

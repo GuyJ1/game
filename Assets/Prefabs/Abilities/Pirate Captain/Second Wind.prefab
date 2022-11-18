@@ -47,13 +47,22 @@ MonoBehaviour:
   friendly: 1
   requiresTarget: 1
   totalDMG: 0
-  totalHP: 0
+  totalHP: 10
+  totalACC: 0
   baseDMG: 0
   baseHP: 50
+  baseACC: 0
   cost: 1
   range: 0
   movement: 0
   displayName: Second Wind
   shape:
   - {x: 0, y: 0}
+  targetModifiers: []
+  selfModifiers:
+  - type: 7
+    op: 0
+    duration: 2
+    value: 2
+    chance: 1
   targetEffect: {fileID: 696958063292329688, guid: 00092c09e25beb54f813012f561ea1c0, type: 3}

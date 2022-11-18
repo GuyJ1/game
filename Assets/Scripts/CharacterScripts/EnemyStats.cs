@@ -16,7 +16,7 @@ public class EnemyStats : CharacterStats
     {
 
         // Set health and morale
-        HP = HPMAX;
+        HP = getMaxHP();
 
         //Morale = MoraleMAX;
         
@@ -30,7 +30,7 @@ public class EnemyStats : CharacterStats
     void Update()
     {
 
-        AVO = ((SPD*3 + LCK) / 2) + (2 * (Morale / 5)) + difficultyAdjustment;
+        AVO = ((getSpeed()*3 + getLuck()) / 2) + (2 * (Morale / 5)) + difficultyAdjustment;
         
     }
 
@@ -43,8 +43,8 @@ public class EnemyStats : CharacterStats
             HP = 0;
         }
 
-        if(HP > HPMAX){
-            HP = HPMAX;
+        if(HP > getMaxHP()){
+            HP = getMaxHP();
         }
 
 
@@ -56,17 +56,17 @@ public class EnemyStats : CharacterStats
     //Note: diffcultyAdjustment should be in the range of -6 to +6
     public int EnemyAttack(CharacterStats target){
 
-        HIT = ((((DEX * 3 + LCK) / 2) + (2 * (Morale / 5))) - target.AVO) + difficultyAdjustment;
-        CRIT = ((((DEX / 2) - 5) + (Morale / 5)) - target.LCK) + difficultyAdjustment;
+        HIT = ((((getDexterity() * 3 + getLuck()) / 2) + (2 * (Morale / 5))) - target.AVO) + difficultyAdjustment;
+        CRIT = ((((getDexterity() / 2) - 5) + (Morale / 5)) - target.getLuck()) + difficultyAdjustment;
 
         if(determineCRIT(CRIT)){
 
-            ATK = (((STR + (Morale / 5) + weaponBonus()) - target.DEF) + difficultyAdjustment) * 3; //CRITICAL HIT!
+            ATK = (((getStrength() + (Morale / 5) + weaponBonus()) - target.getDefense()) + difficultyAdjustment) * 3; //CRITICAL HIT!
             target.adjustHP(-ATK);
 
         }
         else if(determineHIT(HIT)){
-            ATK = (((STR + (Morale / 5) + weaponBonus()) - target.DEF) + difficultyAdjustment); //HIT!
+            ATK = (((getStrength() + (Morale / 5) + weaponBonus()) - target.getDefense()) + difficultyAdjustment); //HIT!
             target.adjustHP(-ATK);
 
         }

@@ -50,15 +50,15 @@ public class CharacterCardUI : MonoBehaviour
     {
         string text = "";
 
-        text += "Max HP: " + stats.HPMAX + "\n";
+        text += "Max HP: " + stats.getMaxHP() + "\n";
         text += "ATK: " + stats.ATK + "\n";
-        text += "DEF: " + stats.DEF + "\n";
-        text += "SPD: " + stats.SPD + "\n";
-        text += "DEX: " + stats.DEX + "\n";
-        text += "LCK: " + stats.CRIT + "\n";
+        text += "DEF: " + stats.getDefense() + "\n";
+        text += "SPD: " + stats.getSpeed() + "\n";
+        text += "DEX: " + stats.getDexterity() + "\n";
+        text += "LCK: " + stats.getLuck() + "\n";
         text += "AVO: " + stats.AVO + "\n";
         text += "HIT: " + stats.HIT + "\n";
-        text += "MV: " + stats.MV;
+        text += "MV: " + stats.getMovement();
 
         return text;
     }
