@@ -216,7 +216,7 @@ public class CharacterStats : MonoBehaviour
         {
 
             //damage
-            adjustHP(-20);
+            adjustHP(-20, false);
         }
 
         //updateAVO(ring, aura);
@@ -278,12 +278,17 @@ public class CharacterStats : MonoBehaviour
     }
 
     // HP changed (either taking damage (negative) or healing (positive))
-    public void adjustHP(int change)
+    // if dontKill is true, lethal damage will only reduce HP to 1
+    public void adjustHP(int change, bool dontKill)
     {
         HP += change;
 
-        if(HP < 0){
+        if(HP < 0 && !dontKill){
             HP = 0;
+        }
+        else if(HP <= 0 && dontKill){
+
+            HP = 1;
         }
 
         if(HP > getMaxHP()){

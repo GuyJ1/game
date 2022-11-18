@@ -103,11 +103,27 @@ public class Ability : MonoBehaviour
              Siphon(user, target);
 
         }
+        else if(displayName == "Life Swap"){
+
+            LifeSwap(user, target);
+        }
         /*else if(displayName == "Pistol Shot"){
 
             PistolShot(user, target);
 
         }*/
+        else if(displayName == "Head Shot"){
+
+            HeadShot(user, target);
+        }
+        else if(displayName == "Pistol Volley"){
+
+            PistolVolley(user, target);
+        }
+        else if(displayName == "Death Wish"){
+
+            DeathWish(user, target);
+        }
         else Generic(user, target);
 
 
@@ -164,7 +180,7 @@ public class Ability : MonoBehaviour
 
                     totalDMG = user.Attack(target, 1);
 
-                    target.adjustHP(-totalDMG - baseDMG);
+                    target.adjustHP(-totalDMG - baseDMG, false);
 
                 }
             }
@@ -175,7 +191,7 @@ public class Ability : MonoBehaviour
 
                 totalDMG = user.Attack(target, 1);
 
-                target.adjustHP(-totalDMG - baseDMG);
+                target.adjustHP(-totalDMG - baseDMG, false);
             }
         }
         else
@@ -186,7 +202,7 @@ public class Ability : MonoBehaviour
 
             totalHP = user.Heal(target);
 
-            target.adjustHP(totalHP + baseHP);
+            target.adjustHP(totalHP + baseHP, true);
         }
         //Apply modifiers to self
         foreach(StatModifier modifier in selfModifiers) {
@@ -202,7 +218,7 @@ public class Ability : MonoBehaviour
 
         //not sure how this will work yet so it will be blank for now
 
-        target.adjustHP(-totalDMG);
+        target.adjustHP(-totalDMG, false);
 
         
 
@@ -214,12 +230,40 @@ public class Ability : MonoBehaviour
 
         //see above
 
+    
+
+        if(user.determineHIT(baseACC)){
+
+            GameObject hitParticle = Instantiate(targetEffect);
+            hitParticle.transform.position = target.transform.position;
+
+            target.adjustHP(-totalDMG - baseDMG, false);
+
+
+        }
         
 
-        target.adjustHP(-totalDMG - baseDMG);
+
+    }
+
+    void HeadShot(CharacterStats user, CharacterStats target){
+
+        //could potentially ignore DEF
+
+
+        if(user.determineHIT(baseACC)){
+
+            GameObject hitParticle = Instantiate(targetEffect);
+            hitParticle.transform.position = target.transform.position;
+
+            target.adjustHP(-totalDMG - baseDMG, false);
+
+
+        }
+
+
+
         
-
-
     }
 
 
@@ -236,14 +280,14 @@ public class Ability : MonoBehaviour
 
         totalDMG = user.Attack(target, 1);
 
-        target.adjustHP(-totalDMG);
+        target.adjustHP(-totalDMG, false);
 
         if(user.weapon != null && user.weapon.strongSiphon){//Strong Siphon gives 20% more HP
 
             modifier = (totalDMG * 2) / 10;
         }
 
-        user.adjustHP(totalDMG + modifier);
+        user.adjustHP(totalDMG + modifier, true);
 
     }
 
@@ -254,7 +298,7 @@ public class Ability : MonoBehaviour
         hitParticle.transform.position = target.transform.position;
 
         totalDMG = user.Attack(target, 2);
-        target.adjustHP(-totalDMG - baseDMG);
+        target.adjustHP(-totalDMG - baseDMG, false);
 
         
 
@@ -273,7 +317,7 @@ public class Ability : MonoBehaviour
             hitParticle.transform.position = target.transform.position;
 
             totalDMG = user.Attack(target, 1) / 5;
-            target.adjustHP(-totalDMG);
+            target.adjustHP(-totalDMG, false);
             //might need a sleep statement here
             
         }
@@ -282,15 +326,40 @@ public class Ability : MonoBehaviour
 
     }
 
+    //Swap current HP with the target.
+    //This move does not kill the user/target (reduces HP to a max of 1)
+    void LifeSwap(CharacterStats user, CharacterStats target){
+
+        int DEX = user.getDexterity(), STR = user.getStrength(), LCK = user.getLuck();
+        totalACC = ((((DEX * 3 + LCK) / 2) + (2 * (user.Morale / 20))) - target.AVO) + user.accessoryBonus(1) + baseACC;
+
+        int modifier = 0;
+
+        if(user.determineHIT(totalACC)){
+
+            totalHP = target.HP - user.HP;
+
+            if(user.weapon != null && user.weapon.safeSwap){
+
+                modifier = user.Heal(user);
+
+            }
+
+            user.adjustHP(totalHP + modifier, true);
+            target.adjustHP(totalHP, true);
+        }
+    }
+
 /// PIRATE CAPTAIN ABILITIES ///
 
     void WhirlingSteel(CharacterStats user, CharacterStats target){
 
         //blank for now
+        GameObject hitParticle = Instantiate(targetEffect);
+        hitParticle.transform.position = target.transform.position;
 
 
-
-        target.adjustHP(-totalDMG - baseDMG);
+        target.adjustHP(-totalDMG - baseDMG, false);
     }
 
     void SecondWind(CharacterStats user){
@@ -298,7 +367,48 @@ public class Ability : MonoBehaviour
 
         totalHP = user.Heal(user);
 
-        user.adjustHP(totalHP + baseHP);
+        user.adjustHP(totalHP + baseHP, true);
+    }
+
+    void PistolVolley(CharacterStats user, CharacterStats target){
+
+        for(int i = 0; i < 3; i++){
+
+            if(user.determineHIT(baseACC)){
+
+                GameObject hitParticle = Instantiate(targetEffect);
+                hitParticle.transform.position = target.transform.position;
+
+                target.adjustHP(-totalDMG - baseDMG, false);
+
+            }
+
+        }
+    }
+
+    void DeathWish(CharacterStats user, CharacterStats target){
+
+        if(user.determineHIT(baseACC)){
+
+            GameObject hitParticle = Instantiate(targetEffect);
+            hitParticle.transform.position = target.transform.position;
+
+            target.adjustHP(-totalDMG - baseDMG, false);
+
+            if(target.isDead()){
+
+                user.adjustAP(1,0);
+            }
+
+
+
+
+        }
+
+
+
+
+
     }
 
 

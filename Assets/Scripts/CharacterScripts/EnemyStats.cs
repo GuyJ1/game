@@ -62,12 +62,12 @@ public class EnemyStats : CharacterStats
         if(determineCRIT(CRIT)){
 
             ATK = (((getStrength() + (Morale / 5) + weaponBonus()) - target.getDefense()) + difficultyAdjustment) * 3; //CRITICAL HIT!
-            target.adjustHP(-ATK);
+            //target.adjustHP(-ATK);
 
         }
         else if(determineHIT(HIT)){
             ATK = (((getStrength() + (Morale / 5) + weaponBonus()) - target.getDefense()) + difficultyAdjustment); //HIT!
-            target.adjustHP(-ATK);
+            //target.adjustHP(-ATK);
 
         }
         else{

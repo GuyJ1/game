@@ -66,7 +66,7 @@ public class PlayerCollision : MonoBehaviour
             splash.transform.position = this.transform.position;
 
             // Deplete HP
-            CharStats.adjustHP(-10000);
+            CharStats.adjustHP(-10000, false);
             CharStats.isDead();
         }
     }

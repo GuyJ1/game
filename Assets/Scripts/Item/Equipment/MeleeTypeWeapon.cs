@@ -49,6 +49,7 @@ public class MeleeTypeWeapon : Weapon
                 DEXmod = -3;
                 LCKmod = -2;*/
                 deadlyPierce = true;
+                safeSwap = true;
 
                 
                 
