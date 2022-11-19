@@ -9,7 +9,7 @@ public class Stat
     public int baseValue, min, max;
     public StatType type;
 
-    //Return value adjusted with modifiers
+    //Return value adjusted for modifiers
     public int getValue(List<StatModifier> modifiers)
     {
         float value = baseValue;
@@ -39,7 +39,7 @@ public class StatModifier
     public OpType op; //Whether to do addition or multiplication
     public int duration; //Duration in turns (-1 for infinite)
     public float value; //Value for operation
-    public float chance; //Chance to apply (0.0 to 1.0);
+    public float chance; //Chance to apply (0.0 to 1.0)
 
     private StatModifier(StatType type, OpType op, int duration, float value, float chance) {
         this.type = type;

@@ -52,6 +52,7 @@ public class CharacterCardUI : MonoBehaviour
 
         text += "Max HP: " + stats.getMaxHP() + "\n";
         text += "ATK: " + stats.ATK + "\n";
+        text += "STR: " + stats.getStrength() + "\n";
         text += "DEF: " + stats.getDefense() + "\n";
         text += "SPD: " + stats.getSpeed() + "\n";
         text += "DEX: " + stats.getDexterity() + "\n";

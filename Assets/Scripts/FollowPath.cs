@@ -95,4 +95,8 @@ public class FollowPath : MonoBehaviour
             }
         }
     }
+
+    public bool isMoving() {
+        return tileSet;
+    }
 }

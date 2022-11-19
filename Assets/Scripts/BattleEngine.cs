@@ -53,10 +53,13 @@ public class BattleEngine : MonoBehaviour
     private Vector2Int highlightedCharPos;
     private int lastXDist, lastYDist; //Last distance between user and target for ability selection
 
+    //Pausing
+
+
     //AI Variables
     private PlayerActionList playerActions = new PlayerActionList();
     private GameObject playerTarget = null; //Might be unnecessary
-    private Ability playerAbility = null; //Might not be needed due to 'selectedAbility'
+    //private Ability playerAbility = null; //Might not be needed due to 'selectedAbility'
 
     // Start is called before the first frame update
     void Start() 
@@ -149,6 +152,7 @@ public class BattleEngine : MonoBehaviour
                                 // then deselect the current character and select the new one
                                 else 
                                 {
+                                    Debug.Log("SELECT NEW CHARACTER");
                                     if(moving) setupMove(objectHit.gameObject);
                                     else setupAction(objectHit.gameObject);
                                 }
@@ -548,7 +552,11 @@ public class BattleEngine : MonoBehaviour
         }
         else
         {
-            if(!moved) { highlightValidMoves(tilePos, tileScript.characterOn.GetComponent<CharacterStats>().getMovement()); }
+            if(!moved)
+            {
+                cam.GetComponent<CameraControl>().SetCameraFollow(tileScript.characterOn);
+                highlightValidMoves(tilePos, tileScript.characterOn.GetComponent<CharacterStats>().getMovement());
+            }
         }
 
         // Select new tile at tile pos
@@ -559,7 +567,7 @@ public class BattleEngine : MonoBehaviour
 
         // Selection Logic
         charSelected = true;
-        charCard.open(activeUnit.GetComponent<CharacterStats>());
+        charCard.open(tileScript.characterOn.GetComponent<CharacterStats>());
         charHighlighted = false;
     }
 
@@ -616,7 +624,14 @@ public class BattleEngine : MonoBehaviour
                 }
             }
         }
+        StartCoroutine(endActUnit(tilePos, xDist, yDist, characters));
+        return true;
+    }
 
+    IEnumerator endActUnit(Vector2Int tilePos, int xDist, int yDist, List<GameObject> characters) {
+        yield return new WaitForSeconds(0.6f);
+        var gridTiles = grid.GetComponent<GridBehavior>();
+        var tileScript = gridTiles.GetTileAtPos(tilePos).GetComponent<TileScript>();
         // ----- Combo Attacks ------
         if(selectedAbility.requiresTarget && xDist != yDist) //No diagonals
         {
@@ -636,9 +651,10 @@ public class BattleEngine : MonoBehaviour
         //AI: Forward the target(s) to AI handler for enqueue. Currently only forwards one character - for refactoring later
         if(characters.Count > 0) playerTarget = characters[0];
 
+        yield return new WaitForSeconds(0.6f);
+
         if(!moved) selectMove(); //Move to move state if available
         update();
-        return true;
     }
 
     //Try to perform a combo attack from the specified character to the target
@@ -668,23 +684,30 @@ public class BattleEngine : MonoBehaviour
             else 
             {
                 if(simulate) return true;
-                // Unselect currently select character
-                Debug.Log("Unselecting character on " + selectedCharPos.x + " " + selectedCharPos.y);
-                activeUnitPos = tilePos;
-                activeUnitTile = gridTiles.GetTileAtPos(tilePos);
-                gridTiles.grid[selectedCharPos.x, selectedCharPos.y].GetComponent<Renderer>().material = isTileActive(selectedCharPos) ? gridTiles.activeUnselected : gridTiles.unselected;
-                charSelected = false;
-                charCard.close();
-                charHighlighted = false;
-                ResetAllHighlights();
-                moved = true;
-                moveButton.interactable = false;
-                if(!acted) selectAction(); //Move to action state if available
-                update();
+                StartCoroutine(endMoveUnit(tilePos));
                 return true;
             }
         }
         return false;
+    }
+
+    IEnumerator endMoveUnit(Vector2Int tilePos) {
+        var gridTiles = grid.GetComponent<GridBehavior>();
+        // Unselect currently select character
+        Debug.Log("Unselecting character on " + selectedCharPos.x + " " + selectedCharPos.y);
+        activeUnitPos = tilePos;
+        activeUnitTile = gridTiles.GetTileAtPos(tilePos);
+        gridTiles.grid[selectedCharPos.x, selectedCharPos.y].GetComponent<Renderer>().material = isTileActive(selectedCharPos) ? gridTiles.activeUnselected : gridTiles.unselected;
+        charSelected = false;
+        charCard.close();
+        charHighlighted = false;
+        ResetAllHighlights();
+        moved = true;
+        moveButton.interactable = false;
+        yield return new WaitWhile(() => activeUnit.GetComponent<FollowPath>().pathToFollow.Count > 0 || activeUnit.GetComponent<FollowPath>().isMoving());
+        yield return new WaitForSecondsRealtime(0.15f);
+        if(!acted) selectAction(); //Move to action state if available
+        update();
     }
 
     //Try to surrender the battle. Returns true if surrender is accepted.

@@ -2775,8 +2775,12 @@ PrefabInstance:
       objectReference: {fileID: 2079094074}
     - target: {fileID: 5755669321042413843, guid: a1dcd447bfbb3bc45821f8b436c031d2, type: 3}
       propertyPath: crews.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 5755669321042413843, guid: a1dcd447bfbb3bc45821f8b436c031d2, type: 3}
+      propertyPath: crews.Array.data[1]
+      value: 
+      objectReference: {fileID: 8677408311475748420, guid: ff7e742bfec002a4c80690599f895dce, type: 3}
     - target: {fileID: 6517913969078843130, guid: a1dcd447bfbb3bc45821f8b436c031d2, type: 3}
       propertyPath: m_TagString
       value: Ship
