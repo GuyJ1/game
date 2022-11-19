@@ -709,6 +709,30 @@ public class BattleEngine : MonoBehaviour
         update();
     }
 
+    // --------------------------------------------------------------
+    // @desc: Pause the battle engine for a given amount of time
+    // @arg: waitTime - real time seconds to wait for
+    // @arg: endTurnAfter - whether a new turn happens after the wait
+    // --------------------------------------------------------------
+    public IEnumerator PauseBattleEngine(float waitTime, bool endTurnAfter = false)
+    {
+        // Before wait
+        active = false;
+        interactable = false;
+
+        yield return new WaitForSecondsRealtime(waitTime);
+
+        // After wait
+        active = true;
+        interactable = true;
+        update();
+
+        if (endTurnAfter)
+        {
+            endTurn();
+        }
+    }
+
     //Try to surrender the battle. Returns true if surrender is accepted.
     public bool trySurrender() {
         return true;

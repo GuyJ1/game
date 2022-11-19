@@ -8,7 +8,8 @@ public class UI_CrewIcons : MonoBehaviour
     // Public vars
     public BattleEngine battleScript; // Battle engine ref
     public GameObject icon; // Icon game object to attach to canvas
-    public List<GameObject> icons = new List<GameObject>(); // Char icons list
+    public List<GameObject> goodIcons = new List<GameObject>(); // Good char icons list
+    public List<GameObject> badIcons = new List<GameObject>(); // Bad char icons list
     public float centerSpacing; // Spacing away from center of the canvas
     public float iconSpacing; // Spacing for individual icons
     public float iconHeight; // Spacing for individual icons
@@ -32,8 +33,15 @@ public class UI_CrewIcons : MonoBehaviour
             {
                 bool isNewIcon = true;
 
-                // See whether we have this icon already
-                foreach (GameObject icon in icons)
+                // Check both lists to see whether we have this icon already
+                foreach (GameObject icon in goodIcons)
+                {
+                    if (unit == icon.GetComponent<UI_CharIcon>().myChar)
+                    {
+                        isNewIcon = false;
+                    }
+                }
+                foreach (GameObject icon in badIcons)
                 {
                     if (unit == icon.GetComponent<UI_CharIcon>().myChar)
                     {
@@ -54,24 +62,72 @@ public class UI_CrewIcons : MonoBehaviour
                     // Position based on whether ally or enemy
                     if (BattleEngine.isAllyUnit(unit) == true)
                     {
-                        newIcon.transform.GetComponent<RectTransform>().anchoredPosition = new Vector2(-centerSpacing - (goodChars * iconSpacing), iconHeight);
+                        // Add icon to list
+                        goodIcons.Add(newIcon);
+
+                        // Modify position and healthbar
+                        newIcon.transform.GetComponent<RectTransform>().anchoredPosition = new Vector2(-shiftAmount(goodChars, true), iconHeight);
                         newIcon.transform.GetChild(0).GetChild(0).GetComponent<HealthBar>().gradient = CharacterStats.HealthBarGradient(true);
+
+                        // Increment counter
                         goodChars++;
                     }
                     else
                     {
-                        newIcon.transform.GetComponent<RectTransform>().anchoredPosition = new Vector2(centerSpacing + (badChars * iconSpacing), iconHeight);
+                        // Add icon to list
+                        badIcons.Add(newIcon);
+
+                        // Modify position and healthbar
+                        newIcon.transform.GetComponent<RectTransform>().anchoredPosition = new Vector2(shiftAmount(badChars, false), iconHeight);
                         newIcon.transform.GetChild(0).GetChild(0).GetComponent<HealthBar>().gradient = CharacterStats.HealthBarGradient(false);
+
+                        // Increment counter
                         badChars++;
                     }          
-
-                    // Add new Icon to List
-                    icons.Add(newIcon);
                 }
             }
 
             // Update number of characters
             numOfCharacters = currNumOfChars;
         }
+    }
+
+    private float shiftAmount(int n, bool goodIcon)
+    {
+        // Calculate shift
+        float shift = centerSpacing + (n * iconSpacing);
+        float halfW = transform.parent.transform.GetComponent<RectTransform>().rect.width / 2f - 50f;
+
+        // If the calculated shift position is off the screen, then we'll have to adjust
+        // the position of every character icon on that side of the screen
+        if (shift > halfW)
+        {
+            float iconSpaceNew = (halfW - centerSpacing) / n;
+            float newShift = shift;
+            
+            if (goodIcon)
+            {
+                for (int i = 0; i < goodIcons.Count; i++)
+                {
+                    GameObject currIcon = goodIcons[i];
+                    newShift = centerSpacing + (i * iconSpaceNew);
+                    currIcon.transform.GetComponent<RectTransform>().anchoredPosition = new Vector2(-newShift, iconHeight);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < badIcons.Count; i++)
+                {
+                    GameObject currIcon = badIcons[i];
+                    newShift = centerSpacing + (i * iconSpaceNew);
+                    currIcon.transform.GetComponent<RectTransform>().anchoredPosition = new Vector2(newShift, iconHeight);
+                }
+            }
+
+            shift = newShift; // for return
+        }
+
+        // Return calculated shift
+        return shift;
     }
 }

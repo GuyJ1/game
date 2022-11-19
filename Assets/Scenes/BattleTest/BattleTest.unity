@@ -2107,7 +2107,7 @@ MonoBehaviour:
   battleScript: {fileID: 322437417}
   icon: {fileID: 3239360924737938845, guid: 22a0297e84fd6854bad99c51ea3d02e8, type: 3}
   icons: []
-  centerSpacing: 50
+  centerSpacing: 30
   iconSpacing: 50
   iconHeight: 25
 --- !u!1001 &792736053

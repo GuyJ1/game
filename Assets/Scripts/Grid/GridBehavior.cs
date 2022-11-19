@@ -108,6 +108,7 @@ public class GridBehavior : MonoBehaviour
         // Tiles valid for spawning characters
         availableTiles = width*height;
     }
+    
     // --------------------------------------------------------------
     // @desc: Spawn a character on the grid
     // @arg: character - the character prefab object to spawn

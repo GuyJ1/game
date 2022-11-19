@@ -10,13 +10,10 @@ public class CannonUI : MonoBehaviour
     [SerializeField] public Button fireCharacter;
     [SerializeField] public Image fireCannonballImage;
     [SerializeField] public Image fireCharacterImage;
-    [SerializeField] public float battleSleepTime;
 
     private GameObject currCannon = null;
     private GameObject grid;
     private Vector2Int activePos = new Vector2Int(-1,-1);
-    private float sleepTimer;
-    private bool setSleep = false;
 
     // Camera Ref
     [SerializeField] public CameraControl camScript;
@@ -35,23 +32,6 @@ public class CannonUI : MonoBehaviour
         {
             fireCannonball.interactable = true;
             fireCharacter.interactable = true;
-        }
-        
-        if (setSleep)
-        {
-            if (sleepTimer <= 0.0f)
-            {
-                battleScript.active = true;
-                battleScript.interactable = true;
-                battleScript.checkOutcome();
-                battleScript.endTurn();
-                setSleep = false;
-                //camScript.StopCameraFollow();
-            }
-            else
-            {
-                sleepTimer -= Time.deltaTime;
-            }
         }
     }
 
@@ -102,10 +82,7 @@ public class CannonUI : MonoBehaviour
             currCannon.transform.GetChild(0).GetComponent<CannonControl>().fireCannonball();
 
             // Sleep Battle Engine for a Moment
-            battleScript.active = false;
-            battleScript.interactable = false;
-            sleepTimer = battleSleepTime;
-            setSleep = true;
+            battleScript.StartCoroutine(battleScript.PauseBattleEngine(battleSleepTime, true));
         }
     }
 
@@ -115,11 +92,9 @@ public class CannonUI : MonoBehaviour
         {
             // Fire Effect
             var cannonScript = currCannon.transform.GetChild(0).GetComponent<CannonControl>();
-            //cannonScript.fireEffect();
 
             // Fire Active Character
             Transform modelTrans = battleScript.activeUnit.transform.GetChild(0);
-            //modelTrans.GetComponent<Animation>().Play();
             var modelScript = modelTrans.GetComponent<PlayerCollision>();
             modelScript.wakeRigidBody();
             cannonScript.fireObject(modelTrans.gameObject);
@@ -128,10 +103,7 @@ public class CannonUI : MonoBehaviour
             camScript.SetCameraFollow(modelTrans.gameObject);
 
             // Sleep Battle Engine for a Moment
-            //battleScript.active = false;
-            battleScript.interactable = false;
-            sleepTimer = battleSleepTime;
-            setSleep = true;
+            battleScript.StartCoroutine(battleScript.PauseBattleEngine(battleSleepTime, true));
         }
     }
 

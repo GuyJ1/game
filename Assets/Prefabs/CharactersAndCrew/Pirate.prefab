@@ -361,7 +361,7 @@ MonoBehaviour:
   canvas: {fileID: 0}
   DamageText: {fileID: 8133978484208511556, guid: 87660d197cb3d9c4a90de7de09cea50e, type: 3}
   model: {fileID: 4349290728497671086}
-  gridPosition: {x: 7, y: 3}
+  gridPosition: {x: 5, y: 19}
   myGrid: {fileID: 0}
   crew: {fileID: 8677408311475748420, guid: ff7e742bfec002a4c80690599f895dce, type: 3}
   weapon: {fileID: 0}
