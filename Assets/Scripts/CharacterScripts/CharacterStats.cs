@@ -97,8 +97,8 @@ public class CharacterStats : MonoBehaviour
     public string Name;
 
     // Actions
-    public GameObject basicAttack, comboAttack; //Generic actions
-    public List<GameObject> abilities; //Unique abilities
+    public Ability basicAttack, comboAttack; //Generic actions
+    public List<Ability> abilities; //Unique abilities
 
     // Healthbar
     [SerializeField] public float healthBarScale;
@@ -263,10 +263,10 @@ public class CharacterStats : MonoBehaviour
     }
 
     // Return selectable abilities in battle (combo attack not included)
-    public List<GameObject> getBattleAbilities() {
-        List<GameObject> list = new List<GameObject>();
+    public List<Ability> getBattleAbilities() {
+        List<Ability> list = new List<Ability>();
         list.Add(basicAttack);
-        foreach(GameObject ability in abilities) list.Add(ability);
+        foreach(Ability ability in abilities) list.Add(ability);
         return list;
     }
 

@@ -350,18 +350,18 @@ MonoBehaviour:
   AVO: 0
   statModifiers: []
   Name: Dummy
-  basicAttack: {fileID: 5751798234688528242, guid: dfebc8a26e6c41845a3b9ea13ddcb1b0, type: 3}
-  comboAttack: {fileID: 5751798234688528242, guid: 340a031d05ed20443bfb33cc3da77785, type: 3}
+  basicAttack: {fileID: 11400000, guid: 7b15c7ffff3c0454ba167d4755a19e4b, type: 2}
+  comboAttack: {fileID: 11400000, guid: f2f9a97eeb0aa4241b5b5672ef36d498, type: 2}
   abilities:
-  - {fileID: 5751798234688528242, guid: a3061c5fb22fe7f438aef4cf591f1383, type: 3}
-  - {fileID: 5751798234688528242, guid: 79df8a1d39b82b14fa2bab96da32d630, type: 3}
+  - {fileID: 11400000, guid: 595dc3b54765dcd438942d4f718cf379, type: 2}
+  - {fileID: 11400000, guid: 1f7cb3cf19b1c0c4099a8f5cb96d3a6b, type: 2}
   healthBarScale: 2
   healthBar: {fileID: 4151192400801874901}
   healthBarYOffset: 1
   canvas: {fileID: 0}
   DamageText: {fileID: 8133978484208511556, guid: 87660d197cb3d9c4a90de7de09cea50e, type: 3}
   model: {fileID: 4349290728497671086}
-  gridPosition: {x: 6, y: 19}
+  gridPosition: {x: 7, y: 3}
   myGrid: {fileID: 0}
   crew: {fileID: 8677408311475748420, guid: ff7e742bfec002a4c80690599f895dce, type: 3}
   weapon: {fileID: 0}

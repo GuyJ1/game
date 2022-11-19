@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEditor;
 
-public class Ability : MonoBehaviour
+  [CreateAssetMenu] //allows creating of item assets directly unity by right clicking project
+public class Ability : ScriptableObject
 {
     public bool friendly; //Whether this ability targets allies or enemies (true for allies, false for enemies)
     public bool requiresTarget; //Whether this ability requires a selected target to execute
@@ -16,7 +17,7 @@ public class Ability : MonoBehaviour
     public int baseACC; //ability comes with a set accuracy
     public int cost; //AP cost
     public int range; //Distance from the user this ability can be used at
-    public int movement; //Movement to apply to targets (positive is push, negative is pull)
+    public int knockback; //Movement to apply to targets (positive is push, negative is pull)
     public string displayName; //Display name for UI
     public List<Vector2Int> shape; //Shape in tiles facing north (0,0) is the center
     public List<StatModifier> targetModifiers; //Stat modifiers to apply to targets
@@ -35,14 +36,14 @@ public class Ability : MonoBehaviour
 
     }
 
-    // Return movement value rotated dependent on which way user is facing
+    // Return knockback value rotated dependent on which way user is facing
     public Vector2Int getMovement(int xDist, int yDist) {
         if(Mathf.Abs(xDist) >= Mathf.Abs(yDist)) {
-            if(xDist > 0) return new Vector2Int(-movement, 0);
-            else return new Vector2Int(movement, 0);
+            if(xDist > 0) return new Vector2Int(-knockback, 0);
+            else return new Vector2Int(knockback, 0);
         }
-        else if(yDist > 0) return new Vector2Int(0, -movement);
-        else return new Vector2Int(0, movement);
+        else if(yDist > 0) return new Vector2Int(0, -knockback);
+        else return new Vector2Int(0, knockback);
     }
 
     // Return shape rotated dependent on which way user is facing

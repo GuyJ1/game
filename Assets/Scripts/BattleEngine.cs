@@ -464,8 +464,7 @@ public class BattleEngine : MonoBehaviour
             int count = 0;
 
             //Setup action buttons
-            foreach(GameObject abilityObject in activeUnit.GetComponent<CharacterStats>().getBattleAbilities()) {
-                Ability ability = abilityObject.GetComponent<Ability>();
+            foreach(Ability ability in activeUnit.GetComponent<CharacterStats>().getBattleAbilities()) {
                 GameObject actionButton = Instantiate(buttonPrefab); //This is copying stuff from AttackButton idk why
                 actionButton.transform.SetParent(canvas.transform, false);
                 actionButton.transform.position = new Vector3(actionButton.transform.position.x + 110, actionButton.transform.position.y - 30 * count, actionButton.transform.position.z);
@@ -609,7 +608,7 @@ public class BattleEngine : MonoBehaviour
         attackButton.interactable = false;
         selectedAbility.affectCharacters(activeUnit, characters);
         //Pull and knockback
-        if(selectedAbility.movement != 0) {
+        if(selectedAbility.knockback != 0) {
             foreach(GameObject character in characters) {
                 CharacterStats charStats = character.GetComponent<CharacterStats>();
                 Vector2Int movement = selectedAbility.getMovement(xDist, yDist);
@@ -790,11 +789,11 @@ public class BattleEngine : MonoBehaviour
     }
 
     public static Ability getBasicAttack(GameObject unit) {
-        return unit.GetComponent<CharacterStats>().basicAttack.GetComponent<Ability>();
+        return unit.GetComponent<CharacterStats>().basicAttack;
     }
 
     public static Ability getComboAttack(GameObject unit) {
-        return unit.GetComponent<CharacterStats>().comboAttack.GetComponent<Ability>();
+        return unit.GetComponent<CharacterStats>().comboAttack;
     }
 
     public void showActionsList() {
