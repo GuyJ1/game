@@ -142,21 +142,7 @@ public class CharacterStats : MonoBehaviour
 
         // Set gradient color
         bool isPlayer = crew.GetComponent<CrewSystem>().isPlayer;
-        Gradient grad = new Gradient();
-
-        // Populate the color keys at the relative time 0 and 1 (0 and 100%)
-        GradientColorKey[] colorKey = new GradientColorKey[2];
-        colorKey[0].color = isPlayer ? Color.yellow : new Color(255f/255f, 165f/255f, 0f, 1f);
-        colorKey[0].time = 0.0f;
-        colorKey[1].color = isPlayer ? Color.green : Color.red;
-        colorKey[1].time = 1.0f;
-
-        GradientAlphaKey[] alphaKey = new GradientAlphaKey[1];
-        alphaKey[0].alpha = 0.5f;
-
-        grad.SetKeys(colorKey, alphaKey);
-
-        healthBar.gradient = grad;
+        healthBar.gradient = HealthBarGradient(isPlayer);
 
         // Morale is now pulled from CrewSystem.morale. All characters now use a univeral morale value, with the same boosts
         Morale = crew.GetComponent<CrewSystem>().morale; //Morale (from 0 - 100), (from crew)
@@ -208,6 +194,26 @@ public class CharacterStats : MonoBehaviour
 
     }
 
+    // Get a gradient for healthbar colors
+    public static Gradient HealthBarGradient(bool isFriendy)
+    {
+        Gradient grad = new Gradient();
+
+        // Populate the color keys at the relative time 0 and 1 (0 and 100%)
+        GradientColorKey[] colorKey = new GradientColorKey[2];
+        colorKey[0].color = isFriendy ? Color.yellow : new Color(255f/255f, 165f/255f, 0f, 1f);
+        colorKey[0].time = 0.0f;
+        colorKey[1].color = isFriendy ? Color.green : Color.red;
+        colorKey[1].time = 1.0f;
+
+        GradientAlphaKey[] alphaKey = new GradientAlphaKey[1];
+        alphaKey[0].alpha = 0.5f;
+
+        grad.SetKeys(colorKey, alphaKey);
+
+        return grad;
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -216,7 +222,7 @@ public class CharacterStats : MonoBehaviour
         {
 
             //damage
-            adjustHP(-20);
+            adjustHP(-20, false);
         }
 
         //updateAVO(ring, aura);
@@ -278,12 +284,17 @@ public class CharacterStats : MonoBehaviour
     }
 
     // HP changed (either taking damage (negative) or healing (positive))
-    public void adjustHP(int change)
+    // if dontKill is true, lethal damage will only reduce HP to 1
+    public void adjustHP(int change, bool dontKill)
     {
         HP += change;
 
-        if(HP < 0){
+        if(HP < 0 && !dontKill){
             HP = 0;
+        }
+        else if(HP <= 0 && dontKill){
+
+            HP = 1;
         }
 
         if(HP > getMaxHP()){

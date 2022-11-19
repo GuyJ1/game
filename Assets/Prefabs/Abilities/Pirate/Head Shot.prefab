@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &5751798234688528242
+--- !u!1 &4052472206973195345
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,22 +8,22 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2797077193110064003}
-  - component: {fileID: -1126076218509836862}
+  - component: {fileID: 6125248813496850608}
+  - component: {fileID: 2800238668667668528}
   m_Layer: 0
-  m_Name: Pistol Shot
+  m_Name: Head Shot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2797077193110064003
+--- !u!4 &6125248813496850608
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5751798234688528242}
+  m_GameObject: {fileID: 4052472206973195345}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -32,13 +32,13 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &-1126076218509836862
+--- !u!114 &2800238668667668528
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5751798234688528242}
+  m_GameObject: {fileID: 4052472206973195345}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 51fcb3cb7e2a5f24d84d8061e64ea368, type: 3}
@@ -49,15 +49,14 @@ MonoBehaviour:
   totalDMG: 0
   totalHP: 0
   totalACC: 0
-  baseDMG: 20
+  baseDMG: 100
   baseHP: 0
-  baseACC: 80
+  baseACC: 65
   cost: 2
-  range: 4
-  movement: 2
-  displayName: Pistol Shot
-  shape:
-  - {x: 0, y: 0}
+  range: 1
+  movement: 0
+  displayName: Head Shot
+  shape: []
   targetModifiers: []
   selfModifiers: []
   targetEffect: {fileID: 1743301284569550, guid: ad2ab49d0a2a17148bd51c93d977bdbc, type: 3}

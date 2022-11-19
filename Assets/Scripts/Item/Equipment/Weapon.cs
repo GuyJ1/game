@@ -14,6 +14,7 @@ public class Weapon : EquippableItem
     public bool doubleAttack = false; //certain weapons are able to attack again if the unit's SPD - target's SPD >= 5 
     public bool strongSiphon = false; //when using Siphon, user will heal 20% more HP
     public bool deadlyPierce = false; //when using Pierce, CRIT +10
+    public bool safeSwap = false; //When using LifeSwap, uses healing bonus (gain more HP or take less damage)
 
     public int Rarity; //from 1 to 3.
 
