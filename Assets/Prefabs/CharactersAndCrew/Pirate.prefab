@@ -348,6 +348,7 @@ MonoBehaviour:
   HIT: 0
   CRIT: 0
   AVO: 0
+  statModifiers: []
   Name: Dummy
   basicAttack: {fileID: 5751798234688528242, guid: dfebc8a26e6c41845a3b9ea13ddcb1b0, type: 3}
   comboAttack: {fileID: 5751798234688528242, guid: 340a031d05ed20443bfb33cc3da77785, type: 3}
@@ -360,7 +361,7 @@ MonoBehaviour:
   canvas: {fileID: 0}
   DamageText: {fileID: 8133978484208511556, guid: 87660d197cb3d9c4a90de7de09cea50e, type: 3}
   model: {fileID: 4349290728497671086}
-  gridPosition: {x: 4, y: 10}
+  gridPosition: {x: 6, y: 19}
   myGrid: {fileID: 0}
   crew: {fileID: 8677408311475748420, guid: ff7e742bfec002a4c80690599f895dce, type: 3}
   weapon: {fileID: 0}
