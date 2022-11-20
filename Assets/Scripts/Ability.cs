@@ -108,6 +108,14 @@ public class Ability : ScriptableObject
 
             LifeSwap(user, target);
         }
+        else if(displayName == "Soul Bash"){
+
+            SoulBash(user, target);
+        }
+        else if(displayName == "Persistance"){
+
+            Persistance(user, target);
+        }
         /*else if(displayName == "Pistol Shot"){
 
             PistolShot(user, target);
@@ -350,6 +358,46 @@ public class Ability : ScriptableObject
             target.adjustHP(totalHP, true);
         }
     }
+
+    //Attack the target. Bonus dmg is applied depending on current HP (more HP, more dmg)
+    void SoulBash(CharacterStats user, CharacterStats target){
+
+        baseDMG = user.Attack(target, 1);
+
+        if(user.weapon != null && user.weapon.strongSoul && user.isFullHealth()){
+
+            totalDMG = baseDMG + user.HP;
+
+        }
+        else{
+
+            totalDMG = baseDMG + (user.HP / 3);
+
+        }
+
+        GameObject hitParticle = Instantiate(targetEffect);
+        hitParticle.transform.position = target.transform.position;
+
+        target.adjustHP(-totalDMG, false);
+
+
+    }
+
+    //Attack the target. Bonus dmg is applied depending on current HP (less HP, more dmg)
+    void Persistance(CharacterStats user, CharacterStats target){
+
+        baseDMG = user.Attack(target, 1);
+
+        totalDMG = baseDMG + (user.getMaxHP() - user.HP);
+
+        GameObject hitParticle = Instantiate(targetEffect);
+        hitParticle.transform.position = target.transform.position;
+
+        target.adjustHP(-totalDMG, false);
+    }
+
+    
+
 
 /// PIRATE CAPTAIN ABILITIES ///
 

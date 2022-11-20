@@ -262,6 +262,11 @@ public class CharacterStats : MonoBehaviour
         return HP <= 0;
     }
 
+    public bool isFullHealth(){
+
+        return HP == getMaxHP();
+    }
+
     // Return selectable abilities in battle (combo attack not included)
     public List<Ability> getBattleAbilities() {
         List<Ability> list = new List<Ability>();
@@ -396,6 +401,12 @@ public class CharacterStats : MonoBehaviour
         if(type == 2 && (weapon != null && weapon.deadlyPierce)){//Deadly Pierce grants +10 CRIT
 
             CRIT += 10;
+        }
+
+        if(weapon != null && weapon.lastStand && HP == 1){//Last Stand gives a gauranteed crit
+
+            ATK = ((STR + (Morale / 20) + weaponBonus() + accessoryBonus(0)) - target.getDefense()) * 3;
+            return ATK;
         }
 
         if(determineCRIT(CRIT)){

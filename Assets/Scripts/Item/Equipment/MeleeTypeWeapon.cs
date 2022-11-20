@@ -23,6 +23,7 @@ public class MeleeTypeWeapon : Weapon
                 //Swords have no modifiers
                 //Swords have Strong Siphon (get 20% HP when using Siphon)
                 strongSiphon = true;
+                strongSoul = true;
 
 
                 break;
@@ -36,6 +37,7 @@ public class MeleeTypeWeapon : Weapon
                 DEXmod = 3;
                 LCKmod = 2;*/
                 doubleAttack = true;
+                lastStand = true;
                 
 
                 break;

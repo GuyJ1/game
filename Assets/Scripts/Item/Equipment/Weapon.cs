@@ -15,6 +15,8 @@ public class Weapon : EquippableItem
     public bool strongSiphon = false; //when using Siphon, user will heal 20% more HP
     public bool deadlyPierce = false; //when using Pierce, CRIT +10
     public bool safeSwap = false; //When using LifeSwap, uses healing bonus (gain more HP or take less damage)
+    public bool strongSoul = false; //When using SoulBash, if user is at full HP, bonus damage = MAX HP
+    public bool lastStand = false; //When using Persistance, if user is at 1 HP, gauranteed critical hit
 
     public int Rarity; //from 1 to 3.
 
