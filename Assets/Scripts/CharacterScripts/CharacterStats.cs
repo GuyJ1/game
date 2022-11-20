@@ -376,6 +376,16 @@ public class CharacterStats : MonoBehaviour
         statModifiers.Clear();
     }
 
+    public void clearDebuffs(){
+
+        List<StatModifier> debuffs = new List<StatModifier>();
+        foreach(StatModifier modifier in statModifiers) {
+            if(!modifier.isBuff()) debuffs.Add(modifier);
+        }
+        foreach(StatModifier modifier in debuffs) statModifiers.Remove(modifier);
+
+    }
+
 /*
     //Morale changed (either positive or negative)
     public void adjustMorale(int change){
@@ -484,6 +494,22 @@ public class CharacterStats : MonoBehaviour
         else{
             return false;
         }
+    }
+
+    public int getATK(CharacterStats target, bool noDEF){
+
+        if(noDEF){
+
+            return (getStrength() + (Morale / 20) + weaponBonus() + accessoryBonus(0));
+        }
+        else{
+
+            return (getStrength() + (Morale / 20) + weaponBonus() + accessoryBonus(0)) - target.getDefense();
+
+
+        }
+
+
     }
 
     public int weaponBonus(){
