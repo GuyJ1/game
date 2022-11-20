@@ -86,8 +86,6 @@ public class UI_CrewIcons : MonoBehaviour
                         // Increment counter
                         badChars++;
                     }
-
-                    numOfCharacters = goodChars + badChars;
                 }
             }
 
