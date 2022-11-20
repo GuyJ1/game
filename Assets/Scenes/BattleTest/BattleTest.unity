@@ -1025,6 +1025,7 @@ MonoBehaviour:
   grid: {fileID: 0}
   activeUnitPos: {x: 0, y: 0}
   deadUnits: []
+  turnQueue: []
   charCard: {fileID: 792736054}
   canvas: {fileID: 865769687}
 --- !u!1001 &347220872

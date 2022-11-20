@@ -25,6 +25,8 @@ public class UI_CrewTurnOrder : MonoBehaviour
         // Update when the # of chars in the battle system change
         if (numOfCharacters != currNumOfChars)
         {
+            Debug.Log("Updating crew icons...");
+            
             // For every character
             foreach (GameObject unit in battleScript.units)
             {
