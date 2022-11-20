@@ -19,12 +19,23 @@ MonoBehaviour:
   totalACC: 0
   baseDMG: 0
   baseHP: 0
-  baseACC: 0
-  cost: 0
-  range: 0
+  baseACC: 85
+  cost: 1
+  range: 4
   knockback: 0
-  displayName: 
-  shape: []
-  targetModifiers: []
+  displayName: Maddening Jig
+  shape:
+  - {x: 0, y: 0}
+  targetModifiers:
+  - type: 3
+    op: 0
+    duration: 3
+    value: -5
+    chance: 1
+  - type: 5
+    op: 0
+    duration: 3
+    value: -5
+    chance: 1
   selfModifiers: []
   targetEffect: {fileID: 0}
