@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
@@ -24,13 +25,13 @@ public class BattleEngine : MonoBehaviour
     public  bool isPlayerTurn;
     private bool moved = false; //Whether movement was taken
     private bool acted = false; //Whether an action was taken
-    private uint turnCount = 0;
+    private int turnCount = 0;
     public GameObject activeUnit, activeUnitTile;
     public GameObject grid; //Active grid that unit is on
     public Vector2Int activeUnitPos;
     public List<GameObject> deadUnits = new List<GameObject>();
-    private List<GameObject> unitsBySpeed = new List<GameObject>(); //Units sorted from lowest to highest speed values
-    public List<GameObject> turnQueue = new List<GameObject>(); //Stored units in the turn queue (units can repeat)
+    //private List<GameObject> unitsBySpeed = new List<GameObject>(); //Units sorted from highest to lowest speed values
+    public List<Vector2Int> turnQueue = new List<Vector2Int>(); //Stored units in the turn queue (units can repeat)
 
     //UI references
     [SerializeField] public CharacterCardUI charCard;
@@ -266,14 +267,13 @@ public class BattleEngine : MonoBehaviour
         }
 
         //Sort speed list
-        foreach(GameObject unit in units)
+        /*foreach(GameObject unit in units)
         {
             unitsBySpeed.Add(unit);
         }
-        unitsBySpeed.Sort(compareBySpeed);
+        unitsBySpeed.Sort(compareBySpeed);*/
 
         //Set up turns
-        updateTurnOrder();
         pickNewTurn();
 
         //Make sure active tile is updated
@@ -368,7 +368,7 @@ public class BattleEngine : MonoBehaviour
     }
 
     //Sorting function by speed. Returns -1 if unit2 is greater, 0 if equal, 1 if unit1 is greater.
-    private static int compareBySpeed(GameObject unit1, GameObject unit2) {
+    private static int compareBySpeed(Vector2Int unit1, Vector2Int unit2) {
         if(unit1 == null) {
             if(unit2 == null) return 0;
             else return -1;
@@ -376,8 +376,8 @@ public class BattleEngine : MonoBehaviour
         else {
             if(unit2 == null) return 1;
             else {
-                int speed1 = unit1.GetComponent<CharacterStats>().getSpeed();
-                int speed2 = unit2.GetComponent<CharacterStats>().getSpeed();
+                int speed1 = unit1.y;
+                int speed2 = unit2.y;
                 if(speed1 > speed2) return 1;
                 else if(speed1 < speed2) return -1;
                 else return 0;
@@ -413,8 +413,11 @@ public class BattleEngine : MonoBehaviour
     }
 
     public void updateTurnOrder() {
-        turnQueue.Clear();
-        turnQueue.Add(unitsBySpeed[(int) turnCount % unitsBySpeed.Count]);
+        for(int i = 0; i < units.Count; i++) {
+            CharacterStats unit = units[i].GetComponent<CharacterStats>();
+            if(!unit.isDead()) turnQueue.Add(new Vector2Int(i, unit.getSpeed() * turnCount));
+        }
+        turnQueue = turnQueue.OrderBy(v => v.y).ToList();
     }
 
     //Start a new turn for the active unit
@@ -429,7 +432,8 @@ public class BattleEngine : MonoBehaviour
         acted = false;
 
         // Get active unit script
-        activeUnit = turnQueue[0];
+        Debug.Log("Turn " + turnCount + ": Index" + turnQueue[turnCount-1].x);
+        activeUnit = units[turnQueue[0].x];
         var activeUnitScript = activeUnit.GetComponent<CharacterStats>();
 
         // Get data from active unit
@@ -516,6 +520,7 @@ public class BattleEngine : MonoBehaviour
             foreach(GameObject button in actionButtons) Destroy(button);
             actionButtons.Clear();
             hideActionsList();
+            turnQueue.RemoveAt(0);
             pickNewTurn();
         }
     }
@@ -745,9 +750,13 @@ public class BattleEngine : MonoBehaviour
             if(!isUnitAlive(unit)) {
                 if(grid.GetComponent<GridBehavior>().RemoveCharacter(unit)) {
                     deadUnits.Add(unit);
-                    unitsBySpeed.Remove(unit);
                 }
             }
+        }
+        foreach(GameObject unit in deadUnits) {
+            int i = units.IndexOf(unit);
+            //if(units.Contains(unit)) units.Remove(unit);
+            turnQueue.RemoveAll((v) => v.x == i); //Take dead unit out of turn queue
         }
         checkOutcome();
         if(moved && acted) endTurn();
@@ -845,7 +854,7 @@ public class BattleEngine : MonoBehaviour
         endTurn();
     }
 
-    public uint getTurnCount() {
+    public int getTurnCount() {
         return turnCount;
     }
 }

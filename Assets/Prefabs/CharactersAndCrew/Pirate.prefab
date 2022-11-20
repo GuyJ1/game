@@ -323,7 +323,7 @@ MonoBehaviour:
     max: 100
     type: 3
   SPD:
-    baseValue: 25
+    baseValue: 15
     min: 5
     max: 100
     type: 4
@@ -361,9 +361,9 @@ MonoBehaviour:
   canvas: {fileID: 0}
   DamageText: {fileID: 8133978484208511556, guid: 87660d197cb3d9c4a90de7de09cea50e, type: 3}
   model: {fileID: 4349290728497671086}
-  gridPosition: {x: 7, y: 6}
+  gridPosition: {x: 5, y: 2}
   myGrid: {fileID: 0}
-  crew: {fileID: 8677408311475748420, guid: ff7e742bfec002a4c80690599f895dce, type: 3}
+  crew: {fileID: 8677408311475748420, guid: 238bccab6e5fb4a449c65233d85a8160, type: 3}
   weapon: {fileID: 0}
   armor: {fileID: 0}
   hat: {fileID: 0}

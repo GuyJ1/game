@@ -37,7 +37,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 730, y: 25}
+  m_AnchoredPosition: {x: 230, y: 25}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3857102688501951415
@@ -173,8 +173,12 @@ PrefabInstance:
       value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 7121239214818248064, guid: b0f4ea3c9b6835f48bffb74a3b029b6f, type: 3}
+      propertyPath: gradient.key0.b
+      value: 0.015686275
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121239214818248064, guid: b0f4ea3c9b6835f48bffb74a3b029b6f, type: 3}
       propertyPath: gradient.key0.g
-      value: 0.64705884
+      value: 0.92156863
       objectReference: {fileID: 0}
     - target: {fileID: 7121239214818248064, guid: b0f4ea3c9b6835f48bffb74a3b029b6f, type: 3}
       propertyPath: gradient.key0.r
@@ -186,6 +190,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7121239214818248064, guid: b0f4ea3c9b6835f48bffb74a3b029b6f, type: 3}
       propertyPath: gradient.key1.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121239214818248064, guid: b0f4ea3c9b6835f48bffb74a3b029b6f, type: 3}
+      propertyPath: gradient.key1.r
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7121239214818248064, guid: b0f4ea3c9b6835f48bffb74a3b029b6f, type: 3}
