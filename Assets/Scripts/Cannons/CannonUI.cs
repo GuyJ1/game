@@ -10,6 +10,7 @@ public class CannonUI : MonoBehaviour
     [SerializeField] public Button fireCharacter;
     [SerializeField] public Image fireCannonballImage;
     [SerializeField] public Image fireCharacterImage;
+    [SerializeField] public float battleSleepTime;
 
     private GameObject currCannon = null;
     private GameObject grid;
