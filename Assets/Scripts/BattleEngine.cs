@@ -30,7 +30,7 @@ public class BattleEngine : MonoBehaviour
     public Vector2Int activeUnitPos;
     public List<GameObject> deadUnits = new List<GameObject>();
     private List<GameObject> unitsBySpeed = new List<GameObject>(); //Units sorted from lowest to highest speed values
-    private List<GameObject> turnQueue = new List<GameObject>(); //Stored units in the turn queue (units can repeat)
+    public List<GameObject> turnQueue = new List<GameObject>(); //Stored units in the turn queue (units can repeat)
 
     //UI references
     [SerializeField] public CharacterCardUI charCard;

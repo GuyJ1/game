@@ -6,6 +6,7 @@ public class CharacterCardUI : MonoBehaviour
 {
     // Public vars
     [SerializeField] public TMP_Text statsPanel;
+    [SerializeField] public TMP_Text abilitiesPanel;
     [SerializeField] public Animator panelAnim;
     public CharacterStats CurrentCharacter;
 
@@ -18,17 +19,23 @@ public class CharacterCardUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        /*
         // Update Stats Panel
         if (CurrentCharacter != null)
         {
             statsPanel.text = statsList(CurrentCharacter);
         }
+        */
     }
 
     public void open(CharacterStats stats)
     {
         // Set character
         CurrentCharacter = stats;
+
+        // Update Panels
+        statsPanel.text = statsList(CurrentCharacter);
+        abilitiesPanel.text = abilitiesList(CurrentCharacter);
 
         // Open panel
         panelAnim.Play("PanelOpen");
@@ -60,6 +67,18 @@ public class CharacterCardUI : MonoBehaviour
         text += "AVO: " + stats.AVO + "\n";
         text += "HIT: " + stats.HIT + "\n";
         text += "MV: " + stats.getMovement();
+
+        return text;
+    }
+
+    public string abilitiesList(CharacterStats stats)
+    {
+        string text = "";
+
+        foreach(Ability ability in stats.abilities)
+        {
+            text += ability.displayName + "\n\n";
+        }
 
         return text;
     }

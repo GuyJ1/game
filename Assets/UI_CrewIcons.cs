@@ -12,7 +12,7 @@ public class UI_CrewIcons : MonoBehaviour
     public List<GameObject> badIcons = new List<GameObject>(); // Bad char icons list
     public float centerSpacing; // Spacing away from center of the canvas
     public float iconSpacing; // Spacing for individual icons
-    public float iconHeight; // Spacing for individual icons
+    public float iconHeight; // Distance away from the bottom of the canvas
     
     // Private vars
     private int numOfCharacters = 0;
@@ -83,7 +83,9 @@ public class UI_CrewIcons : MonoBehaviour
 
                         // Increment counter
                         badChars++;
-                    }          
+                    }
+
+                    numOfCharacters = goodChars + badChars;
                 }
             }
 
