@@ -389,7 +389,7 @@ MonoBehaviour:
   _dropDetailHeightBasedOnWaves: 0.2
   _lodDataResolution: 384
   _geometryDownSampleFactor: 2
-  _lodCount: 7
+  _lodCount: 3
   _renderingLayerMask: 255
   _simSettingsAnimatedWaves: {fileID: 0}
   _createSeaFloorDepthData: 1
