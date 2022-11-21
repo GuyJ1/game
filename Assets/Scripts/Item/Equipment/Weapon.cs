@@ -17,6 +17,7 @@ public class Weapon : EquippableItem
     public bool safeSwap = false; //When using LifeSwap, uses healing bonus (gain more HP or take less damage)
     public bool strongSoul = false; //When using SoulBash, if user is at full HP, bonus damage = MAX HP
     public bool lastStand = false; //When using Persistance, if user is at 1 HP, gauranteed critical hit
+    public bool shiningStar = false; //When using Shooting Star, attack 10 times at 1/10th the power (same hit and crit rate)
 
     public int Rarity; //from 1 to 3.
 

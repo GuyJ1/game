@@ -13,7 +13,7 @@ public class BattleEngine : MonoBehaviour
     public GameObject buttonPrefab;
 
     public List<GameObject> grids = new List<GameObject>(); //All grids
-    public GameObject playerShip, enemyShip;
+    public GameObject playerCrew, enemyCrew;
     public List<GameObject> units = new List<GameObject>(); //All units
     public PathTreeNode gridPaths;
     public bool active = false; //Activation flag to be set by other systems
@@ -39,6 +39,7 @@ public class BattleEngine : MonoBehaviour
     private Button attackButton, moveButton, endButton;
     private List<GameObject> actionButtons = new List<GameObject>();
     private GameObject victoryText, defeatText;
+    private HealthBar playerShipBar, playerMoraleBar, enemyShipBar, enemyMoraleBar;
 
     //Click Detection
     private Camera cam;
@@ -65,6 +66,10 @@ public class BattleEngine : MonoBehaviour
     // Start is called before the first frame update
     void Start() 
     {
+        // Temporary assignment of ships, crews should be passed in somewhere since they're permanent
+        playerCrew.GetComponent<CrewSystem>().ship = GameObject.Find("Player Ship");
+        enemyCrew.GetComponent<CrewSystem>().ship = GameObject.Find("Enemy Ship");
+
         // Get Camera
         cam = Camera.main;
 
@@ -78,6 +83,27 @@ public class BattleEngine : MonoBehaviour
         victoryText.SetActive(false);
         defeatText = GameObject.Find("DefeatText");
         defeatText.SetActive(false);
+
+        // Health & Morale bars
+        playerShipBar = GameObject.Find("PlayerShipBar").GetComponent<HealthBar>();
+        int playerShipHealth = playerCrew.GetComponent<CrewSystem>().getShip().HP;
+        playerShipBar.SetMaxHealth(playerShipHealth);
+        playerShipBar.SetHealth(playerShipHealth);
+
+        playerMoraleBar = GameObject.Find("PlayerMoraleBar").GetComponent<HealthBar>();
+        int playerMorale = playerCrew.GetComponent<CrewSystem>().morale;
+        playerMoraleBar.SetMaxHealth(playerMorale);
+        playerMoraleBar.SetHealth(playerMorale);
+
+        enemyShipBar = GameObject.Find("EnemyShipBar").GetComponent<HealthBar>();
+        int enemyShipHealth = enemyCrew.GetComponent<CrewSystem>().getShip().HP;
+        enemyShipBar.SetMaxHealth(enemyShipHealth);
+        enemyShipBar.SetHealth(enemyShipHealth);
+
+        enemyMoraleBar = GameObject.Find("EnemyMoraleBar").GetComponent<HealthBar>();
+        int enemyMorale = enemyCrew.GetComponent<CrewSystem>().morale;
+        enemyMoraleBar.SetMaxHealth(enemyMorale);
+        enemyMoraleBar.SetHealth(enemyMorale);
     }
 
     // Update is called once per frame
@@ -543,10 +569,10 @@ public class BattleEngine : MonoBehaviour
         Vector2Int tilePos = tileScript.position;
 
         // Unselect currently selected character
-        if(charSelected) {
+        /*if(charSelected) {
             Debug.Log("Unselecting character on " + selectedCharPos.x + " " + selectedCharPos.y);
             gridTiles.grid[selectedCharPos.x, selectedCharPos.y].GetComponent<Renderer>().material = isTileActive(selectedCharPos) ? gridTiles.activeUnselected : gridTiles.unselected;
-        }
+        }*/
 
         ResetAllHighlights();
 
@@ -779,7 +805,7 @@ public class BattleEngine : MonoBehaviour
                 break;
             }
         }
-        if(enemyShip.GetComponent<ShipStats>().HP <= 0) won = true;
+        if(enemyCrew.GetComponent<CrewSystem>().getShip().HP <= 0) won = true;
         //End on win
         if(won) {
             onEnd();
@@ -797,7 +823,7 @@ public class BattleEngine : MonoBehaviour
                 break;
             }
         }
-        if(playerShip.GetComponent<ShipStats>().HP <= 0) loss = true;
+        if(playerCrew.GetComponent<CrewSystem>().getShip().HP <= 0) loss = true;
         //End on loss
         if(loss) {
             onEnd();

@@ -112,9 +112,9 @@ public class Ability : ScriptableObject
 
             SoulBash(user, target);
         }
-        else if(displayName == "Persistance"){
+        else if(displayName == "Persistence"){
 
-            Persistance(user, target);
+            Persistence(user, target);
         }
         /*else if(displayName == "Pistol Shot"){
 
@@ -125,6 +125,18 @@ public class Ability : ScriptableObject
 
             HeadShot(user, target);
         }
+        else if(displayName == "Inspiring Shanty"){
+
+            InspiringShanty(user, target);
+        }
+        else if(displayName == "Reckless Tune"){
+
+            RecklessTune(user, target);
+        }
+        else if(displayName == "Maddening Jig"){
+
+            MaddeningJig(user, target);
+        }
         else if(displayName == "Pistol Volley"){
 
             PistolVolley(user, target);
@@ -132,6 +144,14 @@ public class Ability : ScriptableObject
         else if(displayName == "Death Wish"){
 
             DeathWish(user, target);
+        }
+        else if(displayName == "Second Wind"){
+
+            SecondWind(user);
+        }
+        else if(displayName == "Whirling Steel"){
+
+            WhirlingSteel(user, target);
         }
         else Generic(user, target);
 
@@ -223,30 +243,36 @@ public class Ability : ScriptableObject
         }
     }
 
+    //combo attacks will ignore defense if they hit
     void Combo(CharacterStats user, CharacterStats target){
 
-        //not sure how this will work yet so it will be blank for now
+        if(user.determineHIT(baseACC)){
 
-        target.adjustHP(-totalDMG, false);
+            GameObject hitParticle = Instantiate(targetEffect);
+            hitParticle.transform.position = target.transform.position;
 
-        
+            totalDMG = (baseDMG + user.getATK(target, true));
+
+            target.adjustHP(-totalDMG, false);
+
+
+        }
 
     }
 
 /// PIRATE CLASS ABILITIES ///
 
+    //attack the enemy, does not crit
     void PistolShot(CharacterStats user, CharacterStats target){
 
-        //see above
-
-    
-
         if(user.determineHIT(baseACC)){
 
             GameObject hitParticle = Instantiate(targetEffect);
             hitParticle.transform.position = target.transform.position;
 
-            target.adjustHP(-totalDMG - baseDMG, false);
+            totalDMG = user.getATK(target, false) + baseDMG;
+
+            target.adjustHP(-totalDMG, false);
 
 
         }
@@ -255,17 +281,18 @@ public class Ability : ScriptableObject
 
     }
 
+    //attack the enemy with high damage, ignores defense, does not crit
     void HeadShot(CharacterStats user, CharacterStats target){
 
-        //could potentially ignore DEF
-
 
         if(user.determineHIT(baseACC)){
 
             GameObject hitParticle = Instantiate(targetEffect);
             hitParticle.transform.position = target.transform.position;
 
-            target.adjustHP(-totalDMG - baseDMG, false);
+            totalDMG = user.getATK(target, true) + baseDMG;
+
+            target.adjustHP(-totalDMG, false);
 
 
         }
@@ -274,6 +301,64 @@ public class Ability : ScriptableObject
 
         
     }
+
+    //Flank
+
+
+/// BARD CLASS ABILITIES ///
+
+    //buffs the target's STR and SPD for 3 turns (+5). Friendly ability
+    void InspiringShanty(CharacterStats user, CharacterStats target){
+
+        GameObject hitParticle = Instantiate(targetEffect);
+        hitParticle.transform.position = target.transform.position;
+
+        foreach(StatModifier modifier in targetModifiers) {
+            if(modifier.chance > Random.Range(0.0F, 1.0F)) target.addModifier(modifier.clone());
+        }
+
+
+
+    }
+
+    //heal the target and grant +1 AP, but debuff defense for 3 turns (-3). Friendly ability
+    void RecklessTune(CharacterStats user, CharacterStats target){
+
+        GameObject hitParticle = Instantiate(targetEffect);
+        hitParticle.transform.position = target.transform.position;
+
+        totalHP = baseHP + user.Heal(target);
+
+        target.adjustHP(totalHP, true);
+
+        target.adjustAP(1,0);
+
+        
+        foreach(StatModifier modifier in targetModifiers) {
+            if(modifier.chance > Random.Range(0.0F, 1.0F)) target.addModifier(modifier.clone());
+        }
+
+
+
+    }
+
+
+    //if ability hits, debuff target's DEF (-5) and accuraccy (DEX) (-5) for 3 turns
+    void MaddeningJig(CharacterStats user, CharacterStats target){
+
+        if(user.determineHIT(baseACC)){
+
+            GameObject hitParticle = Instantiate(targetEffect);
+            hitParticle.transform.position = target.transform.position;
+
+            foreach(StatModifier modifier in targetModifiers) {
+                if(modifier.chance > Random.Range(0.0F, 1.0F)) target.addModifier(modifier.clone());
+            }
+        }
+
+    }
+
+
 
 
 
@@ -320,12 +405,23 @@ public class Ability : ScriptableObject
 
         GameObject hitParticle = null;
 
-        for(int i = 0; i < 5; i++){
+        int numAttack = 0;
+
+        if(user.weapon != null && user.weapon.shiningStar){
+
+            numAttack = 10;
+        }
+        else{
+
+            numAttack = 5;
+        }
+
+        for(int i = 0; i < numAttack; i++){
 
             hitParticle = Instantiate(targetEffect);//?
             hitParticle.transform.position = target.transform.position;
 
-            totalDMG = user.Attack(target, 1) / 5;
+            totalDMG = user.Attack(target, 1) / numAttack;
             target.adjustHP(-totalDMG, false);
             //might need a sleep statement here
             
@@ -384,7 +480,7 @@ public class Ability : ScriptableObject
     }
 
     //Attack the target. Bonus dmg is applied depending on current HP (less HP, more dmg)
-    void Persistance(CharacterStats user, CharacterStats target){
+    void Persistence(CharacterStats user, CharacterStats target){
 
         baseDMG = user.Attack(target, 1);
 
@@ -414,9 +510,9 @@ public class Ability : ScriptableObject
     void SecondWind(CharacterStats user){
 
 
-        totalHP = user.Heal(user);
+        totalHP = user.Heal(user) + baseHP;
 
-        user.adjustHP(totalHP + baseHP, true);
+        user.adjustHP(totalHP, true);
     }
 
     void PistolVolley(CharacterStats user, CharacterStats target){

@@ -38,6 +38,7 @@ public class MeleeTypeWeapon : Weapon
                 LCKmod = 2;*/
                 doubleAttack = true;
                 lastStand = true;
+                shiningStar = true;
                 
 
                 break;

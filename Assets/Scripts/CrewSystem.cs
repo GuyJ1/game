@@ -18,6 +18,7 @@ public class CrewSystem : MonoBehaviour
 {
     public bool isPlayer; //Whether this crew is a player crew (do not change this in code)
     public List<GameObject> characters; //List of all characters in this crew
+    public GameObject ship; //Ship belonging to this crew
     public int morale = 100;
 
     public int inventory_gold =1 ;
@@ -60,6 +61,10 @@ public class CrewSystem : MonoBehaviour
         foreach (GameObject character in characters) {
             character.GetComponent<CharacterStats>().crew = this.gameObject; //Set reference to crew in character
         }
+    }
+
+    public ShipStats getShip() {
+        return ship.GetComponent<ShipStats>();
     }
 
     /// <summary>

@@ -10,29 +10,32 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 51fcb3cb7e2a5f24d84d8061e64ea368, type: 3}
-  m_Name: Whirling Steel
+  m_Name: Inspiring Shanty
   m_EditorClassIdentifier: 
-  friendly: 0
-  requiresTarget: 0
+  friendly: 1
+  requiresTarget: 1
   totalDMG: 0
   totalHP: 0
   totalACC: 0
-  baseDMG: 60
+  baseDMG: 0
   baseHP: 0
   baseACC: 0
   cost: 2
-  range: 0
+  range: 4
   knockback: 0
-  displayName: Whirling Steel
+  displayName: Inspiring Shanty
   shape:
-  - {x: 1, y: 0}
-  - {x: -1, y: 0}
-  - {x: -1, y: -1}
-  - {x: -1, y: 1}
-  - {x: 1, y: 1}
-  - {x: 1, y: -1}
-  - {x: 0, y: 1}
-  - {x: 0, y: -1}
-  targetModifiers: []
+  - {x: 0, y: 0}
+  targetModifiers:
+  - type: 4
+    op: 0
+    duration: 3
+    value: 5
+    chance: 1
+  - type: 2
+    op: 0
+    duration: 3
+    value: 5
+    chance: 1
   selfModifiers: []
-  targetEffect: {fileID: 6874435940801072556, guid: c8a56fea996783b47a8dfa896240f0f0, type: 3}
+  targetEffect: {fileID: 0}
