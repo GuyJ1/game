@@ -212,11 +212,11 @@ public class Ability : ScriptableObject
         }
         //Apply modifiers to self
         foreach(StatModifier modifier in selfModifiers) {
-            if(modifier.chance > Random.Range(0.0F, 1.0F)) user.addModifier(modifier.clone());
+            if(modifier.chance > Random.Range(0.0F, 1.0F)) user.addModifier(modifier);
         }
         //Apply modifiers to target
         foreach(StatModifier modifier in targetModifiers) {
-            if(modifier.chance > Random.Range(0.0F, 1.0F)) target.addModifier(modifier.clone());
+            if(modifier.chance > Random.Range(0.0F, 1.0F)) target.addModifier(modifier);
         }
     }
 

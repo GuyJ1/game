@@ -40,13 +40,18 @@ public class StatModifier
     public int duration; //Duration in turns (-1 for infinite)
     public float value; //Value for operation
     public float chance; //Chance to apply (0.0 to 1.0)
+    public string id = ""; //Optional ID to identify this modifier after it's applied
 
-    private StatModifier(StatType type, OpType op, int duration, float value, float chance) {
+    public StatModifier(StatType type, OpType op, int duration, float value, float chance) {
         this.type = type;
         this.op = op;
         this.duration = duration;
         this.value = value;
         this.chance = chance;
+    }
+
+    public StatModifier(StatType type, OpType op, int duration, float value, float chance, string id) : this(type, op, duration, value, chance) {
+        this.id = id;
     }
 
     //Return true if this modifier is a buff, false if a debuff
@@ -56,7 +61,7 @@ public class StatModifier
     }
 
     public StatModifier clone() {
-        return new StatModifier(type, op, duration, value, chance);
+        return new StatModifier(type, op, duration, value, chance, id);
     }
 }
 
@@ -363,7 +368,7 @@ public class CharacterStats : MonoBehaviour
     }
 
     public void addModifier(StatModifier modifier) {
-        statModifiers.Add(modifier);
+        statModifiers.Add(modifier.clone());
     }
 
     public void addModifiers(List<StatModifier> modifiers) {
@@ -372,12 +377,17 @@ public class CharacterStats : MonoBehaviour
         }
     }
 
+    public void clearModifiersWithId(string id) {
+        foreach(StatModifier modifier in statModifiers) {
+            if(modifier.id == id) statModifiers.Remove(modifier);
+        }
+    }
+
     public void clearModifiers() {
         statModifiers.Clear();
     }
 
     public void clearDebuffs(){
-
         List<StatModifier> debuffs = new List<StatModifier>();
         foreach(StatModifier modifier in statModifiers) {
             if(!modifier.isBuff()) debuffs.Add(modifier);

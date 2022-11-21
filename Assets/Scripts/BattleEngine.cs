@@ -9,6 +9,20 @@ using UnityEngine.Events;
 //Note that this system must be activated and will not perform any logic until it is
 public class BattleEngine : MonoBehaviour 
  {
+    public static readonly string MORALE_BUFF_ID = "morale_buff", MORALE_DEBUFF_ID = "morale_debuff";
+    public static readonly int MORALE_HIGH = 75, MORALE_LOW = 25;
+    public static readonly StatModifier[] MORALE_BUFFS = {
+        new StatModifier(StatType.STR, OpType.MULTIPLY, -1, 0.2f, 1, MORALE_BUFF_ID),
+        new StatModifier(StatType.DEF, OpType.MULTIPLY, -1, 0.2f, 1, MORALE_BUFF_ID),
+        new StatModifier(StatType.SPD, OpType.MULTIPLY, -1, 0.2f, 1, MORALE_BUFF_ID),
+        new StatModifier(StatType.DEX, OpType.MULTIPLY, -1, 0.2f, 1, MORALE_BUFF_ID)
+    };
+    public static readonly StatModifier[] MORALE_DEBUFFS = {
+        new StatModifier(StatType.STR, OpType.MULTIPLY, -1, -0.2f, 1, MORALE_DEBUFF_ID),
+        new StatModifier(StatType.DEF, OpType.MULTIPLY, -1, -0.2f, 1, MORALE_DEBUFF_ID),
+        new StatModifier(StatType.SPD, OpType.MULTIPLY, -1, -0.2f, 1, MORALE_DEBUFF_ID),
+        new StatModifier(StatType.DEX, OpType.MULTIPLY, -1, -0.2f, 1, MORALE_DEBUFF_ID)
+    };
     //Prefabs
     public GameObject buttonPrefab;
 
@@ -30,7 +44,6 @@ public class BattleEngine : MonoBehaviour
     public GameObject grid; //Active grid that unit is on
     public Vector2Int activeUnitPos;
     public List<GameObject> deadUnits = new List<GameObject>();
-    //private List<GameObject> unitsBySpeed = new List<GameObject>(); //Units sorted from highest to lowest speed values
     public List<GameObject> turnQueue = new List<GameObject>(); //Stored units in the turn queue (units can repeat)
 
     //UI references
@@ -55,13 +68,9 @@ public class BattleEngine : MonoBehaviour
     private Vector2Int highlightedCharPos;
     private int lastXDist, lastYDist; //Last distance between user and target for ability selection
 
-    //Pausing
-
-
     //AI Variables
     private PlayerActionList playerActions = new PlayerActionList();
     private GameObject playerTarget = null; //Might be unnecessary
-    //private Ability playerAbility = null; //Might not be needed due to 'selectedAbility'
 
     // Start is called before the first frame update
     void Start() 
@@ -292,19 +301,16 @@ public class BattleEngine : MonoBehaviour
             units.Add(character);
         }
 
-        //Sort speed list
-        /*foreach(GameObject unit in units)
-        {
-            unitsBySpeed.Add(unit);
-        }
-        unitsBySpeed.Sort(compareBySpeed);*/
+        // Apply morale modifiers
+        CrewSystem playerCrew = getPlayerCrew(), enemyCrew = getEnemyCrew();
+        if(playerCrew.morale >= MORALE_HIGH) foreach(StatModifier modifier in MORALE_BUFFS) playerCrew.addModifier(modifier);
+        else if(playerCrew.morale <= MORALE_LOW) foreach(StatModifier modifier in MORALE_DEBUFFS) playerCrew.addModifier(modifier);
+        if(enemyCrew.morale >= MORALE_HIGH) foreach(StatModifier modifier in MORALE_BUFFS) enemyCrew.addModifier(modifier);
+        else if(enemyCrew.morale <= MORALE_LOW) foreach(StatModifier modifier in MORALE_DEBUFFS) enemyCrew.addModifier(modifier);
 
         //Set up turns
         pickNewTurn();
 
-        //Make sure active tile is updated
-        var activeGrid = grid.GetComponent<GridBehavior>();
-        activeGrid.grid[activeUnitPos.x, activeUnitPos.y].GetComponent<Renderer>().material = activeGrid.activeUnselected;
         init = true;
 
         // ------------------------------------
@@ -440,19 +446,19 @@ public class BattleEngine : MonoBehaviour
 
     public void updateTurnOrder() {
         List<Vector2Int> temp = new List<Vector2Int>();
-        //Populate list with sorted indices of units by speed over the next 100 turns
-        for(int i = 1; i < 100 + turnCount; i++) {
+        //Populate list with sorted indices of units by speed over the next 50 turns
+        for(int i = 1; i < 50 + turnCount; i++) {
             for(int j = 0; j < units.Count; j++) {
                 CharacterStats unit = units[j].GetComponent<CharacterStats>();
-                if(!unit.isDead()) temp.Add(new Vector2Int(j, unit.getSpeed() * i));
+                if(!unit.isDead()) temp.Add(new Vector2Int(j, (51 - unit.getSpeed()) * i));
             }
         }
-        temp = temp.OrderBy(v => v.y).ToList();
-        //Fill turn queue with the actual units up to 100
+        temp.Sort(compareBySpeed);
+        //Fill turn queue with the actual units
         turnQueue.Clear();
         foreach(Vector2Int vec in temp) {
             turnQueue.Add(units[vec.x]);
-            if(turnQueue.Count == 100 + turnCount - 1) break;
+            if(turnQueue.Count == 50 + turnCount - 1) break;
         }
         for(int i = 0; i < turnCount - 1; i++) turnQueue.RemoveAt(0); //Cull turns that were already taken
     }
@@ -462,7 +468,7 @@ public class BattleEngine : MonoBehaviour
     {
         // Increment turn count and populate turn queue if empty
         turnCount++;
-        if(turnQueue.Count < 50) updateTurnOrder();
+        updateTurnOrder();
 
         // Update flags
         moved = false;
@@ -557,6 +563,7 @@ public class BattleEngine : MonoBehaviour
             actionButtons.Clear();
             hideActionsList();
             turnQueue.RemoveAt(0);
+            update();
             pickNewTurn();
         }
     }
@@ -797,14 +804,11 @@ public class BattleEngine : MonoBehaviour
                 }
             }
         }
-        foreach(GameObject unit in deadUnits) {
-            //if(units.Contains(unit)) units.Remove(unit);
-            turnQueue.RemoveAll((u) => u == unit); //Take dead unit out of turn queue
-        }
         playerShipBar.SetHealth(getPlayerCrew().getShip().HP);
         enemyShipBar.SetHealth(getEnemyCrew().getShip().HP);
         playerMoraleBar.SetHealth(getPlayerCrew().morale);
         enemyMoraleBar.SetHealth(getEnemyCrew().morale);
+        updateTurnOrder();
 
         checkOutcome();
         if(moved && acted) endTurn();
@@ -820,7 +824,24 @@ public class BattleEngine : MonoBehaviour
     }
 
     private void addMorale(CrewSystem crew, int morale) {
+        int lastMorale = crew.morale;
         crew.addMorale(morale);
+        if(crew.morale >= MORALE_HIGH) {
+            if(lastMorale <= MORALE_LOW) crew.clearModifiersWithId(MORALE_DEBUFF_ID);
+            else if(lastMorale < MORALE_HIGH) {
+                foreach(StatModifier modifier in MORALE_BUFFS) crew.addModifier(modifier);
+            }
+        }
+        else if(crew.morale <= MORALE_LOW) {
+            if(lastMorale <= MORALE_HIGH) crew.clearModifiersWithId(MORALE_BUFF_ID);
+            else if(lastMorale > MORALE_LOW) {
+                foreach(StatModifier modifier in MORALE_DEBUFFS) crew.addModifier(modifier);
+            }
+        }
+        else {
+            if(lastMorale >= MORALE_HIGH) crew.clearModifiersWithId(MORALE_BUFF_ID);
+            else if(lastMorale <= MORALE_LOW) crew.clearModifiersWithId(MORALE_DEBUFF_ID);
+        }
     }
 
     //Check whether victory or defeat conditions are met

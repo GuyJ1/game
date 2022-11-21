@@ -58,7 +58,7 @@ public class CrewSystem : MonoBehaviour
     }
 
     public void initCharacters() {
-        foreach (GameObject character in characters) {
+        foreach(GameObject character in characters) {
             character.GetComponent<CharacterStats>().crew = this.gameObject; //Set reference to crew in character
         }
     }
@@ -69,6 +69,18 @@ public class CrewSystem : MonoBehaviour
 
     public void addMorale(int morale) {
         this.morale = (int) Mathf.Clamp(this.morale + morale, 0, 100);
+    }
+
+    public void addModifier(StatModifier modifier) {
+        foreach(GameObject character in characters) {
+            character.GetComponent<CharacterStats>().addModifier(modifier);
+        }
+    }
+
+    public void clearModifiersWithId(string id) {
+        foreach(GameObject character in characters) {
+            character.GetComponent<CharacterStats>().clearModifiersWithId(id);
+        }
     }
 
     /// <summary>

@@ -121,7 +121,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6886658739876458237, guid: 35e9b644f5a473148bedf512f2340242, type: 3}
       propertyPath: SPD.baseValue
-      value: 10
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 6886658739876458237, guid: 35e9b644f5a473148bedf512f2340242, type: 3}
       propertyPath: STR.baseValue
@@ -129,11 +129,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6886658739876458237, guid: 35e9b644f5a473148bedf512f2340242, type: 3}
       propertyPath: gridPosition.x
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6886658739876458237, guid: 35e9b644f5a473148bedf512f2340242, type: 3}
       propertyPath: gridPosition.y
-      value: 10
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 6886658739876458237, guid: 35e9b644f5a473148bedf512f2340242, type: 3}
       propertyPath: APMAX.baseValue

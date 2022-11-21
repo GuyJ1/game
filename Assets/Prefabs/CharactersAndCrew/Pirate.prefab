@@ -305,7 +305,7 @@ MonoBehaviour:
   HPMAX:
     baseValue: 200
     min: 20
-    max: 1000
+    max: 2000
     type: 0
   APMAX:
     baseValue: 3
@@ -314,28 +314,28 @@ MonoBehaviour:
     type: 1
   STR:
     baseValue: 25
-    min: 5
-    max: 100
+    min: 1
+    max: 50
     type: 2
   DEF:
     baseValue: 12
-    min: 5
-    max: 100
+    min: 1
+    max: 50
     type: 3
   SPD:
     baseValue: 15
-    min: 5
-    max: 100
+    min: 1
+    max: 50
     type: 4
   DEX:
     baseValue: 20
-    min: 5
-    max: 100
+    min: 1
+    max: 50
     type: 5
   LCK:
     baseValue: 20
-    min: 5
-    max: 100
+    min: 1
+    max: 50
     type: 6
   MV:
     baseValue: 5
@@ -361,7 +361,7 @@ MonoBehaviour:
   canvas: {fileID: 0}
   DamageText: {fileID: 8133978484208511556, guid: 87660d197cb3d9c4a90de7de09cea50e, type: 3}
   model: {fileID: 4349290728497671086}
-  gridPosition: {x: 7, y: 11}
+  gridPosition: {x: 1, y: 1}
   myGrid: {fileID: 0}
   crew: {fileID: 8677408311475748420, guid: ff7e742bfec002a4c80690599f895dce, type: 3}
   weapon: {fileID: 0}
