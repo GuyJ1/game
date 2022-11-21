@@ -54,7 +54,14 @@ public class NodeClick : MonoBehaviour
             if (objectHighlighted == false)
             {
                 objectHighlighted = true;
-                StartCoroutine(highlight());
+                if (NodeLines.isNeighbor(PlayerMove.currNode, obj))
+                {
+                    StartCoroutine(highlight());
+                }
+                else
+                {
+                    StartCoroutine(grayOut());
+                }
             }
         }
     }
@@ -110,6 +117,18 @@ public class NodeClick : MonoBehaviour
                     blue -= 10;
                 }
             }
+
+        }
+    }
+
+    IEnumerator grayOut()
+    {
+        while (objectHighlighted == true)
+        {
+            yield return new WaitForSeconds(.05f);
+            red = 32;
+            green = 32;
+            blue = 32;
 
         }
     }
