@@ -31,7 +31,7 @@ public class BattleEngine : MonoBehaviour
     public Vector2Int activeUnitPos;
     public List<GameObject> deadUnits = new List<GameObject>();
     //private List<GameObject> unitsBySpeed = new List<GameObject>(); //Units sorted from highest to lowest speed values
-    public List<Vector2Int> turnQueue = new List<Vector2Int>(); //Stored units in the turn queue (units can repeat)
+    public List<GameObject> turnQueue = new List<GameObject>(); //Stored units in the turn queue (units can repeat)
 
     //UI references
     [SerializeField] public CharacterCardUI charCard;
@@ -439,27 +439,37 @@ public class BattleEngine : MonoBehaviour
     }
 
     public void updateTurnOrder() {
-        for(int i = 0; i < units.Count; i++) {
-            CharacterStats unit = units[i].GetComponent<CharacterStats>();
-            if(!unit.isDead()) turnQueue.Add(new Vector2Int(i, unit.getSpeed() * turnCount));
+        List<Vector2Int> temp = new List<Vector2Int>();
+        //Populate list with sorted indices of units by speed over the next 100 turns
+        for(int i = 1; i < 100 + turnCount; i++) {
+            for(int j = 0; j < units.Count; j++) {
+                CharacterStats unit = units[j].GetComponent<CharacterStats>();
+                if(!unit.isDead()) temp.Add(new Vector2Int(j, unit.getSpeed() * i));
+            }
         }
-        turnQueue = turnQueue.OrderBy(v => v.y).ToList();
+        temp = temp.OrderBy(v => v.y).ToList();
+        //Fill turn queue with the actual units up to 100
+        turnQueue.Clear();
+        foreach(Vector2Int vec in temp) {
+            turnQueue.Add(units[vec.x]);
+            if(turnQueue.Count == 100 + turnCount - 1) break;
+        }
+        for(int i = 0; i < turnCount - 1; i++) turnQueue.RemoveAt(0); //Cull turns that were already taken
     }
 
     //Start a new turn for the active unit
     public void startTurn()
     {
-        // Increment turn count and update turn order
+        // Increment turn count and populate turn queue if empty
         turnCount++;
-        updateTurnOrder();
+        if(turnQueue.Count < 50) updateTurnOrder();
 
         // Update flags
         moved = false;
         acted = false;
 
         // Get active unit script
-        Debug.Log("Turn " + turnCount + ": Index" + turnQueue[turnCount-1].x);
-        activeUnit = units[turnQueue[0].x];
+        activeUnit = turnQueue[0];
         var activeUnitScript = activeUnit.GetComponent<CharacterStats>();
 
         // Get data from active unit
@@ -776,17 +786,41 @@ public class BattleEngine : MonoBehaviour
             if(!isUnitAlive(unit)) {
                 if(grid.GetComponent<GridBehavior>().RemoveCharacter(unit)) {
                     deadUnits.Add(unit);
+                    if(isAllyUnit(unit)) {
+                        addPlayerMorale(-5);
+                        addEnemyMorale(2);
+                    }
+                    else {
+                        addEnemyMorale(-5);
+                        addPlayerMorale(2);
+                    }
                 }
             }
         }
         foreach(GameObject unit in deadUnits) {
-            int i = units.IndexOf(unit);
             //if(units.Contains(unit)) units.Remove(unit);
-            turnQueue.RemoveAll((v) => v.x == i); //Take dead unit out of turn queue
+            turnQueue.RemoveAll((u) => u == unit); //Take dead unit out of turn queue
         }
+        playerShipBar.SetHealth(getPlayerCrew().getShip().HP);
+        enemyShipBar.SetHealth(getEnemyCrew().getShip().HP);
+        playerMoraleBar.SetHealth(getPlayerCrew().morale);
+        enemyMoraleBar.SetHealth(getEnemyCrew().morale);
+
         checkOutcome();
         if(moved && acted) endTurn();
         checkOutcome();
+    }
+
+    public void addPlayerMorale(int morale) {
+        addMorale(getPlayerCrew(), morale);
+    }
+
+    public void addEnemyMorale(int morale) {
+        addMorale(getEnemyCrew(), morale);
+    }
+
+    private void addMorale(CrewSystem crew, int morale) {
+        crew.addMorale(morale);
     }
 
     //Check whether victory or defeat conditions are met
@@ -855,6 +889,18 @@ public class BattleEngine : MonoBehaviour
         return unit.GetComponent<CharacterStats>().comboAttack;
     }
 
+    public CrewSystem getPlayerCrew() {
+        return playerCrew.GetComponent<CrewSystem>();
+    }
+
+    public CrewSystem getEnemyCrew() {
+        return enemyCrew.GetComponent<CrewSystem>();
+    }
+
+    public int getTurnCount() {
+        return turnCount;
+    }
+
     public void showActionsList() {
         foreach(GameObject button in actionButtons) {
             button.SetActive(true);
@@ -878,9 +924,5 @@ public class BattleEngine : MonoBehaviour
     public void doAITurn() {
         //TODO: AI stuff here
         endTurn();
-    }
-
-    public int getTurnCount() {
-        return turnCount;
     }
 }

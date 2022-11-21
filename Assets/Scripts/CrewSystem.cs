@@ -67,6 +67,10 @@ public class CrewSystem : MonoBehaviour
         return ship.GetComponent<ShipStats>();
     }
 
+    public void addMorale(int morale) {
+        this.morale = (int) Mathf.Clamp(this.morale + morale, 0, 100);
+    }
+
     /// <summary>
     /// Function to update an item in the inventory by a given quantity
     /// </summary>
