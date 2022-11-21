@@ -74,121 +74,98 @@ public class Ability : ScriptableObject
         }
     }
 
+    //call an ability based on given display name
     public void callAbility(CharacterStats user, CharacterStats target){
-        //switch statement with all IDs calling the specified function
-        //Generic(user, target);
-        //make use of displayName
 
-        /*if(displayName == "Basic"){
 
-            Generic(user, target);
+        /// COMBO ///
 
-        }
-        else if(displayName == "Combo"){
+        if(displayName == "Combo")                  Combo(user, target);
 
-            Combo(user, target);
 
-        }
-        else*/ if(displayName == "Pierce"){
+        /// WEAPON ///
 
-            Pierce(user, target);
 
-        }
-        else if(displayName == "Shooting Star"){
+        else if(displayName == "Pierce")            Pierce(user, target);
+        else if(displayName == "Shooting Star")     ShootingStar(user, target);
+        else if(displayName == "Siphon")            Siphon(user, target);
+        else if(displayName == "Life Swap")         LifeSwap(user, target);
+        else if(displayName == "Soul Bash")         SoulBash(user, target);
+        else if(displayName == "Persistence")       Persistence(user, target);
 
-            ShootingStar(user, target);
+        /// PIRATE ////
 
-        }
-        else if(displayName == "Siphon"){
+        else if(displayName == "Pistol Shot")       PistolShot(user, target);
+        else if(displayName == "Head Shot")         HeadShot(user, target);
+        else if(displayName == "Flank")             Flank(user);
 
-             Siphon(user, target);
+        /// BARD ///
 
-        }
-        else if(displayName == "Life Swap"){
+        else if(displayName == "Inspiring Shanty")  InspiringShanty(user, target);
+        else if(displayName == "Reckless Tune")     RecklessTune(user, target);
+        else if(displayName == "Maddening Jig")     MaddeningJig(user, target);
 
-            LifeSwap(user, target);
-        }
-        else if(displayName == "Soul Bash"){
+        /// MERCENARY ///
 
-            SoulBash(user, target);
-        }
-        else if(displayName == "Persistence"){
 
-            Persistence(user, target);
-        }
-        /*else if(displayName == "Pistol Shot"){
+        else if(displayName == "Provoke")           Provoke(user, target);
+        else if(displayName == "Reeling Chains")    ReelingChains(user, target);
+        else if(displayName == "Incarcerate")       Incarcerate(user, target);
 
-            PistolShot(user, target);
 
-        }*/
-        else if(displayName == "Head Shot"){
+        /// MERCHANT ///
 
-            HeadShot(user, target);
-        }
-        else if(displayName == "Inspiring Shanty"){
 
-            InspiringShanty(user, target);
-        }
-        else if(displayName == "Reckless Tune"){
+        else if(displayName == "Disparage")         Disparage(user, target);
+        else if(displayName == "Promise of Coin")   PromiseOfCoin(user, target);
+        else if(displayName == "On The House")      OnTheHouse(user, target);
 
-            RecklessTune(user, target);
-        }
-        else if(displayName == "Maddening Jig"){
 
-            MaddeningJig(user, target);
-        }
-        else if(displayName == "Pistol Volley"){
+        /// BUCCANEER ///
 
-            PistolVolley(user, target);
-        }
-        else if(displayName == "Death Wish"){
 
-            DeathWish(user, target);
-        }
-        else if(displayName == "Second Wind"){
+        else if(displayName == "Rifle Shot")        RifleShot(user, target);
+        else if(displayName == "Cheap Shot")        CheapShot(user, target);
+        else if(displayName == "Explosive Blast")   ExplosiveBlast(user, target);
 
-            SecondWind(user);
-        }
-        else if(displayName == "Whirling Steel"){
 
-            WhirlingSteel(user, target);
-        }
+        /// ACOLYTE ///
+
+
+        else if(displayName == "Replenish")         Replenish(user, target);
+        else if(displayName == "Noble Rite")        NobleRite(user, target);
+        else if(displayName == "Purge")             Purge(user, target);
+
+
+        /// PIRATE CAPTAIN ///
+
+
+        else if(displayName == "Pistol Volley")     PistolVolley(user, target);
+        else if(displayName == "Death Wish")        DeathWish(user, target);
+        else if(displayName == "Second Wind")       SecondWind(user);
+        else if(displayName == "Whirling Steel")    WhirlingSteel(user, target);
+
+
+        /// MERCHANT CAPTAIN ///
+
+
+        else if(displayName == "Tempt")             Tempt(user, target);
+        else if(displayName == "Forceful Lashing")  ForcefulLashing(user, target);
+        else if(displayName == "Harrowing Speech")  HarrowingSpeech(user, target);
+        else if(displayName == "Silver Tongue")     SilverTongue(user, target);
+
+
+        /// MONARCHY CAPTAIN ///
+
+
+        else if(displayName == "Command")           Command(user, target);
+        else if(displayName == "Shield Bash")       ShieldBash(user, target);
+        else if(displayName == "Enrage")            Enrage(user, target);
+        else if(displayName == "King's Will")       KingsWill(user, target);
+
+
+        /// BASIC ///
         else Generic(user, target);
-
-
-
-        /*switch(ID){
-            case 0: 
-                Generic(user,target);
-                break;
-
-            case 1:
-                Combo(user, target);
-                break;
-            case 2:
-                
-                PistolShot(user, target);
-                break;
-            case 3:
-
-                Siphon(user, target);
-                break;
-            case 4:
-
-                Pierce(user, target);
-                break;
-            case 5:
-
-                ShootingStar(user, target);
-                break;
-                
-            default:
-                return 1; //error
-
-        }*/
-
-        
-            
 
     }
 
@@ -302,7 +279,18 @@ public class Ability : ScriptableObject
         
     }
 
-    //Flank
+
+
+    //Move to any tile around adjacent enemeies, also grants +2 SPD and DEX for 2 turns
+    void Flank(CharacterStats user){
+
+        //effect
+
+        foreach(StatModifier modifier in selfModifiers) {
+            if(modifier.chance > Random.Range(0.0F, 1.0F)) user.addModifier(modifier.clone());
+        }
+
+    }
 
 
 /// BARD CLASS ABILITIES ///
@@ -348,6 +336,23 @@ public class Ability : ScriptableObject
 
         if(user.determineHIT(baseACC)){
 
+            //possible effect
+
+            foreach(StatModifier modifier in targetModifiers) {
+                if(modifier.chance > Random.Range(0.0F, 1.0F)) target.addModifier(modifier.clone());
+            }
+        }
+
+    }
+
+
+/// MERCENARY CLASS ABILITIES ///
+
+    //Taunt: +5 STR/SPD / -10 DEF/LCK/DEX to target. Lasts for 1 turn
+    void Provoke(CharacterStats user, CharacterStats target){
+
+        if(user.determineHIT(baseACC)){
+
             GameObject hitParticle = Instantiate(targetEffect);
             hitParticle.transform.position = target.transform.position;
 
@@ -357,6 +362,178 @@ public class Ability : ScriptableObject
         }
 
     }
+
+    //Low damage, pull enemy towards the user, also grants +3 DEX to user for 3 turns
+    void ReelingChains(CharacterStats user, CharacterStats target){
+
+        if(user.determineHIT(baseACC)){
+
+            GameObject hitParticle = Instantiate(targetEffect);
+            hitParticle.transform.position = target.transform.position;
+
+            totalDMG = baseDMG + (user.getDexterity() / 3);
+
+            target.adjustHP(-totalDMG, false);
+
+            foreach(StatModifier modifier in selfModifiers) {
+                if(modifier.chance > Random.Range(0.0F, 1.0F)) user.addModifier(modifier.clone());
+            }
+        }
+
+    }
+
+
+
+    //medium damage, debuff SPD (-8) and MV (-3) to target for 2 turns
+    void Incarcerate(CharacterStats user, CharacterStats target){
+
+        if(user.determineHIT(baseACC)){
+
+            GameObject hitParticle = Instantiate(targetEffect);
+            hitParticle.transform.position = target.transform.position;
+
+            totalDMG = baseDMG + (user.getDexterity() / 2);
+
+            target.adjustHP(-totalDMG, false);
+
+            foreach(StatModifier modifier in targetModifiers) {
+                if(modifier.chance > Random.Range(0.0F, 1.0F)) user.addModifier(modifier.clone());
+            }
+        }
+ 
+    }
+
+
+
+/// MERCHANT CLASS ABILITIES ///
+
+    // -6 STR -4 DEX to target for 1 turns
+    void Disparage(CharacterStats user, CharacterStats target){
+
+        if(user.determineHIT(baseACC)){
+
+            //effect
+
+            foreach(StatModifier modifier in targetModifiers) {
+                if(modifier.chance > Random.Range(0.0F, 1.0F)) user.addModifier(modifier.clone());
+            }
+        }
+        
+    }
+
+
+
+    // +6 DEF +4 LCK to target for 2 turns
+    void PromiseOfCoin(CharacterStats user, CharacterStats target){
+
+            //effect
+
+            foreach(StatModifier modifier in targetModifiers) {
+                if(modifier.chance > Random.Range(0.0F, 1.0F)) user.addModifier(modifier.clone());
+            }
+    
+    }
+
+    
+    //Grants one random buff to target for 3 turns (if move is successful)
+    //Can choose from any stat (minus MV, AP, or HP)
+    // +5 STR (90% chance)
+    // +5 DEF (70% chance)
+    // +5 SPD (50% chance)
+    // +5 DEX (30% chance)
+    // +5 LCK (10% chance)
+    void OnTheHouse(CharacterStats user, CharacterStats target){
+
+        //effect
+
+        foreach(StatModifier modifier in targetModifiers) {
+            if(modifier.chance > Random.Range(0.0F, 1.0F)) user.addModifier(modifier.clone());
+        }
+    
+    }
+
+
+
+
+
+/// BUCCANEER CLASS ABILITIES ///
+
+    //moderate damage, can convert remaining movement to +5 ACC
+    void RifleShot(CharacterStats user, CharacterStats target){
+
+
+
+
+
+
+        
+    }
+
+
+    //low damage, -2 MV to target
+    void CheapShot(CharacterStats user, CharacterStats target){
+
+
+
+
+
+
+        
+    }
+
+
+    //medium damage if move successful
+    void ExplosiveBlast(CharacterStats user, CharacterStats target){
+
+
+
+
+
+
+        
+    }
+
+
+
+
+/// ACOLYTE CLASS ABILITIES ///
+
+    //heal the target (moderate)
+    void Replenish(CharacterStats user, CharacterStats target){
+
+
+
+
+
+
+        
+    }
+
+
+
+    //heal the target (strong) and grant +6 LCK
+    void NobleRite(CharacterStats user, CharacterStats target){
+
+
+
+
+
+
+        
+    }
+
+
+    //clear all debuffs and grant 1 AP to target
+    void Purge(CharacterStats user, CharacterStats target){
+
+
+
+
+
+
+        
+    }
+
 
 
 
@@ -554,6 +731,125 @@ public class Ability : ScriptableObject
 
 
 
+    }
+
+
+
+
+/// MERCHANT CAPTAIN ABILITIES ///
+
+
+
+    //-10 DEF, resist enemy Charm
+    void Tempt(CharacterStats user, CharacterStats target){
+
+
+
+
+
+
+        
+    }
+
+
+
+    //Low damage, knockback 1, inflicts [Taunt]
+    //Taunt: +5 STR/SPD / -10 DEF/LCK/DEX to target
+    void ForcefulLashing(CharacterStats user, CharacterStats target){
+
+
+
+
+
+
+        
+    }
+
+
+    //Lower enemy morale by 3 for each target hit
+    void HarrowingSpeech(CharacterStats user, CharacterStats target){
+
+
+
+
+
+
+        
+    }
+
+
+
+    //Inflict [Charm]
+    //Charm: -8 STR/DEF for 2 turns, Can't use abilities on user for 1 turn
+    void SilverTongue(CharacterStats user, CharacterStats target){
+
+
+
+
+
+
+        
+    }
+
+
+
+
+
+
+
+
+/// MONARCHY CAPTAIN ABILITIES ///
+
+
+
+    //+7 STR/DEX/LCK to target
+    void Command(CharacterStats user, CharacterStats target){
+
+
+
+
+
+
+        
+    }
+
+
+    //medium damage, knockback 3, self forward 1
+    //if armor is equipped, bonus damage = user's DEF / 3
+    void ShieldBash(CharacterStats user, CharacterStats target){
+
+
+
+
+
+
+        
+    }
+
+
+    //inflicts [Taunt]
+    //Taunt: +5 STR/SPD / -10 DEF/LCK/DEX to target
+    void Enrage(CharacterStats user, CharacterStats target){
+
+
+
+
+
+
+        
+    }
+
+
+
+    //immune to damage for 1 turn
+    void KingsWill(CharacterStats user, CharacterStats target){
+
+
+
+
+
+
+        
     }
 
 
