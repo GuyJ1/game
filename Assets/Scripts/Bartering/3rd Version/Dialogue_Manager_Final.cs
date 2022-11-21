@@ -24,4 +24,34 @@ public class Dialogue_Manager_Final : MonoBehaviour
         message = textBox.transform.GetChild(1).GetComponent<Text>();
         choiceSelected = null;
     }
+
+    /*private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            //Is there more to the story?
+            if(story.canContinue)
+            {
+                nametag.text = "Main Character";
+                AdvanceDialogue();
+
+                //Are there any choices?
+                if (story.currentChoices.Count != 0)
+                {
+                    StartCoroutine(ShowChoices());
+                }
+            }
+            else
+            {
+                FinishDialogue();
+            }
+        }
+    }
+    */
+
+    // Finished the Story (Dialogue)
+    private void FinishDialogue()
+    {
+        Debug.Log("End of Dialogue!");
+    }
 }
