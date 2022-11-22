@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51fcb3cb7e2a5f24d84d8061e64ea368, type: 3}
   m_Name: Reckless Tune
   m_EditorClassIdentifier: 
-  friendly: 0
+  friendly: 1
   requiresTarget: 0
   totalDMG: 0
   totalHP: 0
