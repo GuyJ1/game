@@ -50,6 +50,7 @@ public class NodeClick : MonoBehaviour
             if (Input.GetMouseButtonDown(0))
             {
                 clickobj = obj;
+                
             }
             if (objectHighlighted == false)
             {
