@@ -474,10 +474,6 @@ public class BattleEngine : MonoBehaviour
         turnCount++;
         updateTurnOrder();
 
-        // Update flags
-        moved = false;
-        acted = false;
-
         // Get active unit script
         activeUnit = turnQueue[0];
         var activeUnitScript = activeUnit.GetComponent<CharacterStats>();
@@ -567,6 +563,8 @@ public class BattleEngine : MonoBehaviour
             actionButtons.Clear();
             hideActionsList();
             turnQueue.RemoveAt(0);
+            moved = false;
+            acted = false;
             update();
             pickNewTurn();
         }
