@@ -48,6 +48,7 @@ public class BattleEngine : MonoBehaviour
 
     //UI references
     [SerializeField] public CharacterCardUI charCard;
+    [SerializeField] public UI_CrewTurnOrder crewTurnOrder;
     public GameObject canvas;
     private Button attackButton, moveButton, endButton;
     private List<GameObject> actionButtons = new List<GameObject>();
@@ -461,6 +462,9 @@ public class BattleEngine : MonoBehaviour
             if(turnQueue.Count == 50 + turnCount - 1) break;
         }
         for(int i = 0; i < turnCount - 1; i++) turnQueue.RemoveAt(0); //Cull turns that were already taken
+
+        // Update crew turn order in the UI
+        crewTurnOrder.UpdateCrewTurnOrder();
     }
 
     //Start a new turn for the active unit

@@ -37,7 +37,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 480, y: 25}
+  m_AnchoredPosition: {x: 750, y: 25}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3857102688501951415
@@ -93,6 +93,7 @@ MonoBehaviour:
   myChar: {fileID: 0}
   charScript: {fileID: 0}
   myHealthBar: {fileID: 8372320732285518797}
+  UpdateChar: 0
 --- !u!1001 &1649386244860708429
 PrefabInstance:
   m_ObjectHideFlags: 0

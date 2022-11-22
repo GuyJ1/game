@@ -1447,6 +1447,7 @@ MonoBehaviour:
   deadUnits: []
   turnQueue: []
   charCard: {fileID: 792736054}
+  crewTurnOrder: {fileID: 783148654}
   canvas: {fileID: 865769687}
 --- !u!1001 &347220872
 PrefabInstance:
@@ -2832,10 +2833,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   battleScript: {fileID: 322437417}
   icon: {fileID: 3239360924737938845, guid: 22a0297e84fd6854bad99c51ea3d02e8, type: 3}
-  icons: []
-  leftMargin: 30
+  iconCount: 20
   iconSpacing: 50
   iconHeight: 25
+  leftMargin: 30
 --- !u!1001 &792736053
 PrefabInstance:
   m_ObjectHideFlags: 0

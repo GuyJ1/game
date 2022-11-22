@@ -8,68 +8,52 @@ public class UI_CrewTurnOrder : MonoBehaviour
     // Public vars
     public BattleEngine battleScript; // Battle engine ref
     public GameObject icon; // Icon game object to attach to canvas
-    public List<GameObject> icons = new List<GameObject>(); // Char icons list
-    public float leftMargin; // Spacing away from center of the canvas
+    public uint iconCount; // Number of icons to display from the turn order
     public float iconSpacing; // Spacing for individual icons
     public float iconHeight; // Distance away from the bottom of the canvas
+    public float leftMargin; // Spacing away from center of the canvas
     
     // Private vars
-    private int numOfCharacters = 0;
+    private List<GameObject> icons = new List<GameObject>(); // Char icons list
 
-    // Late update is called after Update()
-    void LateUpdate()
+    // Intitialize icons
+    void Start()
     {
-        // Get char count from battle engine
-        int currNumOfChars = battleScript.units.Count;
-
-        // Update when the # of chars in the battle system change
-        if (numOfCharacters != currNumOfChars)
+        for (uint i = 0; i < iconCount && i < 50; i++)
         {
-            Debug.Log("Updating crew icons...");
-            
-            // For every character
-            foreach (GameObject unit in battleScript.units)
-            {
-                bool isNewIcon = true;
+            // Spawn Icon
+            GameObject newIcon = Instantiate(icon, this.transform);
 
-                // Check both lists to see whether we have this icon already
-                foreach (GameObject icon in icons)
-                {
-                    if (unit == icon.GetComponent<UI_CharIcon>().myChar)
-                    {
-                        isNewIcon = false;
-                    }
-                }
+            // Add icon to list
+            icons.Add(newIcon);
 
-                // If this is a new icon-
-                if (isNewIcon == true)
-                {
-                    // Spawn Icon
-                    GameObject newIcon = Instantiate(icon, this.transform);
-                    //Vector3 pos = newIcon.transform.position; // store pos
+            // Modify rect transform
+            RectTransform rect = icon.transform.GetComponent<RectTransform>();
+            rect.anchorMin = new Vector2(0.0f, 0.0f);
+            rect.anchorMax = new Vector2(0.0f, 0.0f);
+            rect.anchoredPosition = new Vector2(shiftAmount(icons.Count), iconHeight);
+        }
+    }
 
-                    // Set Icon Data
-                    newIcon.GetComponent<UI_CharIcon>().myChar = unit;
+    // Update Icons
+    public void UpdateCrewTurnOrder()
+    {
+        // For every icon
+        for (int i = 0; i < icons.Count && i < battleScript.turnQueue.Count; i++)
+        {
+            GameObject currIcon = icons[i];
+            GameObject currChar = battleScript.turnQueue[i];
 
-                    // Add icon to list
-                    icons.Add(newIcon);
+            // Set icon data
+            var iconScript = currIcon.GetComponent<UI_CharIcon>();
+            iconScript.myChar = currChar;
+            iconScript.UpdateChar = true;
 
-                    // Modify rect transform
-                    RectTransform rect = icon.transform.GetComponent<RectTransform>();
-                    rect.anchorMin = new Vector2(0.0f, 0.0f);
-                    rect.anchorMax = new Vector2(0.0f, 0.0f);
-                    rect.anchoredPosition = new Vector2(shiftAmount(numOfCharacters), iconHeight);
-
-                    // Modify healthbar
-                    icon.transform.GetChild(0).GetChild(0).GetComponent<HealthBar>().gradient = CharacterStats.HealthBarGradient(BattleEngine.isAllyUnit(unit));
-
-                    // Increment counter
-                    numOfCharacters++;        
-                }
-            }
-
-            // Update number of characters
-            numOfCharacters = currNumOfChars;
+            // Modify rect transform
+            RectTransform rect = icon.transform.GetComponent<RectTransform>();
+            rect.anchorMin = new Vector2(0.0f, 0.0f);
+            rect.anchorMax = new Vector2(0.0f, 0.0f);
+            rect.anchoredPosition = new Vector2(shiftAmount(i), iconHeight);
         }
     }
 
@@ -90,7 +74,7 @@ public class UI_CrewTurnOrder : MonoBehaviour
             {
                 GameObject currIcon = icons[i];
                 newShift = leftMargin + (i * iconSpaceNew);
-                currIcon.transform.GetComponent<RectTransform>().anchoredPosition = new Vector2(-newShift, iconHeight);
+                currIcon.transform.GetComponent<RectTransform>().anchoredPosition = new Vector2(newShift, iconHeight);
             }
 
             shift = newShift; // for return
