@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51fcb3cb7e2a5f24d84d8061e64ea368, type: 3}
   m_Name: King's Will
   m_EditorClassIdentifier: 
-  friendly: 0
+  friendly: 1
   requiresTarget: 0
   totalDMG: 0
   totalHP: 0
@@ -20,11 +20,24 @@ MonoBehaviour:
   baseDMG: 0
   baseHP: 0
   baseACC: 0
-  cost: 0
+  cost: 3
   range: 0
   knockback: 0
-  displayName: 
-  shape: []
-  targetModifiers: []
+  displayName: King's Will
+  shape:
+  - {x: 0, y: 0}
+  targetModifiers:
+  - type: 2
+    op: 0
+    duration: 1
+    value: 3
+    chance: 1
+    id: Immune
+  - type: 5
+    op: 0
+    duration: 1
+    value: 3
+    chance: 1
+    id: Immune
   selfModifiers: []
   targetEffect: {fileID: 0}

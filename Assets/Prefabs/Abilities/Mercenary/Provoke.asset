@@ -32,25 +32,30 @@ MonoBehaviour:
     duration: 1
     value: 5
     chance: 1
+    id: Taunt
   - type: 4
     op: 0
     duration: 1
     value: 5
     chance: 1
+    id: Taunt
   - type: 3
     op: 0
     duration: 1
     value: -10
     chance: 1
+    id: Taunt
   - type: 5
     op: 0
     duration: 1
     value: -10
     chance: 1
+    id: Taunt
   - type: 6
     op: 0
     duration: 1
     value: -10
     chance: 1
+    id: Taunt
   selfModifiers: []
   targetEffect: {fileID: 0}

@@ -129,11 +129,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6886658739876458237, guid: 35e9b644f5a473148bedf512f2340242, type: 3}
       propertyPath: gridPosition.x
-      value: 2
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6886658739876458237, guid: 35e9b644f5a473148bedf512f2340242, type: 3}
       propertyPath: gridPosition.y
-      value: 13
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 6886658739876458237, guid: 35e9b644f5a473148bedf512f2340242, type: 3}
       propertyPath: APMAX.baseValue
@@ -163,6 +163,34 @@ PrefabInstance:
       propertyPath: abilities.Array.data[3]
       value: 
       objectReference: {fileID: 11400000, guid: 51c646b6c8a8d9947a6053b30d46c253, type: 2}
+    - target: {fileID: 6886658739876458237, guid: 35e9b644f5a473148bedf512f2340242, type: 3}
+      propertyPath: statModifiers.Array.size
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6886658739876458237, guid: 35e9b644f5a473148bedf512f2340242, type: 3}
+      propertyPath: statModifiers.Array.data[1].type
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6886658739876458237, guid: 35e9b644f5a473148bedf512f2340242, type: 3}
+      propertyPath: statModifiers.Array.data[2].type
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6886658739876458237, guid: 35e9b644f5a473148bedf512f2340242, type: 3}
+      propertyPath: statModifiers.Array.data[3].type
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6886658739876458237, guid: 35e9b644f5a473148bedf512f2340242, type: 3}
+      propertyPath: statModifiers.Array.data[4].type
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6886658739876458237, guid: 35e9b644f5a473148bedf512f2340242, type: 3}
+      propertyPath: statModifiers.Array.data[6].type
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6886658739876458237, guid: 35e9b644f5a473148bedf512f2340242, type: 3}
+      propertyPath: statModifiers.Array.data[7].type
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 8884561808067556798, guid: 35e9b644f5a473148bedf512f2340242, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 

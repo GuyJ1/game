@@ -200,6 +200,10 @@ public class CharacterStats : MonoBehaviour
         AP = getMaxAP();
 
         updateAVO(ring, aura);
+        HIT = getHIT(null, true);
+        CRIT = getCRIT(null, true);
+        ATK = getATK(null, true);
+
 
 
 
@@ -542,6 +546,37 @@ public class CharacterStats : MonoBehaviour
 
     }
 
+    public int getHIT(CharacterStats target, bool noAVO){
+
+        if(noAVO){
+
+            return ((((getDexterity() * 3 + getLuck()) / 2) + (2 * (Morale / 20)))) + accessoryBonus(1);
+        }
+        else{
+
+            return ((((getDexterity() * 3 + getLuck()) / 2) + (2 * (Morale / 20))) - target.AVO) + accessoryBonus(1);
+
+
+        }
+
+
+    }
+
+    public int getCRIT(CharacterStats target, bool noLCK){
+
+        if(noLCK){
+
+            return ((((getDexterity() / 2) - 5) + (Morale / 20))) + accessoryBonus(2);
+        }
+        else{
+
+            return ((((getDexterity() / 2) - 5) + (Morale / 20)) - target.getLuck()) + accessoryBonus(2);
+
+
+        }
+        
+    }
+
     public int weaponBonus(){
 
         if(weapon != null && !(weapon.isBroken)){
@@ -554,6 +589,8 @@ public class CharacterStats : MonoBehaviour
             return 0;
         }
     }
+
+    
 
     public int accessoryBonus(int type){
 

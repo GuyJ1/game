@@ -13,18 +13,37 @@ MonoBehaviour:
   m_Name: Silver Tongue
   m_EditorClassIdentifier: 
   friendly: 0
-  requiresTarget: 0
+  requiresTarget: 1
   totalDMG: 0
   totalHP: 0
   totalACC: 0
   baseDMG: 0
   baseHP: 0
   baseACC: 0
-  cost: 0
-  range: 0
+  cost: 3
+  range: 6
   knockback: 0
-  displayName: 
-  shape: []
-  targetModifiers: []
+  displayName: Silver Tongue
+  shape:
+  - {x: 0, y: 0}
+  targetModifiers:
+  - type: 2
+    op: 0
+    duration: 1
+    value: -6
+    chance: 1
+    id: Charm
+  - type: 3
+    op: 0
+    duration: 1
+    value: -6
+    chance: 1
+    id: Charm
+  - type: 5
+    op: 0
+    duration: 1
+    value: -6
+    chance: 1
+    id: Charm
   selfModifiers: []
   targetEffect: {fileID: 0}

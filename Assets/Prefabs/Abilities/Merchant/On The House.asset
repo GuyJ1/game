@@ -20,7 +20,7 @@ MonoBehaviour:
   baseDMG: 0
   baseHP: 0
   baseACC: 0
-  cost: 3
+  cost: 2
   range: 1
   knockback: 0
   displayName: On The House
@@ -30,27 +30,32 @@ MonoBehaviour:
   - type: 2
     op: 0
     duration: 3
-    value: 5
+    value: 3
     chance: 0.9
+    id: 
   - type: 3
     op: 0
     duration: 3
-    value: 5
-    chance: 0.7
+    value: 3
+    chance: 0.5
+    id: 
   - type: 4
     op: 0
     duration: 3
-    value: 5
-    chance: 0.5
+    value: 3
+    chance: 0.3
+    id: 
   - type: 5
     op: 0
     duration: 3
-    value: 5
-    chance: 0.3
+    value: 3
+    chance: 0.1
+    id: 
   - type: 6
     op: 0
     duration: 3
-    value: 5
-    chance: 0.1
+    value: 3
+    chance: 0.01
+    id: 
   selfModifiers: []
   targetEffect: {fileID: 0}
