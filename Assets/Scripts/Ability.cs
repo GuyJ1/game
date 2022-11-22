@@ -161,7 +161,7 @@ public class Ability : ScriptableObject
         else if(displayName == "Command")           Command(user, target);
         else if(displayName == "Shield Bash")       ShieldBash(user, target);
         else if(displayName == "Enrage")            Enrage(user, target);
-        else if(displayName == "King's Will")       KingsWill(user, target);
+        else if(displayName == "King's Will")       KingsWill(user);
 
 
         /// BASIC ///
@@ -356,8 +356,17 @@ public class Ability : ScriptableObject
             GameObject hitParticle = Instantiate(targetEffect);
             hitParticle.transform.position = target.transform.position;
 
-            foreach(StatModifier modifier in targetModifiers) {
-                if(modifier.chance > Random.Range(0.0F, 1.0F)) target.addModifier(modifier.clone());
+            if(!target.tauntRES){
+
+                foreach(StatModifier modifier in targetModifiers) {
+                    if(modifier.chance > Random.Range(0.0F, 1.0F)) target.addModifier(modifier.clone());
+                }
+
+
+            }
+            else{
+
+                target.tauntRES = false;
             }
         }
 
@@ -437,11 +446,11 @@ public class Ability : ScriptableObject
     
     //Grants one random buff to target for 3 turns (if move is successful)
     //Can choose from any stat (minus MV, AP, or HP)
-    // +5 STR (90% chance)
-    // +5 DEF (70% chance)
-    // +5 SPD (50% chance)
-    // +5 DEX (30% chance)
-    // +5 LCK (10% chance)
+    // +3 STR (90% chance)
+    // +3 DEF (50% chance)
+    // +3 SPD (30% chance)
+    // +3 DEX (10% chance)
+    // +3 LCK (1% chance)
     void OnTheHouse(CharacterStats user, CharacterStats target){
 
         //effect
@@ -462,9 +471,15 @@ public class Ability : ScriptableObject
     void RifleShot(CharacterStats user, CharacterStats target){
 
 
+        totalACC = baseACC; //+ remaining movement * 5
+        if(user.determineHIT(totalACC)){
 
+            GameObject hitParticle = Instantiate(targetEffect);
+            hitParticle.transform.position = target.transform.position;
 
+            target.adjustHP(-baseDMG, false);
 
+        }
 
         
     }
@@ -473,11 +488,17 @@ public class Ability : ScriptableObject
     //low damage, -2 MV to target
     void CheapShot(CharacterStats user, CharacterStats target){
 
+        if(user.determineHIT(baseACC)){
 
+            GameObject hitParticle = Instantiate(targetEffect);
+            hitParticle.transform.position = target.transform.position;
 
+            target.adjustHP(-baseDMG, false);
 
-
-
+            foreach(StatModifier modifier in targetModifiers) {
+                if(modifier.chance > Random.Range(0.0F, 1.0F)) user.addModifier(modifier.clone());
+            }
+        }
         
     }
 
@@ -485,11 +506,14 @@ public class Ability : ScriptableObject
     //medium damage if move successful
     void ExplosiveBlast(CharacterStats user, CharacterStats target){
 
+        if(user.determineHIT(baseACC)){
 
+            GameObject hitParticle = Instantiate(targetEffect);
+            hitParticle.transform.position = target.transform.position;
 
+            target.adjustHP(-baseDMG, false);
 
-
-
+        }
         
     }
 
@@ -501,10 +525,9 @@ public class Ability : ScriptableObject
     //heal the target (moderate)
     void Replenish(CharacterStats user, CharacterStats target){
 
+        totalHP = user.Heal(target) + baseHP;
 
-
-
-
+        target.adjustHP(totalHP, true);
 
         
     }
@@ -514,10 +537,13 @@ public class Ability : ScriptableObject
     //heal the target (strong) and grant +6 LCK
     void NobleRite(CharacterStats user, CharacterStats target){
 
+        totalHP = user.Heal(target) + baseHP + target.getLuck();
 
+        target.adjustHP(totalHP, true);
 
-
-
+        foreach(StatModifier modifier in targetModifiers) {
+            if(modifier.chance > Random.Range(0.0F, 1.0F)) user.addModifier(modifier.clone());
+        }
 
         
     }
@@ -526,17 +552,15 @@ public class Ability : ScriptableObject
     //clear all debuffs and grant 1 AP to target
     void Purge(CharacterStats user, CharacterStats target){
 
+        if(user.determineHIT(baseACC)){
 
+            target.clearDebuffs();
 
+            target.adjustAP(1,0);
 
+        }
 
-
-        
     }
-
-
-
-
 
 
 /// GENERAL WEAPON ABILITIES ///
@@ -740,27 +764,46 @@ public class Ability : ScriptableObject
 
 
 
-    //-10 DEF, resist enemy Charm
+    //-8 DEF to target for 3 turns, user resists next enemy Charm
     void Tempt(CharacterStats user, CharacterStats target){
 
 
+        foreach(StatModifier modifier in targetModifiers) {
+            if(modifier.chance > Random.Range(0.0F, 1.0F)) user.addModifier(modifier.clone());
+        }
 
-
-
-
+        user.resistCharm();
         
+
     }
 
 
 
     //Low damage, knockback 1, inflicts [Taunt]
-    //Taunt: +5 STR/SPD / -10 DEF/LCK/DEX to target
+    //Taunt: +5 STR/SPD / -10 DEF/LCK/DEX to target for 1 turn
     void ForcefulLashing(CharacterStats user, CharacterStats target){
 
+        if(user.determineHIT(baseACC)){
+
+            GameObject hitParticle = Instantiate(targetEffect);
+            hitParticle.transform.position = target.transform.position;
+
+            target.adjustHP(-baseDMG, false);
+
+            if(!target.tauntRES){
+
+                foreach(StatModifier modifier in targetModifiers) {
+                    if(modifier.chance > Random.Range(0.0F, 1.0F)) user.addModifier(modifier.clone());
+                }
 
 
+            }
+            else{
 
+                target.tauntRES = false;
+            }
 
+        }
 
         
     }
@@ -769,26 +812,33 @@ public class Ability : ScriptableObject
     //Lower enemy morale by 3 for each target hit
     void HarrowingSpeech(CharacterStats user, CharacterStats target){
 
-
-
-
-
-
+        target.adjustMorale(-3);
         
     }
 
 
 
-    //Inflict [Charm]
-    //Charm: -8 STR/DEF for 2 turns, Can't use abilities on user for 1 turn
+    //Inflict [Charm] depending on enemy morale
+    //Charm: -6 STR/DEF/DEX for 1 turn
     void SilverTongue(CharacterStats user, CharacterStats target){
 
+        if(user.determineHIT(target.Morale)){
+
+            if(!target.charmRES){
+
+                foreach(StatModifier modifier in targetModifiers) {
+                    if(modifier.chance > Random.Range(0.0F, 1.0F)) user.addModifier(modifier.clone());
+                }
 
 
+            }
+            else{
 
+                target.charmRES = false;
+            }
 
-
-        
+        }
+ 
     }
 
 
@@ -802,15 +852,14 @@ public class Ability : ScriptableObject
 
 
 
-    //+7 STR/DEX/LCK to target
+    //+7 STR/DEX/LCK to target for 2 turns
     void Command(CharacterStats user, CharacterStats target){
 
+        foreach(StatModifier modifier in targetModifiers) {
+            if(modifier.chance > Random.Range(0.0F, 1.0F)) user.addModifier(modifier.clone());
+        }
 
-
-
-
-
-        
+   
     }
 
 
@@ -818,38 +867,63 @@ public class Ability : ScriptableObject
     //if armor is equipped, bonus damage = user's DEF / 3
     void ShieldBash(CharacterStats user, CharacterStats target){
 
+        if(user.determineHIT(baseACC)){
 
+            int bonusDMG = 0;
 
+            GameObject hitParticle = Instantiate(targetEffect);
+            hitParticle.transform.position = target.transform.position;
 
+            if(user.armor != null){
 
+                bonusDMG = user.getDefense() / 3;
+            }
 
+            totalDMG = baseDMG + bonusDMG;
+
+            target.adjustHP(-totalDMG, false);
+
+            foreach(StatModifier modifier in targetModifiers) {
+                if(modifier.chance > Random.Range(0.0F, 1.0F)) user.addModifier(modifier.clone());
+            }
+        }
         
     }
 
 
     //inflicts [Taunt]
-    //Taunt: +5 STR/SPD / -10 DEF/LCK/DEX to target
+    //Taunt: +5 STR/SPD / -10 DEF/LCK/DEX to target for 1 turn
     void Enrage(CharacterStats user, CharacterStats target){
 
+        if(user.determineHIT(baseACC)){
+
+            if(!target.tauntRES){
+
+                foreach(StatModifier modifier in targetModifiers) {
+                    if(modifier.chance > Random.Range(0.0F, 1.0F)) target.addModifier(modifier.clone());
+                }
 
 
+            }
+            else{
 
-
-
+                target.tauntRES = false;
+            }
+        }
         
     }
 
 
 
-    //immune to damage for 1 turn
-    void KingsWill(CharacterStats user, CharacterStats target){
+    //+3 STR/DEX and immune to damage for 1 turn
+    void KingsWill(CharacterStats user){
 
+        user.DMGimmune = true;
 
-
-
-
-
-        
+        foreach(StatModifier modifier in selfModifiers) {
+            if(modifier.chance > Random.Range(0.0F, 1.0F)) user.addModifier(modifier.clone());
+        }
+   
     }
 
 

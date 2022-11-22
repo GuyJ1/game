@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Persistance
   m_EditorClassIdentifier: 
   friendly: 0
-  requiresTarget: 0
+  requiresTarget: 1
   totalDMG: 0
   totalHP: 0
   totalACC: 0

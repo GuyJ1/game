@@ -12,19 +12,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51fcb3cb7e2a5f24d84d8061e64ea368, type: 3}
   m_Name: Promise of Coin
   m_EditorClassIdentifier: 
-  friendly: 0
-  requiresTarget: 0
+  friendly: 1
+  requiresTarget: 1
   totalDMG: 0
   totalHP: 0
   totalACC: 0
   baseDMG: 0
   baseHP: 0
   baseACC: 0
-  cost: 0
-  range: 0
+  cost: 2
+  range: 2
   knockback: 0
-  displayName: 
-  shape: []
-  targetModifiers: []
+  displayName: Promise of Coin
+  shape:
+  - {x: 0, y: 0}
+  targetModifiers:
+  - type: 3
+    op: 0
+    duration: 2
+    value: 6
+    chance: 1
+  - type: 6
+    op: 0
+    duration: 2
+    value: 4
+    chance: 1
   selfModifiers: []
   targetEffect: {fileID: 0}

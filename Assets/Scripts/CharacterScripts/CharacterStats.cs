@@ -97,6 +97,13 @@ public class CharacterStats : MonoBehaviour
     public int CRIT; //Critical Rate (= ((DEX / 2) - 5) - Enemy's LCK)
     public int AVO; //Avoid  (= (SPD*3 + LCK) / 2)
 
+
+
+    //Status Effects (Resist)
+    public bool charmRES = false;
+    public bool tauntRES = false;
+    public bool DMGimmune = false;
+
     public List<StatModifier> statModifiers = new List<StatModifier>();
 
     public string Name;
@@ -297,6 +304,12 @@ public class CharacterStats : MonoBehaviour
     // if dontKill is true, lethal damage will only reduce HP to 1
     public void adjustHP(int change, bool dontKill)
     {
+
+        if(change < 0 && DMGimmune){
+
+            change = 0;
+        }
+
         HP += change;
 
         if(HP < 0 && !dontKill){
@@ -364,7 +377,14 @@ public class CharacterStats : MonoBehaviour
             if(modifier.duration > -1) modifier.duration--;
             if(modifier.duration == 0) removals.Add(modifier);
         }
-        foreach(StatModifier modifier in removals) statModifiers.Remove(modifier);
+        foreach(StatModifier modifier in removals){
+
+            statModifiers.Remove(modifier);
+            if(modifier.id == "Immune"){
+                DMGimmune = false;
+            }
+
+        } 
     }
 
     public void addModifier(StatModifier modifier) {
@@ -396,18 +416,18 @@ public class CharacterStats : MonoBehaviour
 
     }
 
-/*
+
     //Morale changed (either positive or negative)
     public void adjustMorale(int change){
         Morale += change;
-        if(Morale < MoraleMIN){
-            Morale = MoraleMIN;
+        if(Morale < 0){
+            Morale = 0;
         }
-        if(Morale > MoraleMAX){
-            Morale = MoraleMAX;
+        if(Morale > 100){
+            Morale = 100;
         }
     }
-*/
+
 
     //Attack the enemy, possibly with a critical hit
     //Note: Critical hits triple the total damage
@@ -628,5 +648,23 @@ public class CharacterStats : MonoBehaviour
 
     public int getMovement() {
         return MV.getValue(statModifiers);
+    }
+
+    //resist a status effect when an attempt is made. The bool will return to false when the effect is resisted
+
+    public void resistCharm() {
+
+        if(!charmRES){
+
+            charmRES = true;
+        }
+    }
+
+    public void resistTaunt(){
+
+        if(!tauntRES){
+
+            tauntRES = true;
+        }
     }
 }

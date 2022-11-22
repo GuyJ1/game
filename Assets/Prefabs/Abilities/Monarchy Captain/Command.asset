@@ -10,31 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 51fcb3cb7e2a5f24d84d8061e64ea368, type: 3}
-  m_Name: Flank
+  m_Name: Command
   m_EditorClassIdentifier: 
   friendly: 0
-  requiresTarget: 1
+  requiresTarget: 0
   totalDMG: 0
   totalHP: 0
   totalACC: 0
   baseDMG: 0
   baseHP: 0
   baseACC: 0
-  cost: 1
+  cost: 0
   range: 0
   knockback: 0
-  displayName: Flank
+  displayName: 
   shape: []
   targetModifiers: []
-  selfModifiers:
-  - type: 4
-    op: 0
-    duration: 2
-    value: 2
-    chance: 1
-  - type: 5
-    op: 0
-    duration: 2
-    value: 2
-    chance: 1
+  selfModifiers: []
   targetEffect: {fileID: 0}
