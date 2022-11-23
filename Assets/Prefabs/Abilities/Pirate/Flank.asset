@@ -14,17 +14,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   friendly: 0
   requiresTarget: 1
+  free: 1
   totalDMG: 0
   totalHP: 0
   totalACC: 0
   baseDMG: 0
   baseHP: 0
   baseACC: 0
-  cost: 1
-  range: 0
-  knockback: 0
+  costAP: 0
+  range: 2
+  knockback: 2
+  selfMovement: 2
   displayName: Flank
-  shape: []
+  shape:
+  - {x: 0, y: 0}
   targetModifiers: []
   selfModifiers:
   - type: 4
@@ -32,9 +35,12 @@ MonoBehaviour:
     duration: 2
     value: 2
     chance: 1
+    id: 
   - type: 5
     op: 0
     duration: 2
     value: 2
     chance: 1
+    id: 
   targetEffect: {fileID: 0}
+  selfEffect: {fileID: 0}

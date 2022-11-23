@@ -284,9 +284,12 @@ public class CharacterStats : MonoBehaviour
         return HP <= 0;
     }
 
-    public bool isFullHealth(){
-
+    public bool isFullHealth() {
         return HP == getMaxHP();
+    }
+
+    public bool isPlayer() {
+        return crew.GetComponent<CrewSystem>().isPlayer;
     }
 
     // Return selectable abilities in battle (combo attack not included)

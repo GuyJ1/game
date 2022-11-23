@@ -14,18 +14,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   friendly: 0
   requiresTarget: 1
-  totalDMG: 0
+  free: 1
+  totalDMG: 68
   totalHP: 0
   totalACC: 0
   baseDMG: 50
   baseHP: 0
   baseACC: 85
-  cost: 2
+  costAP: 0
   range: 4
   knockback: 0
+  selfMovement: 0
   displayName: Pistol Shot
   shape:
   - {x: 0, y: 0}
   targetModifiers: []
   selfModifiers: []
   targetEffect: {fileID: 1743301284569550, guid: ad2ab49d0a2a17148bd51c93d977bdbc, type: 3}
+  selfEffect: {fileID: 0}

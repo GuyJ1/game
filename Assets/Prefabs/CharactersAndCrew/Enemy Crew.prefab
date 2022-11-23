@@ -51,6 +51,8 @@ MonoBehaviour:
   - {fileID: 5537537504233135668, guid: 35e9b644f5a473148bedf512f2340242, type: 3}
   - {fileID: 5537537504233135668, guid: 35e9b644f5a473148bedf512f2340242, type: 3}
   - {fileID: 5537537504233135668, guid: 35e9b644f5a473148bedf512f2340242, type: 3}
+  ship: {fileID: 0}
+  morale: 100
   inventory_gold: 0
   inventory_wood: 0
   inventory_crew: 0

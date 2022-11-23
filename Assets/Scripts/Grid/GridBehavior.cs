@@ -145,8 +145,6 @@ public class GridBehavior : MonoBehaviour
                     Vector3 tilePos = spawningTile.transform.position;
                     Vector3 pos = new Vector3(tilePos.x, tilePos.y+0.5f, tilePos.z);
                     Debug.Log("Spawning character as position " + randX + " " + randY);
-                    character.GetComponent<CharacterStats>().gridPosition = new Vector2Int(randX, randY);
-                    character.GetComponent<CharacterStats>().myGrid = this.gameObject;
                     character.transform.GetChild(0).gameObject.layer = gridLayer;
 
                     // Set tile data
@@ -166,7 +164,9 @@ public class GridBehavior : MonoBehaviour
                     }
 
                     tilesScript.hasCharacter = true;
-                    character.layer = gridLayer;
+                    tilesScript.characterOn.GetComponent<CharacterStats>().gridPosition = new Vector2Int(randX, randY);
+                    tilesScript.characterOn.GetComponent<CharacterStats>().myGrid = this.gameObject;
+                    tilesScript.characterOn.layer = gridLayer;
 
                     // Update flag and # of available tiles
                     availableTiles--;
@@ -321,12 +321,12 @@ public class GridBehavior : MonoBehaviour
     }
 
     // --------------------------------------------------------------
-    // @desc: Move a character on the grid based on tile positions
+    // @desc: Move a character along an automatically generated path
     // @arg: sourcePos - logical grid position with a character on it
     // @arg: destPos   - logical grid position to move the character to
     // @ret: bool      - whether the move is successful or not
     // --------------------------------------------------------------
-    public bool MoveCharacterOnTile(Vector2Int sourcePos, Vector2Int destPos, bool onlyHighlighted)
+    public bool PathCharacterOnTile(Vector2Int sourcePos, Vector2Int destPos, bool onlyHighlighted)
     {
         GameObject charToMove = null;
         bool moveSuccess = false;
@@ -372,12 +372,12 @@ public class GridBehavior : MonoBehaviour
             }
             else
             {
-                Debug.Log("MoveCharacterOnTile: Error! source tile does not have a character");
+                Debug.Log("PathCharacterOnTile: Error! source tile does not have a character");
             }
         }
         else
         {
-            Debug.Log("MoveCharacterOnTile: Error! tile source or dest position is out of range");
+            Debug.Log("PathCharacterOnTile: Error! tile source or dest position is out of range");
         }
         
         return moveSuccess;
@@ -483,10 +483,19 @@ public class GridBehavior : MonoBehaviour
     // --------------------------------------------------------------
     public PathTreeNode GetAllPathsFromTile(GameObject tile, int range)
     {
+        var startTile = tile.GetComponent<TileScript>();
         // Create root node
         PathTreeNode root = new PathTreeNode();
         root.myTile = tile;
         root.tileRange = range;
+
+        // Character should always be here, but just in case
+        if(!startTile.hasCharacter) {
+            Debug.Log("Error: cannot retrieve paths from tile since its character is null.");
+            return root;
+        }
+
+        bool isPlayer = startTile.characterOn.GetComponent<CharacterStats>().isPlayer();
 
         // Temp vars
         PathTreeNode tempNode;
@@ -508,7 +517,6 @@ public class GridBehavior : MonoBehaviour
             Vector2Int tilePos = tileScript.position;
 
             // Highlight tile
-            //tileRend.material = highlighted;
             tileScript.highlighted = true;
 
             // Get neighboring tiles
@@ -520,25 +528,25 @@ public class GridBehavior : MonoBehaviour
             // Add neighboring tiles to queue if in range
             if (tempNode.tileRange > 0)
             {
-                if (ValidHighlightTile(upTile))
+                if (ValidHighlightTile(upTile, isPlayer))
                 {
                     tempNode.up = new PathTreeNode(tempNode, upTile, tempNode.tileRange-1);
                     queue.Enqueue(tempNode.up);
                 }
 
-                if (ValidHighlightTile(downTile))
+                if (ValidHighlightTile(downTile, isPlayer))
                 {
                     tempNode.down = new PathTreeNode(tempNode, downTile, tempNode.tileRange-1);
                     queue.Enqueue(tempNode.down);
                 }
 
-                if (ValidHighlightTile(leftTile))
+                if (ValidHighlightTile(leftTile, isPlayer))
                 {
                     tempNode.left = new PathTreeNode(tempNode, leftTile, tempNode.tileRange-1);
                     queue.Enqueue(tempNode.left);
                 }
 
-                if (ValidHighlightTile(rightTile))
+                if (ValidHighlightTile(rightTile, isPlayer))
                 {
                     tempNode.right = new PathTreeNode(tempNode, rightTile, tempNode.tileRange-1);
                     queue.Enqueue(tempNode.right);
@@ -552,9 +560,10 @@ public class GridBehavior : MonoBehaviour
     // --------------------------------------------------------------
     // @desc: Tests whether a tile can be highlighted
     // @arg: tileToCheck - the tile to check
+    // @arg: isPlayer    - whether the character is on the player crew
     // @ret: bool        - whether the tile can be highlighted
     // --------------------------------------------------------------
-    private bool ValidHighlightTile(GameObject tileToCheck)
+    private bool ValidHighlightTile(GameObject tileToCheck, bool isPlayer)
     {
         bool valid = false;
 
@@ -567,7 +576,11 @@ public class GridBehavior : MonoBehaviour
             // Check if already highlighted
             if (tileScript.highlighted == false && tileScript.passable)
             {
-                valid = true;
+                if(tileScript.hasCharacter)
+                {
+                    if(tileScript.characterOn.GetComponent<CharacterStats>().isPlayer() == isPlayer) valid = true;
+                }
+                else valid = true;
             }
         }
 

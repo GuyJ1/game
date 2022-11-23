@@ -9,20 +9,23 @@ public class Ability : ScriptableObject
 {
     public bool friendly; //Whether this ability targets allies or enemies (true for allies, false for enemies)
     public bool requiresTarget; //Whether this ability requires a selected target to execute
+    public bool free; //Whether this ability consumes a turn action
     public int totalDMG; //total damage dealt 
     public int totalHP; //total HP healed
     public int totalACC; //chance the ability hits
     public int baseDMG; //ability will always do a certain amount of damage regardless of DEF
     public int baseHP; //ability will always heal a certain amount of HP
     public int baseACC; //ability comes with a set accuracy
-    public int cost; //AP cost
+    public int costAP; //AP cost
     public int range; //Distance from the user this ability can be used at
     public int knockback; //Movement to apply to targets (positive is push, negative is pull)
+    public int selfMovement; //Movement to apply to user (positive is forwards, negative is backwards)
     public string displayName; //Display name for UI
     public List<Vector2Int> shape; //Shape in tiles facing north (0,0) is the center
     public List<StatModifier> targetModifiers; //Stat modifiers to apply to targets
-    public List<StatModifier> selfModifiers; //Stat modifiers to apply to self
-    [SerializeField] public GameObject targetEffect; //visual effect
+    public List<StatModifier> selfModifiers; //Stat modifiers to apply to user
+    [SerializeField] public GameObject targetEffect; //Visual effect to apply to affected targets
+    [SerializeField] public GameObject selfEffect; //Visual effect to apply to user
 
     // Start is called before the first frame update
     void Start()
@@ -37,13 +40,47 @@ public class Ability : ScriptableObject
     }
 
     // Return knockback value rotated dependent on which way user is facing
-    public Vector2Int getMovement(int xDist, int yDist) {
+    public Vector2Int getKnockback(int xDist, int yDist) {
+        return rotateMovement(knockback, xDist, yDist);
+    }
+
+    // Return self movement value rotated dependent on which way user is facing
+    public Vector2Int getSelfMovement(int xDist, int yDist) {
+        return rotateMovement(selfMovement, xDist, yDist);
+    }
+
+    private Vector2Int rotateMovement(int magnitude, int xDist, int yDist) {
         if(Mathf.Abs(xDist) >= Mathf.Abs(yDist)) {
-            if(xDist > 0) return new Vector2Int(-knockback, 0);
-            else return new Vector2Int(knockback, 0);
+            if(xDist > 0) return new Vector2Int(-magnitude, 0);
+            else return new Vector2Int(magnitude, 0);
         }
-        else if(yDist > 0) return new Vector2Int(0, -knockback);
-        else return new Vector2Int(0, knockback);
+        else if(yDist > 0) return new Vector2Int(0, -magnitude);
+        else return new Vector2Int(0, magnitude);
+    }
+
+    public Vector2Int applySelfMovement(CharacterStats character, GridBehavior grid, int xDist, int yDist) {
+        if(selfMovement == 0) return character.gridPosition;
+        return applyMovement(character, grid, xDist, yDist, rotateMovement(selfMovement, xDist, yDist));
+    }
+
+    public Vector2Int applyKnockback(CharacterStats character, GridBehavior grid, int xDist, int yDist) {
+        if(knockback == 0) return character.gridPosition;
+        return applyMovement(character, grid, xDist, yDist, rotateMovement(knockback, xDist, yDist));
+    }
+
+    private Vector2Int applyMovement(CharacterStats character, GridBehavior grid, int xDist, int yDist, Vector2Int movement) {
+        grid.GetAllPathsFromTile(grid.GetTileAtPos(character.gridPosition), Mathf.Abs(movement.x) > Mathf.Abs(movement.y) ? Mathf.Abs(movement.x) : Mathf.Abs(movement.y));
+        //Look for longest path and try to take it
+        //TODO: This should not use the normal pathfinding, it should only search in a straight line
+        while(movement.x != 0 || movement.y != 0) {
+            Vector2Int pos = new Vector2Int(character.gridPosition.x + movement.x, character.gridPosition.y + movement.y);
+            if(grid.PathCharacterOnTile(character.gridPosition, pos, false)) return pos;
+            if(movement.x < 0) movement.x++;
+            else if(movement.x > 0) movement.x--;
+            else if(movement.y < 0) movement.y++;
+            else if(movement.y > 0) movement.y--;
+        }
+        return character.gridPosition;
     }
 
     // Return shape rotated dependent on which way user is facing
@@ -76,7 +113,10 @@ public class Ability : ScriptableObject
 
     //call an ability based on given display name
     public void callAbility(CharacterStats user, CharacterStats target){
-
+        if(selfEffect != null) {
+            GameObject particle = Instantiate(selfEffect);
+            particle.transform.position = user.transform.position;
+        }
 
         /// COMBO ///
 

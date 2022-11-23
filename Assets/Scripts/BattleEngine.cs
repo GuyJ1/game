@@ -9,19 +9,20 @@ using UnityEngine.Events;
 //Note that this system must be activated and will not perform any logic until it is
 public class BattleEngine : MonoBehaviour 
  {
+    //Morale vars
     public static readonly string MORALE_BUFF_ID = "morale_buff", MORALE_DEBUFF_ID = "morale_debuff";
     public static readonly int MORALE_HIGH = 75, MORALE_LOW = 25;
     public static readonly StatModifier[] MORALE_BUFFS = {
-        new StatModifier(StatType.STR, OpType.MULTIPLY, -1, 0.2f, 1, MORALE_BUFF_ID),
-        new StatModifier(StatType.DEF, OpType.MULTIPLY, -1, 0.2f, 1, MORALE_BUFF_ID),
-        new StatModifier(StatType.SPD, OpType.MULTIPLY, -1, 0.2f, 1, MORALE_BUFF_ID),
-        new StatModifier(StatType.DEX, OpType.MULTIPLY, -1, 0.2f, 1, MORALE_BUFF_ID)
+        new StatModifier(StatType.STR, OpType.MULTIPLY, -1, 0.2f, 1f, MORALE_BUFF_ID),
+        new StatModifier(StatType.DEF, OpType.MULTIPLY, -1, 0.2f, 1f, MORALE_BUFF_ID),
+        new StatModifier(StatType.SPD, OpType.MULTIPLY, -1, 0.2f, 1f, MORALE_BUFF_ID),
+        new StatModifier(StatType.DEX, OpType.MULTIPLY, -1, 0.2f, 1f, MORALE_BUFF_ID)
     };
     public static readonly StatModifier[] MORALE_DEBUFFS = {
-        new StatModifier(StatType.STR, OpType.MULTIPLY, -1, -0.2f, 1, MORALE_DEBUFF_ID),
-        new StatModifier(StatType.DEF, OpType.MULTIPLY, -1, -0.2f, 1, MORALE_DEBUFF_ID),
-        new StatModifier(StatType.SPD, OpType.MULTIPLY, -1, -0.2f, 1, MORALE_DEBUFF_ID),
-        new StatModifier(StatType.DEX, OpType.MULTIPLY, -1, -0.2f, 1, MORALE_DEBUFF_ID)
+        new StatModifier(StatType.STR, OpType.MULTIPLY, -1, -0.2f, 1f, MORALE_DEBUFF_ID),
+        new StatModifier(StatType.DEF, OpType.MULTIPLY, -1, -0.2f, 1f, MORALE_DEBUFF_ID),
+        new StatModifier(StatType.SPD, OpType.MULTIPLY, -1, -0.2f, 1f, MORALE_DEBUFF_ID),
+        new StatModifier(StatType.DEX, OpType.MULTIPLY, -1, -0.2f, 1f, MORALE_DEBUFF_ID)
     };
     //Prefabs
     public GameObject buttonPrefab;
@@ -50,7 +51,7 @@ public class BattleEngine : MonoBehaviour
     [SerializeField] public CharacterCardUI charCard;
     [SerializeField] public UI_CrewTurnOrder crewTurnOrder;
     public GameObject canvas;
-    private Button attackButton, moveButton, endButton;
+    private Button actionButton, moveButton, endButton;
     private List<GameObject> actionButtons = new List<GameObject>();
     private GameObject victoryText, defeatText;
     private HealthBar playerShipBar, playerMoraleBar, enemyShipBar, enemyMoraleBar;
@@ -67,6 +68,7 @@ public class BattleEngine : MonoBehaviour
     private bool charHighlighted = false;
     private Vector2Int selectedCharPos;
     private Vector2Int highlightedCharPos;
+    private GameObject selectedGrid;
     private int lastXDist, lastYDist; //Last distance between user and target for ability selection
 
     //AI Variables
@@ -84,7 +86,7 @@ public class BattleEngine : MonoBehaviour
         cam = Camera.main;
 
         // Get Button Options
-        attackButton = GameObject.Find("AttackButton").GetComponent<Button>();
+        actionButton = GameObject.Find("ActionButton").GetComponent<Button>();
         moveButton = GameObject.Find("MoveButton").GetComponent<Button>();
         endButton = GameObject.Find("EndButton").GetComponent<Button>();
 
@@ -102,7 +104,7 @@ public class BattleEngine : MonoBehaviour
 
         playerMoraleBar = GameObject.Find("PlayerMoraleBar").GetComponent<HealthBar>();
         int playerMorale = playerCrew.GetComponent<CrewSystem>().morale;
-        playerMoraleBar.SetMaxHealth(playerMorale);
+        playerMoraleBar.SetMaxHealth(100);
         playerMoraleBar.SetHealth(playerMorale);
 
         enemyShipBar = GameObject.Find("EnemyShipBar").GetComponent<HealthBar>();
@@ -112,7 +114,7 @@ public class BattleEngine : MonoBehaviour
 
         enemyMoraleBar = GameObject.Find("EnemyMoraleBar").GetComponent<HealthBar>();
         int enemyMorale = enemyCrew.GetComponent<CrewSystem>().morale;
-        enemyMoraleBar.SetMaxHealth(enemyMorale);
+        enemyMoraleBar.SetMaxHealth(100);
         enemyMoraleBar.SetHealth(enemyMorale);
     }
 
@@ -303,11 +305,12 @@ public class BattleEngine : MonoBehaviour
         }
 
         // Apply morale modifiers
-        CrewSystem playerCrew = getPlayerCrew(), enemyCrew = getEnemyCrew();
+        //TODO: Pass in crews properly, this is just editing prefabs right now because it's not instantiated properly
+        /*CrewSystem playerCrew = getPlayerCrew(), enemyCrew = getEnemyCrew();
         if(playerCrew.morale >= MORALE_HIGH) foreach(StatModifier modifier in MORALE_BUFFS) playerCrew.addModifier(modifier);
         else if(playerCrew.morale <= MORALE_LOW) foreach(StatModifier modifier in MORALE_DEBUFFS) playerCrew.addModifier(modifier);
         if(enemyCrew.morale >= MORALE_HIGH) foreach(StatModifier modifier in MORALE_BUFFS) enemyCrew.addModifier(modifier);
-        else if(enemyCrew.morale <= MORALE_LOW) foreach(StatModifier modifier in MORALE_DEBUFFS) enemyCrew.addModifier(modifier);
+        else if(enemyCrew.morale <= MORALE_LOW) foreach(StatModifier modifier in MORALE_DEBUFFS) enemyCrew.addModifier(modifier);*/
 
         //Set up turns
         pickNewTurn();
@@ -345,8 +348,6 @@ public class BattleEngine : MonoBehaviour
     public void highlightActionTiles(Vector2Int pos, int range) {
         var gridTiles = grid.GetComponent<GridBehavior>();
         ResetAllHighlights();
-        //gridPaths = gridTiles.GetAllPathsFromTile(gridTiles.GetTileAtPos(pos), range);
-        //highlightPathTree(gridPaths, true);
         for(int x = Mathf.Max(pos.x - range, 0); x <= pos.x + range; x++) {
             for(int y = Mathf.Max(pos.y - range, 0); y <= pos.y + range; y++) {
                 if(Mathf.Abs(x - pos.x) + Mathf.Abs(y - pos.y) <= range) {
@@ -404,7 +405,7 @@ public class BattleEngine : MonoBehaviour
         if (interactable)
         {
             moving = false;
-            attackButton.Select();
+            actionButton.Select();
             showActionsList();
             selectedAbility = getBasicAttack(activeUnit);
             setupAction(activeUnitTile);
@@ -479,7 +480,7 @@ public class BattleEngine : MonoBehaviour
 
         // Setup buttons based on whether it's the player's turn
         isPlayerTurn = isAllyUnit(activeUnit);
-        attackButton.interactable = isPlayerTurn;
+        actionButton.interactable = isPlayerTurn;
         moveButton.interactable = isPlayerTurn;
         endButton.interactable = isPlayerTurn;
 
@@ -570,10 +571,11 @@ public class BattleEngine : MonoBehaviour
         Vector2Int tilePos = tileScript.position;
 
         // Unselect currently selected character
-        /*if(charSelected) {
+        if(charSelected) {
+            var selectedGrid = grid.GetComponent<GridBehavior>();
             Debug.Log("Unselecting character on " + selectedCharPos.x + " " + selectedCharPos.y);
-            gridTiles.grid[selectedCharPos.x, selectedCharPos.y].GetComponent<Renderer>().material = isTileActive(selectedCharPos) ? gridTiles.activeUnselected : gridTiles.unselected;
-        }*/
+            selectedGrid.grid[selectedCharPos.x, selectedCharPos.y].GetComponent<Renderer>().material = isTileActive(selectedCharPos) ? selectedGrid.activeUnselected : selectedGrid.unselected;
+        }
 
         ResetAllHighlights();
 
@@ -593,6 +595,7 @@ public class BattleEngine : MonoBehaviour
         // Select new tile at tile pos
         selectRend.material = isTileActive(tilePos) ? gridTiles.activeSelected : gridTiles.selected;
         selectedCharPos = tilePos;
+        selectedGrid = grid;
 
         Debug.Log("Character on " + tile.name + " has been selected");
 
@@ -618,6 +621,7 @@ public class BattleEngine : MonoBehaviour
             if(!selectedAbility.friendly && isAllyUnit(gridTiles.GetCharacterAtPos(tilePos))) return false;
         }
         if(simulate) return true;
+
         int xDist = activeUnitPos.x - tilePos.x;
         int yDist = activeUnitPos.y - tilePos.y;
         List<GameObject> characters = new List<GameObject>();
@@ -635,69 +639,78 @@ public class BattleEngine : MonoBehaviour
                 characters.Add(selTileScript.characterOn);
             }
         }
-        ResetAllHighlights();
-        acted = true;
-        attackButton.interactable = false;
+
+        if(!selectedAbility.free) acted = true;
+        actionButton.interactable = false;
         selectedAbility.affectCharacters(activeUnit, characters);
+
         //Pull and knockback
-        if(selectedAbility.knockback != 0) {
-            foreach(GameObject character in characters) {
-                CharacterStats charStats = character.GetComponent<CharacterStats>();
-                Vector2Int movement = selectedAbility.getMovement(xDist, yDist);
-                gridTiles.GetAllPathsFromTile(gridTiles.GetTileAtPos(charStats.gridPosition), Mathf.Abs(movement.x) > Mathf.Abs(movement.y) ? Mathf.Abs(movement.x) : Mathf.Abs(movement.y));
-                //Look for longest path and try to take it
-                while(movement.x != 0 || movement.y != 0) {
-                    if(gridTiles.MoveCharacterOnTile(charStats.gridPosition, new Vector2Int(charStats.gridPosition.x + movement.x, charStats.gridPosition.y + movement.y), false)) break;
-                    if(movement.x < 0) movement.x++;
-                    else if(movement.x > 0) movement.x--;
-                    else if(movement.y < 0) movement.y++;
-                    else if(movement.y > 0) movement.y--;
-                }
-            }
+        if(selectedAbility.knockback != 0)
+        {
+            foreach(GameObject character in characters) selectedAbility.applyKnockback(character.GetComponent<CharacterStats>(), gridTiles, xDist, yDist);
         }
+        //Self movement
+        Vector2Int newPos = selectedAbility.applySelfMovement(activeUnit.GetComponent<CharacterStats>(), gridTiles, xDist, yDist);
+        if(newPos != activeUnitPos) {
+            activeUnitPos = newPos;
+            activeUnitTile = gridTiles.GetTileAtPos(newPos);
+            gridTiles.grid[selectedCharPos.x, selectedCharPos.y].GetComponent<Renderer>().material = isTileActive(selectedCharPos) ? gridTiles.activeUnselected : gridTiles.unselected;
+            selectedCharPos = newPos;
+        }
+        ResetAllHighlights();
+        if(!acted) highlightActionTiles(newPos, selectedAbility.range);
+
         StartCoroutine(endActUnit(tilePos, xDist, yDist, characters));
         return true;
     }
 
     IEnumerator endActUnit(Vector2Int tilePos, int xDist, int yDist, List<GameObject> characters) {
-        yield return new WaitForSeconds(0.6f);
+        if(!moved) moveButton.interactable = false;
+        yield return new WaitForSecondsRealtime(0.6f);
         var gridTiles = grid.GetComponent<GridBehavior>();
         var tileScript = gridTiles.GetTileAtPos(tilePos).GetComponent<TileScript>();
-        // ----- Combo Attacks ------
-        if(selectedAbility.requiresTarget && xDist != yDist) //No diagonals
-        {
-            if(Mathf.Abs(xDist) > Mathf.Abs(yDist))
-            { //Horizontal cases
-                if(xDist > 0) tryComboAttack(gridTiles.GetTileWest(tilePos), tileScript.characterOn);
-                else tryComboAttack(gridTiles.GetTileEast(tilePos), tileScript.characterOn);
-            }
-            else
-            { //Vertical cases
-                if(yDist > 0) tryComboAttack(gridTiles.GetTileSouth(tilePos), tileScript.characterOn);
-                else tryComboAttack(gridTiles.GetTileNorth(tilePos), tileScript.characterOn);
-            }
-        }
-        // --------------------------
 
         //AI: Forward the target(s) to AI handler for enqueue. Currently only forwards one character - for refactoring later
         if(characters.Count > 0) playerTarget = characters[0];
 
-        yield return new WaitForSeconds(0.6f);
+        // ----- Combo Attacks ------
+        if(selectedAbility.requiresTarget && xDist != yDist) //No diagonals
+        {
+            bool combo;
+            if(Mathf.Abs(xDist) > Mathf.Abs(yDist))
+            { //Horizontal cases
+                if(xDist > 0) combo = tryComboAttack(gridTiles.GetTileWest(tilePos), tileScript.characterOn);
+                else combo = tryComboAttack(gridTiles.GetTileEast(tilePos), tileScript.characterOn);
+            }
+            else
+            { //Vertical cases
+                if(yDist > 0) combo = tryComboAttack(gridTiles.GetTileSouth(tilePos), tileScript.characterOn);
+                else combo = tryComboAttack(gridTiles.GetTileNorth(tilePos), tileScript.characterOn);
+            }
+            if(combo) yield return new WaitForSecondsRealtime(0.6f);
+        }
+        // --------------------------
 
-        if(!moved) selectMove(); //Move to move state if available
+
+        if(!moved) {
+            moveButton.interactable = true;
+            if(acted) selectMove(); //Move to move state if available
+        }
         update();
     }
 
     //Try to perform a combo attack from the specified character to the target
-    public void tryComboAttack(GameObject characterTile, GameObject targetCharacter) {
+    public bool tryComboAttack(GameObject characterTile, GameObject targetCharacter) {
         if(characterTile != null && targetCharacter != null) {
             TileScript tile = characterTile.GetComponent<TileScript>();
             Vector2Int targetPos = targetCharacter.GetComponent<CharacterStats>().gridPosition;
             if(tile.hasCharacter && isAllyUnit(tile.characterOn) != isAllyUnit(targetCharacter) && Mathf.Abs(tile.position.x - targetPos.x) + Mathf.Abs(tile.position.y - targetPos.y) == 1) { //Need target on opposite team
                 Debug.Log("Triggering combo attack...");
                 getComboAttack(tile.characterOn).affectCharacter(tile.characterOn, targetCharacter);
+                return true;
             }
         }
+        return false;
     }
 
     //Try to move the unit to the specified position on the grid. Returns true if move succeeds. Will not affect game state if simulate is true.
@@ -707,7 +720,7 @@ public class BattleEngine : MonoBehaviour
         if(!moved && moving && charSelected && activeUnit == gridTiles.GetCharacterAtPos(selectedCharPos) && tilePos != selectedCharPos) 
         {
             // Move character
-            if (gridTiles.MoveCharacterOnTile(selectedCharPos, tilePos, true) == false)
+            if (gridTiles.PathCharacterOnTile(selectedCharPos, tilePos, true) == false)
             {
                 Debug.Log("Cannot move character to tile " + tilePos.x + " " + tilePos.y);
                 return false;
@@ -735,9 +748,15 @@ public class BattleEngine : MonoBehaviour
         ResetAllHighlights();
         moved = true;
         moveButton.interactable = false;
+        endButton.interactable = false;
+        if(!acted) actionButton.interactable = false;
         yield return new WaitWhile(() => activeUnit.GetComponent<FollowPath>().pathToFollow.Count > 0 || activeUnit.GetComponent<FollowPath>().isMoving());
         yield return new WaitForSecondsRealtime(0.15f);
-        if(!acted) selectAction(); //Move to action state if available
+        endButton.interactable = true;
+        if(!acted) {
+            actionButton.interactable = true;
+            selectAction(); //Move to action state if available
+        }
         update();
     }
 
@@ -752,7 +771,9 @@ public class BattleEngine : MonoBehaviour
         active = false;
         interactable = false;
 
+        endButton.interactable = false;
         yield return new WaitForSecondsRealtime(waitTime);
+        endButton.interactable = true;
 
         // After wait
         active = true;
@@ -872,7 +893,7 @@ public class BattleEngine : MonoBehaviour
 
     private void onEnd() {
         active = false;
-        attackButton.interactable = false;
+        actionButton.interactable = false;
         moveButton.interactable = false;
         endButton.interactable = false;
         deadUnits.Clear();
