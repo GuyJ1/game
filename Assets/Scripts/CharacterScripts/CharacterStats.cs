@@ -74,6 +74,11 @@ public enum OpType
     ADD, MULTIPLY
 }
 
+public enum className {
+
+    Pirate, Bard, Mercenary, Merchant, Buccaneer, Acolyte, PirateCaptain, MerchantCaptain, MonarchyCaptain
+}
+
 public class CharacterStats : MonoBehaviour
 {
     [SerializeField]
@@ -107,6 +112,7 @@ public class CharacterStats : MonoBehaviour
     public List<StatModifier> statModifiers = new List<StatModifier>();
 
     public string Name;
+    public className classname;
 
     // Actions
     public Ability basicAttack, comboAttack; //Generic actions
@@ -437,6 +443,7 @@ public class CharacterStats : MonoBehaviour
     //Note: Critical hits triple the total damage
     //Type 1 = general attack, nothing changes
     //Type 2 = no defenses, attack while target.DEF is ignored
+    //Type 3 = attack doesn't miss
     public int Attack(CharacterStats target, int type){
         int DEX = getDexterity(), STR = getStrength(), LCK = getLuck();
         HIT = ((((DEX * 3 + LCK) / 2) + (2 * (Morale / 20))) - target.AVO) + accessoryBonus(1);
@@ -474,7 +481,7 @@ public class CharacterStats : MonoBehaviour
             }
 
         }
-        else if(determineHIT(HIT)){
+        else if(determineHIT(HIT) || type == 3){
 
             if(type == 2){
 

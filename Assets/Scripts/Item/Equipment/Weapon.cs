@@ -18,6 +18,10 @@ public class Weapon : EquippableItem
     public bool strongSoul = false; //When using SoulBash, if user is at full HP, bonus damage = MAX HP
     public bool lastStand = false; //When using Persistance, if user is at 1 HP, gauranteed critical hit
     public bool shiningStar = false; //When using Shooting Star, attack 10 times at 1/10th the power (same hit and crit rate)
+    public bool betterHeal = false; //When using LightHeal, baseHP is doubled
+    public bool certainty = false; //When using QuickAttack, attack does not miss
+    public bool earlyGambit = false; //When using Gambit, accuracy is better earlier
+    public bool lateGambit = false; //when using Gambit, accuracy is better later
 
     public int Rarity; //from 1 to 3.
 
