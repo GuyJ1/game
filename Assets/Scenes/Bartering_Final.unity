@@ -218,10 +218,10 @@ MonoBehaviour:
   textComponent: {fileID: 1826949734}
   lines:
   - ALAS MY MATEY! you brought me back a working dialogue box!!!
-  - i can finally talk again! ahhh everything feels GUUUDD!!!
+  - i cant believe i can finally talk again! ahhh it feels so GOOD!!!
   - my needs have been satisfied. please, adventurer, take this as my token of gratitude.
-    you never know when you may need it...
-  textSpeed: 0.075
+    you may find this handy on your quest to beat davvy jones...
+  textSpeed: 0.05
 --- !u!1 &270574435
 GameObject:
   m_ObjectHideFlags: 0
