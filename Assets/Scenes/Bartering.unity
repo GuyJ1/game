@@ -1021,6 +1021,7 @@ GameObject:
   - component: {fileID: 1326040118}
   - component: {fileID: 1326040117}
   - component: {fileID: 1326040119}
+  - component: {fileID: 1326040120}
   m_Layer: 5
   m_Name: DialogueBox
   m_TagString: Untagged
@@ -1106,6 +1107,21 @@ MonoBehaviour:
   actorName: {fileID: 70277687}
   messageText: {fileID: 1757911562}
   backgroundBox: {fileID: 1326040116}
+--- !u!114 &1326040120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1326040115}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e3e768d516c55f4eb0a46d82c98a15c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textComponent: {fileID: 1210425226}
+  lines: []
+  textSpeed: 0
 --- !u!1 &1383612851
 GameObject:
   m_ObjectHideFlags: 0
@@ -1418,6 +1434,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1621902165}
   - component: {fileID: 1621902164}
+  - component: {fileID: 1621902166}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -1502,6 +1519,26 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!114 &1621902166
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1621902163}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 1
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
 --- !u!1 &1704521452
 GameObject:
   m_ObjectHideFlags: 0
