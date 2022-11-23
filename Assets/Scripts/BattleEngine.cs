@@ -400,24 +400,6 @@ public class BattleEngine : MonoBehaviour
         return gridTiles.grid[tilePos.x, tilePos.y].GetComponent<TileScript>().characterOn == activeUnit;
     }
 
-    //Sorting function by speed. Returns -1 if unit2 is greater, 0 if equal, 1 if unit1 is greater.
-    private static int compareBySpeed(Vector2Int unit1, Vector2Int unit2) {
-        if(unit1 == null) {
-            if(unit2 == null) return 0;
-            else return -1;
-        }
-        else {
-            if(unit2 == null) return 1;
-            else {
-                int speed1 = unit1.y;
-                int speed2 = unit2.y;
-                if(speed1 > speed2) return 1;
-                else if(speed1 < speed2) return -1;
-                else return 0;
-            }
-        }
-    }
-
     public void selectAction() {
         if (interactable)
         {
@@ -454,7 +436,7 @@ public class BattleEngine : MonoBehaviour
                 if(!unit.isDead()) temp.Add(new Vector2Int(j, (51 - unit.getSpeed()) * i));
             }
         }
-        temp.Sort(compareBySpeed);
+        temp = temp.OrderBy(v => v.y).ToList(); //OrderBy is stable, Sort is not
         //Fill turn queue with the actual units
         turnQueue.Clear();
         foreach(Vector2Int vec in temp) {
