@@ -283,7 +283,7 @@ GameObject:
   - component: {fileID: 833193603814831465}
   - component: {fileID: 833193603814831464}
   m_Layer: 5
-  m_Name: Accessory4 Slot
+  m_Name: Aura Slot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -451,7 +451,7 @@ GameObject:
   - component: {fileID: 833193603903808220}
   - component: {fileID: 833193603903808223}
   m_Layer: 5
-  m_Name: Accessory1 Slot
+  m_Name: Amulet Slot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -722,7 +722,7 @@ GameObject:
   - component: {fileID: 833193604037990848}
   - component: {fileID: 833193604037990851}
   m_Layer: 5
-  m_Name: Gloves Slot
+  m_Name: Ring Slot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1072,7 +1072,7 @@ GameObject:
   - component: {fileID: 833193604107557505}
   - component: {fileID: 833193604107557504}
   m_Layer: 5
-  m_Name: Accessory2 Slot
+  m_Name: Bracelet Slot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2161,7 +2161,7 @@ GameObject:
   - component: {fileID: 833193605277503630}
   - component: {fileID: 833193605277503617}
   m_Layer: 5
-  m_Name: Accessory3 Slot
+  m_Name: Shoes Slot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2485,7 +2485,7 @@ GameObject:
   - component: {fileID: 833193605605474870}
   - component: {fileID: 833193605605475273}
   m_Layer: 5
-  m_Name: Helmet Slot
+  m_Name: Armor Slot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2666,7 +2666,7 @@ GameObject:
   - component: {fileID: 833193605645783701}
   - component: {fileID: 833193605645783700}
   m_Layer: 5
-  m_Name: Armor Slot
+  m_Name: Hat Slot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 2958869790738198804}
   - component: {fileID: 6910508329098645129}
   - component: {fileID: 1501834382304512246}
-  - component: {fileID: 8120975447288480324}
   m_Layer: 0
   m_Name: WhirlingSteelEffect
   m_TagString: Untagged
@@ -111,19 +110,6 @@ VFXRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!114 &8120975447288480324
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3879557253301293840}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c149e14c504df6648998249ea980addf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PlayRate: 5
 --- !u!1 &6874435940801072556
 GameObject:
   m_ObjectHideFlags: 0
@@ -170,5 +156,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _version: 0
-  m_lifeTime: 3
+  m_lifeTime: 1.5
   m_scaleToZeroDuration: 0

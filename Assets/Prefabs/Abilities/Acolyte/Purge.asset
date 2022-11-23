@@ -28,4 +28,4 @@ MonoBehaviour:
   - {x: 0, y: 0}
   targetModifiers: []
   selfModifiers: []
-  targetEffect: {fileID: 0}
+  targetEffect: {fileID: 6874435940801072556, guid: 7244c87914833384b88fc1bb07b8eb51, type: 3}
