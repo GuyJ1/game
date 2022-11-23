@@ -24,6 +24,8 @@ public class MeleeTypeWeapon : Weapon
                 //Swords have Strong Siphon (get 20% HP when using Siphon)
                 strongSiphon = true;
                 strongSoul = true;
+                betterHeal = true;
+                earlyGambit = true;
 
 
                 break;
@@ -39,6 +41,7 @@ public class MeleeTypeWeapon : Weapon
                 doubleAttack = true;
                 lastStand = true;
                 shiningStar = true;
+                certainty = true;
                 
 
                 break;
@@ -53,6 +56,8 @@ public class MeleeTypeWeapon : Weapon
                 LCKmod = -2;*/
                 deadlyPierce = true;
                 safeSwap = true;
+                betterHeal = true;
+                lateGambit = true;
 
                 
                 

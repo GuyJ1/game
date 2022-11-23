@@ -92,6 +92,9 @@ public class Ability : ScriptableObject
         else if(displayName == "Life Swap")         LifeSwap(user, target);
         else if(displayName == "Soul Bash")         SoulBash(user, target);
         else if(displayName == "Persistence")       Persistence(user, target);
+        else if(displayName == "Light Heal")        LightHeal(user);
+        else if(displayName == "Quick Attack")      QuickAttack(user, target);
+        else if(displayName == "Gambit")            Gambit(user, target);
 
         /// PIRATE ////
 
@@ -236,6 +239,7 @@ public class Ability : ScriptableObject
         }
 
     }
+
 
 /// PIRATE CLASS ABILITIES ///
 
@@ -692,6 +696,121 @@ public class Ability : ScriptableObject
 
         target.adjustHP(-totalDMG, false);
     }
+
+
+    //heal self. Heal more if passive is active or class = Acolyte
+    void LightHeal(CharacterStats user){
+
+        if(user.weapon != null && (user.weapon.betterHeal || user.classname == className.Acolyte)){
+
+            baseHP *= 2;
+        }
+
+        totalHP = user.Heal(user) + baseHP;
+
+        user.adjustHP(totalHP, true);
+    }
+
+    //attack the target with 50% user's ATK with bonus dmg = user's SPD.
+    void QuickAttack(CharacterStats user, CharacterStats target){
+
+        if(user.weapon != null && user.weapon.certainty){//attack doesn't miss
+
+            totalDMG = (user.Attack(target, 3) / 2) + user.getSpeed();
+
+
+        }
+        else{
+
+            totalDMG = (user.Attack(target, 1) / 2) + user.getSpeed();
+
+
+        }
+
+        GameObject hitParticle = Instantiate(targetEffect);
+        hitParticle.transform.position = target.transform.position;
+
+        target.adjustHP(-totalDMG, false);
+    }
+
+    //Attack the enemy for as many times as this move is successful. The first attack never misses
+    //This ability can't crit
+    //This ability starts at 20 damage, and gets +5 damage each success, for a max of 70 damage
+    //This ability will only end under 3 conditions:
+    //1. The target dies
+    //2. The move misses
+    //3. 10 additional attacks are reached
+    void Gambit(CharacterStats user, CharacterStats target){
+
+        int ACC = 70;
+        int DMG = 20;
+        bool accUp = false;
+        bool accDown = false;
+
+        if(user.weapon != null && user.weapon.earlyGambit){
+
+            ACC = 95;
+            accDown = true;
+            
+
+
+        }
+        else if(user.weapon != null && user.weapon.lateGambit){
+
+            ACC = 55;
+            accUp = true;
+        }
+
+        GameObject hitParticle = Instantiate(targetEffect);
+        hitParticle.transform.position = target.transform.position;
+
+        target.adjustHP(-DMG, false); //100% to deal 20 damage
+
+        if(target.isDead()){//move ends if target dies
+
+            return;
+        }
+
+        for(int i = 0; i < 10; i++){
+
+            DMG += 5;
+
+            if(user.determineHIT(ACC)){
+
+                hitParticle = Instantiate(targetEffect);
+                hitParticle.transform.position = target.transform.position;
+
+                target.adjustHP(-DMG, false);
+
+                if(target.isDead()){//ability ends if target dies
+
+                    return;
+                }
+
+                if(accUp){//increase ACC for lateGambit
+
+                    ACC += 5;
+                }
+                else if(accDown){//decrease ACC for earlyGambit
+
+                    ACC -= 5;
+                }
+
+            }
+            else{//ability ends on miss
+
+                return;
+            }
+
+
+        }
+        
+        
+    }
+
+
+
+
 
     
 
