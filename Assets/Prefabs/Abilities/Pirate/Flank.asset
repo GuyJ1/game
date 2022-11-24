@@ -29,18 +29,6 @@ MonoBehaviour:
   shape:
   - {x: 0, y: 0}
   targetModifiers: []
-  selfModifiers:
-  - type: 4
-    op: 0
-    duration: 2
-    value: 2
-    chance: 1
-    id: 
-  - type: 5
-    op: 0
-    duration: 2
-    value: 2
-    chance: 1
-    id: 
+  selfModifiers: []
   targetEffect: {fileID: 0}
   selfEffect: {fileID: 0}

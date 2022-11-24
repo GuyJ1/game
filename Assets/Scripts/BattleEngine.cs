@@ -613,12 +613,14 @@ public class BattleEngine : MonoBehaviour
         var tileScript = gridTiles.GetTileAtPos(tilePos).GetComponent<TileScript>();
         int dist = Mathf.Abs(activeUnitPos.x - tilePos.x) + Mathf.Abs(activeUnitPos.y - tilePos.y); //Take Manhattan distance
         if(dist > selectedAbility.range) return false;
+        GameObject selectedCharacter = null;
         if(selectedAbility.requiresTarget) 
         { 
             //Check for valid target
             if(!tileScript.hasCharacter) return false;
             if(selectedAbility.friendly && !isAllyUnit(gridTiles.GetCharacterAtPos(tilePos))) return false;
             if(!selectedAbility.friendly && isAllyUnit(gridTiles.GetCharacterAtPos(tilePos))) return false;
+            selectedCharacter = tileScript.characterOn;
         }
         if(simulate) return true;
 
@@ -651,7 +653,9 @@ public class BattleEngine : MonoBehaviour
         }
         //Self movement
         Vector2Int newPos = selectedAbility.applySelfMovement(activeUnit.GetComponent<CharacterStats>(), gridTiles, xDist, yDist);
+        bool tryCombo = true;
         if(newPos != activeUnitPos) {
+            tryCombo = false;
             activeUnitPos = newPos;
             activeUnitTile = gridTiles.GetTileAtPos(newPos);
             gridTiles.grid[selectedCharPos.x, selectedCharPos.y].GetComponent<Renderer>().material = isTileActive(selectedCharPos) ? gridTiles.activeUnselected : gridTiles.unselected;
@@ -660,11 +664,11 @@ public class BattleEngine : MonoBehaviour
         ResetAllHighlights();
         if(!acted) highlightActionTiles(newPos, selectedAbility.range);
 
-        StartCoroutine(endActUnit(tilePos, xDist, yDist, characters));
+        StartCoroutine(endActUnit(selectedCharacter == null ? tilePos : selectedCharacter.GetComponent<CharacterStats>().gridPosition, xDist, yDist, characters, tryCombo));
         return true;
     }
 
-    IEnumerator endActUnit(Vector2Int tilePos, int xDist, int yDist, List<GameObject> characters) {
+    IEnumerator endActUnit(Vector2Int tilePos, int xDist, int yDist, List<GameObject> characters, bool tryCombo) {
         if(!moved) moveButton.interactable = false;
         yield return new WaitForSecondsRealtime(0.6f);
         var gridTiles = grid.GetComponent<GridBehavior>();
@@ -674,7 +678,7 @@ public class BattleEngine : MonoBehaviour
         if(characters.Count > 0) playerTarget = characters[0];
 
         // ----- Combo Attacks ------
-        if(selectedAbility.requiresTarget && xDist != yDist) //No diagonals
+        if(selectedAbility.requiresTarget && xDist != yDist && tryCombo) //No diagonals
         {
             bool combo;
             if(Mathf.Abs(xDist) > Mathf.Abs(yDist))
@@ -816,7 +820,7 @@ public class BattleEngine : MonoBehaviour
         updateTurnOrder();
 
         checkOutcome();
-        if(moved && acted) endTurn();
+        if((moved && acted) || deadUnits.Contains(activeUnit)) endTurn();
         checkOutcome();
     }
 

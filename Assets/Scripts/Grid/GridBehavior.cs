@@ -320,6 +320,86 @@ public class GridBehavior : MonoBehaviour
         return false;
     }
 
+    // Move character in a straight line from source to destination
+    public bool GetLinearPath(Vector2Int sourcePos, Vector2Int destPos) {
+        GameObject charToMove = null;
+
+        // Check whether tiles are in range
+        if (TilePosInRange(sourcePos) && TilePosInRange(destPos))
+        {
+            // Get tile on source position
+            GameObject sourceTile = grid[sourcePos.x, sourcePos.y];
+            var sourceTileScript = sourceTile.GetComponent<TileScript>();
+
+            // Get tile on dest position
+            GameObject destTile = grid[destPos.x, destPos.y];
+            var destTileScript = destTile.GetComponent<TileScript>();
+
+            Vector2Int path = new Vector2Int(0, 0);
+            if(!sourceTileScript.hasCharacter) return false;
+            int xDist = destPos.x - sourcePos.x;
+            int yDist = destPos.y - sourcePos.y;
+            Debug.Log("DIST: " + xDist +", " + yDist);
+            if(xDist > 0) {
+                for(int i = 1; i <= xDist; i++) {
+                    var tileScript = grid[sourcePos.x + i, sourcePos.y].GetComponent<TileScript>();
+                    if(tileScript.hasCharacter || !tileScript.passable) break;
+                    else path = new Vector2Int(i, 0);
+                }
+            }
+            else {
+                for(int i = -1; i >= xDist; i--) {
+                    var tileScript = grid[sourcePos.x + i, sourcePos.y].GetComponent<TileScript>();
+                    if(tileScript.hasCharacter || !tileScript.passable) break;
+                    else path = new Vector2Int(i, 0);
+                }
+            }
+            if(yDist > 0) {
+                for(int i = 1; i <= yDist; i++) {
+                    var tileScript = grid[sourcePos.x, sourcePos.y + i].GetComponent<TileScript>();
+                    if(tileScript.hasCharacter || !tileScript.passable) break;
+                    else path = new Vector2Int(0, i);
+                }
+            }
+            else {
+                for(int i = -1; i >= yDist; i--) {
+                    var tileScript = grid[sourcePos.x, sourcePos.y + i].GetComponent<TileScript>();
+                    if(tileScript.hasCharacter || !tileScript.passable) break;
+                    else path = new Vector2Int(0, i);
+                }
+            }
+
+            if(path.x != 0 || path.y != 0) {
+                charToMove = sourceTileScript.characterOn;
+                var pos = new Vector2Int(sourcePos.x + path.x, sourcePos.y + path.y);
+                var tileScript = GetTileAtPos(pos).GetComponent<TileScript>();
+
+                charToMove.GetComponent<FollowPath>().abilityDist = path;
+
+                // Move camera to destPos
+                cam.GetComponent<CameraControl>().SetCameraFollow(charToMove);
+
+                // Set source tile data
+                sourceTileScript.hasCharacter = false;
+                sourceTileScript.characterOn = null;
+
+                // Set destination tile data
+                tileScript.hasCharacter = true;
+                tileScript.characterOn = charToMove;
+
+                charToMove.GetComponent<CharacterStats>().gridPosition = pos;
+
+                return true;
+            }
+        }
+        else
+        {
+            Debug.Log("GetLinearPath: Error! tile source or dest position is out of range");
+        }
+        
+        return false;
+    }
+
     // --------------------------------------------------------------
     // @desc: Move a character along an automatically generated path
     // @arg: sourcePos - logical grid position with a character on it

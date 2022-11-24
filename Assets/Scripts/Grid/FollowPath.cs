@@ -9,9 +9,11 @@ public class FollowPath : MonoBehaviour
 
     // A stack of path nodes that link to the position of tiles
     public Stack<PathTreeNode> pathToFollow = new Stack<PathTreeNode>();
+    // Raw distance for ability movement
+    public Vector2Int abilityDist;
 
-    // Current target node
-    private PathTreeNode targetNode;
+    // Current target
+    private GameObject targetTile;
     private Vector3 targetPos;
     private Vector3 targetDirection;
 
@@ -21,6 +23,7 @@ public class FollowPath : MonoBehaviour
 
     // Flags
     private bool tileSet = false;
+    private bool wasAbility;
 
     // Audio
     AudioSource audioData;
@@ -36,6 +39,22 @@ public class FollowPath : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Ability movement
+        if(abilityDist.x != 0 || abilityDist.y != 0) {
+            if(abilityDist.x > 0) abilityDist.x--;
+            else if(abilityDist.x < 0) abilityDist.x++;
+            if(abilityDist.y > 0) abilityDist.y--;
+            else if(abilityDist.y < 0) abilityDist.y++;
+            var character = this.gameObject.GetComponent<CharacterStats>();
+            targetTile = character.myGrid.GetComponent<GridBehavior>().GetTileAtPos(character.gridPosition + new Vector2Int(abilityDist.x != 0 ? (int) Mathf.Sign(abilityDist.x) : 0, abilityDist.y != 0 ? (int) Mathf.Sign(abilityDist.y) : 0));
+            float targetDist = Vector3.Distance(transform.position, targetPos);
+            if(targetTile != null && targetDist > 0.0f) {
+                tileSet = true;
+                wasAbility = true;
+            }
+        }
+        else {
+
         // Audio
         if (pathToFollow.Count > 0)
         {
@@ -50,10 +69,10 @@ public class FollowPath : MonoBehaviour
         }
 
         // Get a new tile to travel to when these conditions are met
-        while (pathToFollow != null && pathToFollow.Count > 0 && tileSet == false)
+        while (pathToFollow != null && pathToFollow.Count > 0 && !tileSet)
         {
             // Get the next node
-            targetNode = pathToFollow.Pop();
+            targetTile = pathToFollow.Pop().myTile;
 
             // Test whether the target position is different from the current position
             distToTarget = Vector3.Distance(transform.position, targetPos);
@@ -67,20 +86,22 @@ public class FollowPath : MonoBehaviour
 
                 // Target tile is set
                 tileSet = true;
+                wasAbility = false;
             }
+        }
         }
 
         // When we have a tile to travel to
         if (tileSet)
         {
             // Get the position of the corresponding tile
-            Vector3 pos = targetNode.myTile.transform.position;
+            Vector3 pos = targetTile.transform.position;
 
             // Set the target position to the position of the tile
             targetPos = new Vector3(pos.x, pos.y + 0.5f, pos.z);
             targetDirection = (targetPos - transform.position).normalized;
             distToTarget = Vector3.Distance(transform.position, targetPos);
-            moveDist = Vector3.Distance(new Vector3(0,0,0), targetDirection * moveSpeed * Time.deltaTime);
+            moveDist = Vector3.Distance(new Vector3(0,0,0), targetDirection * (wasAbility ? 8.0f : moveSpeed) * Time.deltaTime);
 
             // Check whether we reached the target
             if (distToTarget > 0.0f && distToTarget <= moveDist)
@@ -91,7 +112,7 @@ public class FollowPath : MonoBehaviour
             // Else, move this object towards it
             else
             {
-                transform.position += targetDirection * moveSpeed * Time.deltaTime;
+                transform.position += targetDirection * (wasAbility ? 8.0f : moveSpeed) * Time.deltaTime;
             }
         }
     }

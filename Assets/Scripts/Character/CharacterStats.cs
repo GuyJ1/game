@@ -279,6 +279,10 @@ public class CharacterStats : MonoBehaviour
         healthBar.gameObject.SetActive(false);
     }
 
+    public GameObject getTileObject() {
+        return myGrid.GetComponent<GridBehavior>().GetTileAtPos(gridPosition);
+    }
+
     // Whether this character is considered dead in battle
     public bool isDead() {
         return HP <= 0;

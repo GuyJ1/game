@@ -60,21 +60,19 @@ public class Ability : ScriptableObject
 
     public Vector2Int applySelfMovement(CharacterStats character, GridBehavior grid, int xDist, int yDist) {
         if(selfMovement == 0) return character.gridPosition;
-        return applyMovement(character, grid, xDist, yDist, rotateMovement(selfMovement, xDist, yDist));
+        return applyMovement(character, grid, rotateMovement(selfMovement, xDist, yDist));
     }
 
     public Vector2Int applyKnockback(CharacterStats character, GridBehavior grid, int xDist, int yDist) {
         if(knockback == 0) return character.gridPosition;
-        return applyMovement(character, grid, xDist, yDist, rotateMovement(knockback, xDist, yDist));
+        return applyMovement(character, grid, rotateMovement(knockback, xDist, yDist));
     }
 
-    private Vector2Int applyMovement(CharacterStats character, GridBehavior grid, int xDist, int yDist, Vector2Int movement) {
-        grid.GetAllPathsFromTile(grid.GetTileAtPos(character.gridPosition), Mathf.Abs(movement.x) > Mathf.Abs(movement.y) ? Mathf.Abs(movement.x) : Mathf.Abs(movement.y));
+    private Vector2Int applyMovement(CharacterStats character, GridBehavior grid, Vector2Int movement) {
         //Look for longest path and try to take it
-        //TODO: This should not use the normal pathfinding, it should only search in a straight line
         while(movement.x != 0 || movement.y != 0) {
             Vector2Int pos = new Vector2Int(character.gridPosition.x + movement.x, character.gridPosition.y + movement.y);
-            if(grid.PathCharacterOnTile(character.gridPosition, pos, false)) return pos;
+            if(grid.GetLinearPath(character.gridPosition, pos)) return pos;
             if(movement.x < 0) movement.x++;
             else if(movement.x > 0) movement.x--;
             else if(movement.y < 0) movement.y++;

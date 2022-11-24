@@ -29,6 +29,18 @@ public class PathTreeNode
         tileRange = range;
     }
 
+    public PathTreeNode copy() {
+        PathTreeNode p = new PathTreeNode();
+        if(p.parent != null) p.parent = parent.copy();
+        if(p.up != null) p.up = up.copy();
+        if(p.down != null) p.down = down.copy();
+        if(p.left != null) p.left = left.copy();
+        if(p.right != null) p.right = right.copy();
+        p.myTile = myTile;
+        p.tileRange = tileRange;
+        return p;
+    }
+
     // Get path to root
     public Stack<PathTreeNode> PathToRoot()
     {

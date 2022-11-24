@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   friendly: 0
   requiresTarget: 1
-  free: 1
-  totalDMG: 68
+  free: 0
+  totalDMG: 67
   totalHP: 0
   totalACC: 0
   baseDMG: 50
