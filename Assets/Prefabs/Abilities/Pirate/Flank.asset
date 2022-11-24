@@ -23,8 +23,8 @@ MonoBehaviour:
   baseACC: 0
   costAP: 0
   range: 2
-  knockback: 2
-  selfMovement: 2
+  knockback: 1
+  selfMovement: 1
   displayName: Flank
   shape:
   - {x: 0, y: 0}

@@ -123,6 +123,11 @@ public class CharacterStats : MonoBehaviour
     public HealthBar healthBar;
     public float healthBarYOffset;
 
+    // AP Bar
+    [SerializeField] public float APBarScale;
+    public IconBar APBar;
+    public float APBarYOffset;
+
     // Canvas reference
     public GameObject canvas;
 
@@ -157,6 +162,7 @@ public class CharacterStats : MonoBehaviour
         // Attach healthbar to canvas
         canvas = GameObject.Find("UI Menu");
         healthBar = Instantiate(healthBar, canvas.transform);
+        APBar = Instantiate(APBar, canvas.transform);
 
         // Set gradient color
         bool isPlayer = crew.GetComponent<CrewSystem>().isPlayer;
@@ -198,12 +204,12 @@ public class CharacterStats : MonoBehaviour
         }*/
 
         HP = getMaxHP();
-
-        healthBar.SetMaxHealth(getMaxHP());
+        healthBar.SetMaxHealth(HP);
 
         //Morale = MoraleMAX;
 
         AP = getMaxAP();
+        APBar.SetMaxValue(AP);
 
         updateAVO(ring, aura);
         HIT = getHIT(null, true);
@@ -258,8 +264,9 @@ public class CharacterStats : MonoBehaviour
         // Offset
         Vector3 posOffset = new Vector3(0, healthBarYOffset, 0);
 
-        // --------- Update healthbar position ---------
+        // --------- Update bar positions ---------
         healthBar.transform.position = Camera.main.WorldToScreenPoint(model.transform.position + posOffset);
+        APBar.transform.position = Camera.main.WorldToScreenPoint(model.transform.position + new Vector3(0, APBarYOffset, 0));
 
         // --------- Update scale based on camera position ---------
         float camDist = Vector3.Distance(Camera.main.transform.position, this.transform.position);
@@ -271,12 +278,14 @@ public class CharacterStats : MonoBehaviour
         }
 
         healthBar.transform.localScale = new Vector3(newScale, newScale, newScale);
+        APBar.transform.localScale = new Vector3(newScale, newScale, newScale);
     }
 
     // Disable the character and associated elements
     public void removeFromGrid() {
         this.gameObject.SetActive(false);
         healthBar.gameObject.SetActive(false);
+        APBar.gameObject.SetActive(false);
     }
 
     public GameObject getTileObject() {
@@ -350,7 +359,10 @@ public class CharacterStats : MonoBehaviour
         healthBar.SetHealth(HP);
     }
 
-
+    public void addAP(int change) {
+        AP = Mathf.Clamp(AP + change, 0, getMaxAP());
+        APBar.SetValue(AP);
+    }
 
     //AP changed (either positive or negative)
     //subType is primarily for subtractions (either ability used (1) or AP drained (2) [0 if not subtraction])

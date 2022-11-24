@@ -339,7 +339,6 @@ public class GridBehavior : MonoBehaviour
             if(!sourceTileScript.hasCharacter) return false;
             int xDist = destPos.x - sourcePos.x;
             int yDist = destPos.y - sourcePos.y;
-            Debug.Log("DIST: " + xDist +", " + yDist);
             if(xDist > 0) {
                 for(int i = 1; i <= xDist; i++) {
                     var tileScript = grid[sourcePos.x + i, sourcePos.y].GetComponent<TileScript>();

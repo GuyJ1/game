@@ -33,11 +33,12 @@ public class BattleEngine : MonoBehaviour
     public PathTreeNode gridPaths;
     public bool active = false; //Activation flag to be set by other systems
     public bool interactable = true; //Flag used for locking actions during events
+    public bool surrendered = false, victory = false, defeat = false; //End of battle flags
 
     public bool moving = false; //Whether the current mode is moving or acting
     private Ability selectedAbility;
     public bool init = false;
-    public  bool isPlayerTurn;
+    public bool isPlayerTurn;
     private bool moved = false; //Whether movement was taken
     private bool acted = false; //Whether an action was taken
     private int turnCount = 0;
@@ -53,7 +54,7 @@ public class BattleEngine : MonoBehaviour
     public GameObject canvas;
     private Button actionButton, moveButton, endButton;
     private List<GameObject> actionButtons = new List<GameObject>();
-    private GameObject victoryText, defeatText;
+    private GameObject victoryText, defeatText, surrenderText;
     private HealthBar playerShipBar, playerMoraleBar, enemyShipBar, enemyMoraleBar;
 
     //Click Detection
@@ -95,6 +96,8 @@ public class BattleEngine : MonoBehaviour
         victoryText.SetActive(false);
         defeatText = GameObject.Find("DefeatText");
         defeatText.SetActive(false);
+        surrenderText = GameObject.Find("SurrenderText");
+        surrenderText.SetActive(false);
 
         // Health & Morale bars
         playerShipBar = GameObject.Find("PlayerShipBar").GetComponent<HealthBar>();
@@ -461,6 +464,9 @@ public class BattleEngine : MonoBehaviour
         activeUnit = turnQueue[0];
         var activeUnitScript = activeUnit.GetComponent<CharacterStats>();
 
+        // Recover 1 AP
+        activeUnitScript.addAP(1);
+
         // Get data from active unit
         grid = activeUnitScript.myGrid;
         var gridScript = grid.GetComponent<GridBehavior>();
@@ -548,6 +554,7 @@ public class BattleEngine : MonoBehaviour
             turnQueue.RemoveAt(0);
             moved = false;
             acted = false;
+            activeUnit = null;
             update();
             pickNewTurn();
         }
@@ -790,11 +797,6 @@ public class BattleEngine : MonoBehaviour
         }
     }
 
-    //Try to surrender the battle. Returns true if surrender is accepted.
-    public bool trySurrender() {
-        return true;
-    }
-
     //Perform all end-of-turn logic
     public void update() {
         //Collect any dead units
@@ -874,6 +876,7 @@ public class BattleEngine : MonoBehaviour
         if(won) {
             onEnd();
             victoryText.SetActive(true);
+            victory = true;
         }
     }
 
@@ -892,6 +895,7 @@ public class BattleEngine : MonoBehaviour
         if(loss) {
             onEnd();
             defeatText.SetActive(true);
+            defeat = true;
         }
     }
 
@@ -901,6 +905,21 @@ public class BattleEngine : MonoBehaviour
         moveButton.interactable = false;
         endButton.interactable = false;
         deadUnits.Clear();
+    }
+
+    //Surrender the battle for the acting crew
+    public void surrender() {
+        if(isPlayerTurn) {
+            defeatText.SetActive(true);
+            defeat = true;
+        }
+        else {
+            victoryText.SetActive(true);
+            victory = true;
+        }
+        onEnd();
+        surrenderText.SetActive(true);
+        surrendered = true;
     }
 
     public static bool isUnitAlive(GameObject unit) {
