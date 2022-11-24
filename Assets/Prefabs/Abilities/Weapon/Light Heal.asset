@@ -14,18 +14,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   friendly: 1
   requiresTarget: 0
+  free: 0
   totalDMG: 0
   totalHP: 0
   totalACC: 0
   baseDMG: 0
   baseHP: 25
   baseACC: 0
-  cost: 1
+  costAP: 0
   range: 0
   knockback: 0
-  displayName: Light Heal
-  shape:
-  - {x: 0, y: 0}
+  selfMovement: 0
+  displayName: 
+  shape: []
   targetModifiers: []
   selfModifiers: []
   targetEffect: {fileID: 0}
+  selfEffect: {fileID: 6874435940801072556, guid: a964bda06ec2d3e488d2d0efd9c7afc7, type: 3}
