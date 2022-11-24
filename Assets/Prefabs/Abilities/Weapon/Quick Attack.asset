@@ -13,18 +13,18 @@ MonoBehaviour:
   m_Name: Quick Attack
   m_EditorClassIdentifier: 
   friendly: 0
-  requiresTarget: 0
+  requiresTarget: 1
   totalDMG: 0
   totalHP: 0
   totalACC: 0
   baseDMG: 0
   baseHP: 0
   baseACC: 0
-  cost: 0
-  range: 0
+  cost: 1
+  range: 1
   knockback: 0
-  displayName: 
+  displayName: Quick Attack
   shape: []
   targetModifiers: []
   selfModifiers: []
-  targetEffect: {fileID: 0}
+  targetEffect: {fileID: 696958063292329688, guid: 00092c09e25beb54f813012f561ea1c0, type: 3}

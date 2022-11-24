@@ -14,12 +14,17 @@ public enum EquipmentType //defining equipment types
   Shoes,
   Aura
 }
+
+// Weapons give different abilites and higher ATK
+
+// Armor gives higher DEF depending on a user's STR
+
 //different types of accessories give different bonuses to the unit
 //1: Hat, grants +STR/DEF/SPD/DEX
 //2: Ring, grants +ATK/HIT/CRIT/AVO
 //3: Amulet, grants +HP / +LCK
 //4: Bracelet, grants +AP / +LCK
-//5: Shoes, grants +MV / +SPD
+//5: Shoes, grants +MV
 //6: Aura, can grant any of the above stats
 
   [CreateAssetMenu]//allows EquippableItem to be manually created in unity project editor

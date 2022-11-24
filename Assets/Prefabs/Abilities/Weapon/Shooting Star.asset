@@ -20,7 +20,7 @@ MonoBehaviour:
   baseDMG: 0
   baseHP: 0
   baseACC: 0
-  cost: 2
+  cost: 3
   range: 1
   knockback: 0
   displayName: Shooting Star
