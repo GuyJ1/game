@@ -10,7 +10,7 @@ public class PlayerMove : MonoBehaviour
     public float yAxis;
     public float originalYAxis=1;
     public bool FloatUp = true;
-    public GameObject destination;
+    public static GameObject destination;
     public static GameObject destination2;
     public bool travel = false;
     public static GameObject currNode;//=GameObject.Find("StartNode");
@@ -58,6 +58,7 @@ public class PlayerMove : MonoBehaviour
                     }
                     else
                     {
+                        NodeInfo.hideTextBox();
                         travel = false;
                     }
                 }
@@ -129,5 +130,12 @@ public class PlayerMove : MonoBehaviour
             }
         }
     }
-
+    public static GameObject getDestination()
+    {
+        return destination;
+    }
+    public static GameObject getCurrNode()
+    {
+        return currNode;
+    }
 }

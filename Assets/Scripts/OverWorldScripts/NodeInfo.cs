@@ -10,9 +10,10 @@ public class NodeInfo : MonoBehaviour
     public int MoraleReward;
     public int Enemies;
     public string description;
-    public TextMeshProUGUI textBox;
-    public GameObject textnode;
+    public static TextMeshProUGUI textBox;
+    public static GameObject textnode;
     public GameObject node;
+    
     private struct Information{
         int Gold;
         int Booze;
@@ -31,12 +32,26 @@ public class NodeInfo : MonoBehaviour
     }
     public void showTextBox()
     {
-
+        textBox.color = Color.white;
         textBox.text = "Gold Reward: "+ goldReward + "\n";
         textBox.text += "Booze Reward: " + BoozeReward + "\n";
         textBox.text += "Morale Reward: " + MoraleReward + "\n";
         textBox.text += "Enemies: " + Enemies + "\n";
         textBox.text += description;
+        if(!NodeLines.isNeighbor(PlayerMove.getCurrNode(),PlayerMove.getDestination()))
+        {
+            //string no = "\nCannot Travel to \nthis Destination yet.";
+            
+            textBox.text +=  "<color=red>\nCannot Travel to \nthis Destination yet, \n<i> Matey</i>.</color>" ;
+           // textBox.color = Color.red;
+        }
+        textnode.SetActive(true);
+    }
+
+    public static void hideTextBox()
+    {
+        textBox.text = "";
+        textnode.SetActive(false);
 
     }
     // Start is called before the first frame update
@@ -52,5 +67,6 @@ public class NodeInfo : MonoBehaviour
         {
            this.showTextBox();
         }
+
     }
 }

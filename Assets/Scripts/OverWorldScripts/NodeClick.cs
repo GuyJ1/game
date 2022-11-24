@@ -38,7 +38,7 @@ public class NodeClick : MonoBehaviour
         {
             
             obj = hit.transform.gameObject;
-
+            
             if (initial == false)
             {
                 originalColor = obj.GetComponent<Renderer>().material.color;
@@ -50,7 +50,7 @@ public class NodeClick : MonoBehaviour
             if (Input.GetMouseButtonDown(0))
             {
                 clickobj = obj;
-                
+
             }
             if (objectHighlighted == false)
             {
@@ -85,7 +85,7 @@ public class NodeClick : MonoBehaviour
         highlightIn = true;
         obj = null;
         clickobj = null;
-
+        //NodeInfo.hideTextBox();
     }
     IEnumerator highlight()
     {
