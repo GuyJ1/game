@@ -7,10 +7,11 @@ public class Weapon : EquippableItem
 
 
     public int Durability; //Each use of this weapon will decrease its durability by 1. When this reaches 0, the weapon breaks.
-    public bool isBroken;
+    public bool isBroken; //When broken, a weapon grant no bonuses until repaired
 
 
-    //PASSIVE WEAPON ABILITIES (false by default)
+    ///  PASSIVE WEAPON ABILITIES (false by default) ///
+    
     public bool doubleAttack = false; //certain weapons are able to attack again if the unit's SPD - target's SPD >= 5 
     public bool strongSiphon = false; //when using Siphon, user will heal 20% more HP
     public bool deadlyPierce = false; //when using Pierce, CRIT +10
@@ -23,12 +24,10 @@ public class Weapon : EquippableItem
     public bool earlyGambit = false; //When using Gambit, accuracy is better earlier
     public bool lateGambit = false; //when using Gambit, accuracy is better later
 
-    public int Rarity; //from 1 to 3.
-
     [SerializeField]
     public int MGT; //Might. Total attack is increased/decreased with this stat.
     public int DurabilityMAX;
-    public int Range;
+    public List<Ability> abilities; //abilities attached to this weapon
     
 
     // Start is called before the first frame update

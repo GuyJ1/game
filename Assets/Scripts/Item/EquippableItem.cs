@@ -5,7 +5,7 @@ using UnityEngine;
 
 public enum EquipmentType //defining equipment types
 {
-  Weapon,
+  MeleeWeapon,
   Armor,
   Hat,
   Ring,
@@ -15,7 +15,7 @@ public enum EquipmentType //defining equipment types
   Aura
 }
 
-// Weapons give different abilites and higher ATK
+// Weapons give different abilites and modify stats
 
 // Armor gives higher DEF depending on a user's STR
 
@@ -27,7 +27,8 @@ public enum EquipmentType //defining equipment types
 //5: Shoes, grants +MV
 //6: Aura, can grant any of the above stats
 
-  [CreateAssetMenu]//allows EquippableItem to be manually created in unity project editor
+//[CreateAssetMenu]//allows EquippableItem to be manually created in unity project editor
+//inherited classes now have [CreateAssetMenu]
 public class EquippableItem : Item //extends Item class - has scriptableObject
 {
   //used for equipment parameter bonus that will be applied to character stats when equipped

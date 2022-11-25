@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[CreateAssetMenu]
 public class Aura : EquippableItem
 {
     [SerializeField]
@@ -10,14 +11,6 @@ public class Aura : EquippableItem
     public int HITmodifier;
     public int CRITmodifier;
     public int AVOmodifier;
-    //public int MoraleModifier;
-
-
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
 
     //return either ATK (0), HIT (1), or CRIT (2)
     public int battleBonus(int type){

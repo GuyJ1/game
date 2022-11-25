@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[CreateAssetMenu]
 public class MeleeTypeWeapon : Weapon
 {
 
     [SerializeField]
     int type; //0 = Sword, 1 = Scimitar, 2 = Saber
-    List<GameObject> meleeAbilities; //depending on the rarity, the amount of abilities will = 1 to 3. Could possibly be randomly chosen
+
     
 
 
@@ -15,13 +16,14 @@ public class MeleeTypeWeapon : Weapon
     void Start()
     {
 
-        //Determine modifiers
+        //Determine modifiers and default passives
         switch(type){
 
 
             case 0:
-                //Swords have no modifiers
-                //Swords have Strong Siphon (get 20% HP when using Siphon)
+                //Swords generally have no modifiers, Sword users are all around units
+
+                //Passives:
                 strongSiphon = true;
                 strongSoul = true;
                 betterHeal = true;
@@ -31,13 +33,19 @@ public class MeleeTypeWeapon : Weapon
                 break;
 
             case 1:
-                //The scimitar weapon sacrifices defenses for more mobility;
-                //Scimitars can double attack
-                /*HPmod = -5;
-                DEFmod = -3;
-                SPDmod = 5;
-                DEXmod = 3;
-                LCKmod = 2;*/
+                //The scimitar weapon sacrifices defenses for more mobility and power;
+
+                /* General modifiers:
+                
+                HP -5
+                DEF -3
+                SPD +5
+                DEX +3
+                LCK +2
+                
+                */
+
+                //Passives:
                 doubleAttack = true;
                 lastStand = true;
                 shiningStar = true;
@@ -48,12 +56,18 @@ public class MeleeTypeWeapon : Weapon
             case 2:
 
                 //The saber weapon focuses on defensive/supportive tactics
-                //Sabers have Deadly Pierce (+10 CRIT when using Pierce)
-                /*HPmod = 5;
-                DEFmod = 5;
-                SPDmod = -3;
-                DEXmod = -3;
-                LCKmod = -2;*/
+
+                /* General modifiers:
+                
+                HP +5
+                DEF +5
+                SPD -3
+                DEX -3
+                LCK -2
+                
+                */
+
+                //Passives:
                 deadlyPierce = true;
                 safeSwap = true;
                 betterHeal = true;

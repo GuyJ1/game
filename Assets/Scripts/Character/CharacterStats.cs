@@ -181,27 +181,6 @@ public class CharacterStats : MonoBehaviour
 
         refreshStats();
 
-        /*if(armor != null){
-            DEF += armor.RES;
-            if(STR < armor.CON){
-
-                if(((armor.CON - STR) / 10) > 5){
-
-                    MV -= 5;
-
-                }
-                else{
-
-                    MV -= ((armor.CON - STR) / 10);
-                }
-
-            }
-
-            if(MV < 1){
-                MV = 1;
-            }
-            
-        }*/
 
         HP = getMaxHP();
         healthBar.SetMaxHealth(HP);
@@ -211,7 +190,7 @@ public class CharacterStats : MonoBehaviour
         AP = getMaxAP();
         APBar.SetMaxValue(AP);
 
-        updateAVO(ring, aura);
+        updateAVO();
         HIT = getHIT(null, true);
         CRIT = getCRIT(null, true);
         ATK = getATK(null, true);
@@ -324,6 +303,11 @@ public class CharacterStats : MonoBehaviour
         if(shoes != null) shoes.applyModifiers(this);
         if(aura != null) aura.applyModifiers(this);
         if(armor != null) armor.applyModifiers(this);
+
+        updateAVO();
+        HIT = getHIT(null, true);
+        CRIT = getCRIT(null, true);
+        ATK = getATK(null, true);
     }
 
     // HP changed (either taking damage (negative) or healing (positive))
@@ -639,7 +623,7 @@ public class CharacterStats : MonoBehaviour
     }
 
 
-    public void updateAVO(Ring ring, Aura aura){
+    public void updateAVO(){
 
         int totalMod = 0;
         if(ring != null){

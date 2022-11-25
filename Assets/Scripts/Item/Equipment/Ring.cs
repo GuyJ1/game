@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[CreateAssetMenu]
 public class Ring : EquippableItem
 {
     [SerializeField]
@@ -9,12 +10,6 @@ public class Ring : EquippableItem
     public int HITmodifier;
     public int CRITmodifier;
     public int AVOmodifier;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
 
 
     //return either ATK (0), HIT (1), or CRIT (2)
