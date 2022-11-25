@@ -900,7 +900,7 @@ public class Ability : ScriptableObject
 
             if(target.isDead()){
 
-                user.adjustAP(1,0);
+                user.addAP(1);
             }
 
 

@@ -5,23 +5,29 @@ using UnityEngine.UI;
 
 public class IconBar : MonoBehaviour
 {
-    public int value, maxValue, width, height;
+    public int value, maxValue, spacing;
     public GameObject emptyIcon, fullIcon;
-    //private List<Sprite> sprites;
+    private List<GameObject> icons = new List<GameObject>(); 
 
-    // Update is called once per frame
-    void LateUpdate()
+    public void SetMaxValue(int value)
     {
-        
+        maxValue = value;
+        RefreshIcons();
     }
 
-    public void SetMaxValue(int ap)
-    {
-        GameObject obj = Instantiate(emptyIcon, this.transform);
+    public void SetValue(int value)
+    {   
+        this.value = value;
+        RefreshIcons();
     }
 
-    public void SetValue(int ap)
-    {
-        
+    public void RefreshIcons() {
+        foreach(GameObject icon in icons) GameObject.Destroy(icon);
+        icons.Clear();
+        for(int i = 0; i < maxValue; i++) {
+            GameObject icon = Instantiate(i < value ? fullIcon : emptyIcon, this.transform);
+            icon.transform.GetComponent<RectTransform>().anchoredPosition = new Vector2(spacing * i, 0);
+            icons.Add(icon);
+        }
     }
 }

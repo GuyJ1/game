@@ -364,9 +364,9 @@ MonoBehaviour:
   healthBarScale: 2
   healthBar: {fileID: 4151192400801874901}
   healthBarYOffset: 1
-  APBarScale: 1
+  APBarScale: 2
   APBar: {fileID: 6470564073036487882}
-  APBarYOffset: 2
+  APBarYOffset: 1.25
   canvas: {fileID: 0}
   DamageText: {fileID: 8133978484208511556, guid: 87660d197cb3d9c4a90de7de09cea50e, type: 3}
   model: {fileID: 4349290728497671086}

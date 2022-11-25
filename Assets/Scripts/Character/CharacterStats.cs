@@ -184,11 +184,13 @@ public class CharacterStats : MonoBehaviour
 
         HP = getMaxHP();
         healthBar.SetMaxHealth(HP);
+        healthBar.SetHealth(HP);
 
         //Morale = MoraleMAX;
 
         AP = getMaxAP();
         APBar.SetMaxValue(AP);
+        APBar.SetValue(AP);
 
         updateAVO();
         HIT = getHIT(null, true);
@@ -237,27 +239,25 @@ public class CharacterStats : MonoBehaviour
 
     }
 
-    // Update healthbar position
+    // Update bar positions
     void LateUpdate()
     {
-        // Offset
-        Vector3 posOffset = new Vector3(0, healthBarYOffset, 0);
-
         // --------- Update bar positions ---------
-        healthBar.transform.position = Camera.main.WorldToScreenPoint(model.transform.position + posOffset);
-        APBar.transform.position = Camera.main.WorldToScreenPoint(model.transform.position + new Vector3(0, APBarYOffset, 0));
+        healthBar.transform.position = Camera.main.WorldToScreenPoint(model.transform.position + new Vector3(0, healthBarYOffset, 0));
+        APBar.transform.position = Camera.main.WorldToScreenPoint(model.transform.position + new Vector3(-0.45f, APBarYOffset, 0.2f));
 
         // --------- Update scale based on camera position ---------
         float camDist = Vector3.Distance(Camera.main.transform.position, this.transform.position);
-        float newScale = 0.0f;
+        float newScale = 0.0f, apScale = 0.0f;
 
         if (camDist != 0.0f)
         {
             newScale = healthBarScale / camDist;
+            apScale = APBarScale / camDist;
         }
 
         healthBar.transform.localScale = new Vector3(newScale, newScale, newScale);
-        APBar.transform.localScale = new Vector3(newScale, newScale, newScale);
+        APBar.transform.localScale = new Vector3(apScale, apScale, apScale);
     }
 
     // Disable the character and associated elements

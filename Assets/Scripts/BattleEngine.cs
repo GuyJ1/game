@@ -496,24 +496,7 @@ public class BattleEngine : MonoBehaviour
         }
         else 
         {
-            int count = 0;
-
-            //Setup action buttons
-            foreach(Ability ability in activeUnit.GetComponent<CharacterStats>().getBattleAbilities()) {
-                GameObject actionButton = Instantiate(buttonPrefab); //This is copying stuff from AttackButton idk why
-                actionButton.transform.SetParent(canvas.transform, false);
-                actionButton.transform.position = new Vector3(actionButton.transform.position.x + 110, actionButton.transform.position.y - 30 * count, actionButton.transform.position.z);
-                Button button = actionButton.GetComponent<Button>();
-                button.onClick.SetPersistentListenerState(0, UnityEventCallState.Off);
-                button.onClick.AddListener(() => { //Listen to setup ability when clicked
-                    selectedAbility = ability;
-                    setupAction(activeUnitTile);
-                });
-                var tmp = actionButton.GetComponentInChildren<TMPro.TextMeshProUGUI>();
-                tmp.text = ability.displayName; //Set button name to ability name
-                actionButtons.Add(actionButton);
-                count++;
-            }
+            refreshActionButtons();
             selectMove(); //Default to move (generally units move before acting)
         }
     }
@@ -548,9 +531,6 @@ public class BattleEngine : MonoBehaviour
                 Debug.Log("AI Enqueue: " + playerActions.Peek().GetCharacter().Name + " " + playerActions.Peek().GetAbility().displayName + " " + playerActions.Peek().GetMovement() 
                 + "\n" + "Queue Size: " + playerActions.Count());
             }
-            foreach(GameObject button in actionButtons) Destroy(button);
-            actionButtons.Clear();
-            hideActionsList();
             turnQueue.RemoveAt(0);
             moved = false;
             acted = false;
@@ -615,7 +595,7 @@ public class BattleEngine : MonoBehaviour
     //Try to use the selected ability at the specified position on the grid. Returns true if action succeeds. Will not affect game state if simulate is true.
     public bool actUnit(Vector2Int tilePos, bool simulate) 
     {
-        if(moving || acted || selectedAbility == null) return false;
+        if(moving || acted || selectedAbility == null || activeUnit.GetComponent<CharacterStats>().AP < selectedAbility.costAP) return false;
         var gridTiles = grid.GetComponent<GridBehavior>();
         var tileScript = gridTiles.GetTileAtPos(tilePos).GetComponent<TileScript>();
         int dist = Mathf.Abs(activeUnitPos.x - tilePos.x) + Mathf.Abs(activeUnitPos.y - tilePos.y); //Take Manhattan distance
@@ -650,6 +630,7 @@ public class BattleEngine : MonoBehaviour
         }
 
         if(!selectedAbility.free) acted = true;
+        activeUnit.GetComponent<CharacterStats>().addAP(-selectedAbility.costAP);
         actionButton.interactable = false;
         selectedAbility.affectCharacters(activeUnit, characters);
 
@@ -701,7 +682,6 @@ public class BattleEngine : MonoBehaviour
             if(combo) yield return new WaitForSecondsRealtime(0.6f);
         }
         // --------------------------
-
 
         if(!moved) {
             moveButton.interactable = true;
@@ -799,6 +779,7 @@ public class BattleEngine : MonoBehaviour
 
     //Perform all end-of-turn logic
     public void update() {
+        if(isPlayerTurn) refreshActionButtons();
         //Collect any dead units
         foreach(GameObject unit in units) {
             if(!isUnitAlive(unit)) {
@@ -948,6 +929,32 @@ public class BattleEngine : MonoBehaviour
 
     public int getTurnCount() {
         return turnCount;
+    }
+
+    public void refreshActionButtons() {
+        if(activeUnit == null) return;
+        foreach(GameObject button in actionButtons) Destroy(button);
+        actionButtons.Clear();
+
+        int count = 0;
+        //Setup action buttons
+        foreach(Ability ability in activeUnit.GetComponent<CharacterStats>().getBattleAbilities()) {
+            GameObject actionButton = Instantiate(buttonPrefab, this.actionButton.transform);
+            actionButton.transform.GetComponent<RectTransform>().anchoredPosition += new Vector2(125, -10 - 25 * count);
+            //actionButton.transform.position = new Vector3(actionButton.transform.position.x + 110, actionButton.transform.position.y - 30 * count, actionButton.transform.position.z);
+            Button button = actionButton.GetComponent<Button>();
+
+            button.onClick.AddListener(() => { //Listen to setup ability when clicked
+                selectedAbility = ability;
+                setupAction(activeUnitTile);
+            });
+
+            button.interactable = activeUnit.GetComponent<CharacterStats>().AP >= ability.costAP; //Only allow ability selection if AP is available
+            var tmp = actionButton.GetComponentInChildren<TMPro.TextMeshProUGUI>();
+            tmp.text = ability.displayName; //Set button name to ability name
+            actionButtons.Add(actionButton);
+            count++;
+        }
     }
 
     public void showActionsList() {

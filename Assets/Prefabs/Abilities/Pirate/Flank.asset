@@ -21,7 +21,7 @@ MonoBehaviour:
   baseDMG: 0
   baseHP: 0
   baseACC: 0
-  costAP: 0
+  costAP: 1
   range: 2
   knockback: 1
   selfMovement: 1

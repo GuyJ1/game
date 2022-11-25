@@ -83,7 +83,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   value: 0
   maxValue: 0
-  width: 16
-  height: 16
+  spacing: 40
   emptyIcon: {fileID: 4501250124498182610, guid: d6daa57aae3e33a42b6dcb3b04f7f53a, type: 3}
-  fullIcon: {fileID: 4501250124498182610, guid: d6daa57aae3e33a42b6dcb3b04f7f53a, type: 3}
+  fullIcon: {fileID: 4501250124498182610, guid: 3e655a8678181b045b6dd875342d3a26, type: 3}
