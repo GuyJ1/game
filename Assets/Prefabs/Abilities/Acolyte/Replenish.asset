@@ -14,18 +14,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   friendly: 1
   requiresTarget: 1
+  free: 0
   totalDMG: 0
   totalHP: 0
   totalACC: 0
   baseDMG: 0
   baseHP: 50
   baseACC: 0
-  cost: 1
+  costAP: 0
   range: 4
   knockback: 0
+  selfMovement: 0
   displayName: Replenish
   shape:
   - {x: 0, y: 0}
   targetModifiers: []
   selfModifiers: []
-  targetEffect: {fileID: 0}
+  targetEffect: {fileID: 4278447594964143013, guid: 04231062b76dfde4fad68fa25eda94e2, type: 3}
+  selfEffect: {fileID: 0}
