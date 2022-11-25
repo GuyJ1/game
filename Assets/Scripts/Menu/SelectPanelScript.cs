@@ -14,14 +14,18 @@ public class SelectPanelScript : MonoBehaviour
     int tPos;
     GameObject wheel;
 
+    int selectedMenuObject = 0;
+
     public Button Button1;
     public Button Button2;
     public Button Button3;
     public Button Button4;
 
+    
+
     void Start()
     {
-        wheel = GameObject.Find("FunnyWheel");
+        wheel = GameObject.Find("FunnyWheel");      
     }
 
     // Update is called once per frame
@@ -34,14 +38,14 @@ public class SelectPanelScript : MonoBehaviour
         //scroll up
         if (Input.GetAxis("Mouse ScrollWheel") > 0f && rt.offsetMin.y > -85f)
         {
-            scrollSpeed = -250f;
+            scrollSpeed = -200f;
             wheel.GetComponent<SpinWheel>().SetWheelOtherWay();
             //transform.Translate(0, -1f * scrollSpeed * Time.deltaTime, 0, Space.World);
         }
         //scroll down
         if (Input.GetAxis("Mouse ScrollWheel") < 0f && rt.offsetMin.y < 210f)
         {
-            scrollSpeed = 250f;
+            scrollSpeed = 200f;
             wheel.GetComponent<SpinWheel>().SetWheel();
             //transform.Translate(0, scrollSpeed * Time.deltaTime, 0, Space.World);
         }
@@ -61,21 +65,50 @@ public class SelectPanelScript : MonoBehaviour
         {
             case int tPos when (tPos > 128):
                 Button4.Select();
+                selectedMenuObject = 0;
                 //Button1.DoStateTransition(SelectionState.Highlighted, false);
                 break;
             case int tPos when (tPos <= 128 && tPos > 55):
                 Button3.Select();
+                selectedMenuObject = 1;
                 //Button2.DoStateTransition(SelectionState.Highlighted, false);
                 break;
             case int tPos when (tPos <= 55 && tPos > -16):
-                Button2.Select(); 
+                Button2.Select();
+                selectedMenuObject = 2;
                 //Button3.DoStateTransition(SelectionState.Highlighted, false);
                 break;
             case int tPos when (tPos <= 16):
                 Button1.Select();
+                selectedMenuObject = 3;
                 //Button4.DoStateTransition(SelectionState.Highlighted, false);
                 break;
         }
 
+        //invoke a button click when you press Enter
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            clickBigButton();
+        }
+    }
+
+    //Function to allow you to click anywhere on the screen in order to invoke whatever button is aligned with the arrow
+    public void clickBigButton()
+    {
+        switch (selectedMenuObject)
+        {
+            case 0:
+                Button4.onClick.Invoke();
+                break;
+            case 1:
+                Button3.onClick.Invoke();
+                break;
+            case 2:
+                Button2.onClick.Invoke();
+                break;
+            case 3:
+                Button1.onClick.Invoke();
+                break;
+        }
     }
 }
