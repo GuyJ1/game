@@ -672,7 +672,7 @@ public class BattleEngine : MonoBehaviour
         if(characters.Count > 0) playerTarget = characters[0];
 
         // ----- Combo Attacks ------
-        if(tryComboAttack(tilePos, false)) yield return new WaitForSecondsRealtime(0.6f);
+        if(tryComboAttack(activeUnitPos, tilePos, false)) yield return new WaitForSecondsRealtime(0.6f);
         // --------------------------
 
         if(!moved) {
@@ -683,11 +683,11 @@ public class BattleEngine : MonoBehaviour
     }
 
     //Search for a possible combo attack and try it if not simulated. Returns true if a combo occurs.
-    public bool tryComboAttack(Vector2Int selectedPos, bool simulate) {
+    public bool tryComboAttack(Vector2Int userPos, Vector2Int selectedPos, bool simulate) {
         var gridTiles = grid.GetComponent<GridBehavior>();
         var tileScript = gridTiles.GetTileAtPos(selectedPos).GetComponent<TileScript>();
-        int xDist = activeUnitPos.x - selectedPos.x;
-        int yDist = activeUnitPos.y - selectedPos.y;
+        int xDist = userPos.x - selectedPos.x;
+        int yDist = userPos.y - selectedPos.y;
         if(selectedAbility.requiresTarget && xDist != yDist && selectedAbility.selfMovement == 0) //No diagonals
         {
             if(Mathf.Abs(xDist) > Mathf.Abs(yDist))
