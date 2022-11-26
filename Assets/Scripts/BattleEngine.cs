@@ -171,33 +171,7 @@ public class BattleEngine : MonoBehaviour
                             // If a tile has a character on it, then we can only select it
                             if (tileScript.hasCharacter)
                             {
-                                // Move Camera to clicked character
-                                cam.GetComponent<CameraControl>().LookAtPos(objectHit.position);
-
-                                // Case 1: if there's no selected character, then just select this one
-                                if (charSelected == false) 
-                                {
-                                    if(moving) setupMove(objectHit.gameObject);
-                                    else setupAction(objectHit.gameObject);
-                                }
-                                // Case 2: if the character is the same as the already selected,
-                                // then unselect it
-                                else if (tilePos == selectedCharPos)
-                                {
-                                    ResetAllHighlights();
-                                    selectRend.material = isTileActive(tilePos) ? gridTiles.activeUnselected : gridTiles.unselected;
-                                    Debug.Log("Character on " + objectHit.name + " has been unselected");
-                                    charSelected = false;
-                                    charCard.close();
-                                }
-                                // Case 3: if the character is different than the currently selected character,
-                                // then deselect the current character and select the new one
-                                else 
-                                {
-                                    Debug.Log("SELECT NEW CHARACTER");
-                                    if(moving) setupMove(objectHit.gameObject);
-                                    else setupAction(objectHit.gameObject);
-                                }
+                                selectCharacter(objectHit.gameObject);
                             }
                             // If we have a selected character/tile, then we can move it to any
                             // highlighted tile without a character already on it
@@ -343,6 +317,42 @@ public class BattleEngine : MonoBehaviour
                     currentTile.GetComponent<Renderer>().material = isTileActive(new Vector2Int(x,y)) ? gridTiles.activeUnselected : gridTiles.unselected;
                     currentTileScript.highlighted = false;
                 }
+            }
+        }
+    }
+
+    public void selectCharacter(GameObject tile) {
+        TileScript tileScript = tile.GetComponent<TileScript>();
+        var tilePos = tileScript.position;
+        // If a tile has a character on it, then we can only select it
+        if (tileScript.hasCharacter)
+        {
+            var gridTiles = grid.GetComponent<GridBehavior>();
+            // Move Camera to clicked character
+            cam.GetComponent<CameraControl>().LookAtPos(tile.transform.position);
+
+            // Case 1: if there's no selected character, then just select this one
+            if (charSelected == false) 
+            {
+                if(moving) setupMove(tile);
+                else setupAction(tile);
+            }
+            // Case 2: if the character is the same as the already selected,
+            // then unselect it
+            else if (tilePos == selectedCharPos)
+            {
+                ResetAllHighlights();
+                tile.transform.GetComponent<Renderer>().material = isTileActive(tilePos) ? gridTiles.activeUnselected : gridTiles.unselected;
+                Debug.Log("Character on " + tile.name + " has been unselected");
+                charSelected = false;
+                charCard.close();
+            }
+            // Case 3: if the character is different than the currently selected character,
+            // then deselect the current character and select the new one
+            else 
+            {
+                if(moving) setupMove(tile);
+                else setupAction(tile);
             }
         }
     }
@@ -641,9 +651,7 @@ public class BattleEngine : MonoBehaviour
         }
         //Self movement
         Vector2Int newPos = selectedAbility.applySelfMovement(activeUnit.GetComponent<CharacterStats>(), gridTiles, xDist, yDist);
-        bool tryCombo = true;
         if(newPos != activeUnitPos) {
-            tryCombo = false;
             activeUnitPos = newPos;
             activeUnitTile = gridTiles.GetTileAtPos(newPos);
             gridTiles.grid[selectedCharPos.x, selectedCharPos.y].GetComponent<Renderer>().material = isTileActive(selectedCharPos) ? gridTiles.activeUnselected : gridTiles.unselected;
@@ -652,35 +660,19 @@ public class BattleEngine : MonoBehaviour
         ResetAllHighlights();
         if(!acted) highlightActionTiles(newPos, selectedAbility.range);
 
-        StartCoroutine(endActUnit(selectedCharacter == null ? tilePos : selectedCharacter.GetComponent<CharacterStats>().gridPosition, xDist, yDist, characters, tryCombo));
+        StartCoroutine(endActUnit(selectedCharacter == null ? tilePos : selectedCharacter.GetComponent<CharacterStats>().gridPosition, characters));
         return true;
     }
 
-    IEnumerator endActUnit(Vector2Int tilePos, int xDist, int yDist, List<GameObject> characters, bool tryCombo) {
+    IEnumerator endActUnit(Vector2Int tilePos, List<GameObject> characters) {
         if(!moved) moveButton.interactable = false;
         yield return new WaitForSecondsRealtime(0.6f);
-        var gridTiles = grid.GetComponent<GridBehavior>();
-        var tileScript = gridTiles.GetTileAtPos(tilePos).GetComponent<TileScript>();
 
         //AI: Forward the target(s) to AI handler for enqueue. Currently only forwards one character - for refactoring later
         if(characters.Count > 0) playerTarget = characters[0];
 
         // ----- Combo Attacks ------
-        if(selectedAbility.requiresTarget && xDist != yDist && tryCombo) //No diagonals
-        {
-            bool combo;
-            if(Mathf.Abs(xDist) > Mathf.Abs(yDist))
-            { //Horizontal cases
-                if(xDist > 0) combo = tryComboAttack(gridTiles.GetTileWest(tilePos), tileScript.characterOn);
-                else combo = tryComboAttack(gridTiles.GetTileEast(tilePos), tileScript.characterOn);
-            }
-            else
-            { //Vertical cases
-                if(yDist > 0) combo = tryComboAttack(gridTiles.GetTileSouth(tilePos), tileScript.characterOn);
-                else combo = tryComboAttack(gridTiles.GetTileNorth(tilePos), tileScript.characterOn);
-            }
-            if(combo) yield return new WaitForSecondsRealtime(0.6f);
-        }
+        if(tryComboAttack(tilePos, false)) yield return new WaitForSecondsRealtime(0.6f);
         // --------------------------
 
         if(!moved) {
@@ -690,14 +682,41 @@ public class BattleEngine : MonoBehaviour
         update();
     }
 
+    //Search for a possible combo attack and try it if not simulated. Returns true if a combo occurs.
+    public bool tryComboAttack(Vector2Int selectedPos, bool simulate) {
+        var gridTiles = grid.GetComponent<GridBehavior>();
+        var tileScript = gridTiles.GetTileAtPos(selectedPos).GetComponent<TileScript>();
+        int xDist = activeUnitPos.x - selectedPos.x;
+        int yDist = activeUnitPos.y - selectedPos.y;
+        if(selectedAbility.requiresTarget && xDist != yDist && selectedAbility.selfMovement == 0) //No diagonals
+        {
+            if(Mathf.Abs(xDist) > Mathf.Abs(yDist))
+            { //Horizontal cases
+                if(xDist > 0) return handleComboAttack(gridTiles.GetTileWest(selectedPos), tileScript.characterOn, simulate);
+                else return handleComboAttack(gridTiles.GetTileEast(selectedPos), tileScript.characterOn, simulate);
+            }
+            else
+            { //Vertical cases
+                if(yDist > 0) return handleComboAttack(gridTiles.GetTileSouth(selectedPos), tileScript.characterOn, simulate);
+                else return handleComboAttack(gridTiles.GetTileNorth(selectedPos), tileScript.characterOn, simulate);
+            }
+        }
+        return false;
+    }
+
     //Try to perform a combo attack from the specified character to the target
-    public bool tryComboAttack(GameObject characterTile, GameObject targetCharacter) {
-        if(characterTile != null && targetCharacter != null) {
+    private bool handleComboAttack(GameObject characterTile, GameObject targetCharacter, bool simulate) {
+        if(characterTile != null && targetCharacter != null)
+        {
             TileScript tile = characterTile.GetComponent<TileScript>();
             Vector2Int targetPos = targetCharacter.GetComponent<CharacterStats>().gridPosition;
-            if(tile.hasCharacter && isAllyUnit(tile.characterOn) != isAllyUnit(targetCharacter) && Mathf.Abs(tile.position.x - targetPos.x) + Mathf.Abs(tile.position.y - targetPos.y) == 1) { //Need target on opposite team
-                Debug.Log("Triggering combo attack...");
-                getComboAttack(tile.characterOn).affectCharacter(tile.characterOn, targetCharacter);
+            if(tile.hasCharacter && isAllyUnit(tile.characterOn) != isAllyUnit(targetCharacter) && Mathf.Abs(tile.position.x - targetPos.x) + Mathf.Abs(tile.position.y - targetPos.y) == 1) //Need target on opposite team
+            {
+                if(!simulate)
+                {
+                    Debug.Log("Triggering combo attack...");
+                    getComboAttack(tile.characterOn).affectCharacter(tile.characterOn, targetCharacter);
+                }
                 return true;
             }
         }
