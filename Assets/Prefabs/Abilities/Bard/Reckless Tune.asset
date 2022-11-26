@@ -14,15 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   friendly: 1
   requiresTarget: 0
+  free: 0
   totalDMG: 0
   totalHP: 0
   totalACC: 0
   baseDMG: 0
   baseHP: 50
   baseACC: 0
-  cost: 2
+  costAP: 0
   range: 5
   knockback: 0
+  selfMovement: 0
   displayName: Reckless Tune
   shape:
   - {x: 0, y: 0}
@@ -32,5 +34,7 @@ MonoBehaviour:
     duration: 3
     value: -3
     chance: 1
+    id: 
   selfModifiers: []
-  targetEffect: {fileID: 0}
+  targetEffect: {fileID: 3835916925245124943, guid: a335c85a2b5870e4299a8598ca53df11, type: 3}
+  selfEffect: {fileID: 0}

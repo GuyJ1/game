@@ -14,17 +14,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   friendly: 0
   requiresTarget: 1
+  free: 0
   totalDMG: 0
   totalHP: 0
   totalACC: 0
   baseDMG: 75
   baseHP: 0
   baseACC: 70
-  cost: 2
+  costAP: 0
   range: 2
   knockback: 1
+  selfMovement: 0
   displayName: Explosive Blast
   shape: []
   targetModifiers: []
   selfModifiers: []
-  targetEffect: {fileID: 1743301284569550, guid: ad2ab49d0a2a17148bd51c93d977bdbc, type: 3}
+  targetEffect: {fileID: 1337198075554910, guid: 25c7aa9ad705fe143a4d71c1c8deb7d4, type: 3}
+  selfEffect: {fileID: 0}
