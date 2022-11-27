@@ -37,7 +37,7 @@ public void OnPointerClick(PointerEventData eventData)
     //when right clicking in item slots, event triggers
       if (Item != null && OnRightClickEvent != null)
       OnRightClickEvent(Item);
-      Debug.Log("Clicked");
+      Debug.Log("Right button was Clicked");
   }
 }
 

@@ -13,7 +13,7 @@ public class Inventory : MonoBehaviour
 
   public event Action<Item> OnItemRightClickedEvent;
 
-private void Awake()
+private void Start()//Awake()
 {
   for (int i =0; i < itemSlots.Length; i++)
   {
@@ -47,6 +47,7 @@ private void Awake()
     if (IsFull()) //checks if inventory is full, if full, return false
     {
       return false;
+
     }
     else
     {
