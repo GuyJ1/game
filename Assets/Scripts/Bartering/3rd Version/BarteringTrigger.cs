@@ -11,7 +11,7 @@ public class BarteringTrigger : MonoBehaviour
     {
         if (InputManager.GetInstance().GetSubmitPressed())
         {
-            Debug.Log(inkJSON.text);
+            Dialogue_Manager_Final.GetInstance().EnterDialogueMode(inkJSON);
         }
     }
 }
