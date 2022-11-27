@@ -61,7 +61,7 @@ public class Dialogue_Manager_Final : MonoBehaviour
         }
         
         // handle continuing to the next line in the dialogue when submit is pressed
-        if(InputManager.GetInstance().GetSubmitPressed())
+        if (currentStory.currentChoices.Count == 0 && InputManager.GetInstance().GetSubmitPressed())
         {
             ContinueStory();
         }
@@ -123,5 +123,23 @@ public class Dialogue_Manager_Final : MonoBehaviour
         {
             choices[i].gameObject.SetActive(false);
         }
+
+        StartCoroutine(SelectFirstChoice());
+    }
+
+    private IEnumerator SelectFirstChoice()
+    {
+        // Event systems requires we clear it first, then wait
+        // for at least one frame before we set the current selected object. 
+        EventSystem.current.SetSelectedGameObject(null);
+        yield return new WaitForEndOfFrame();
+        EventSystem.current.SetSelectedGameObject(choices[0].gameObject);
+    }
+
+    public void MakeChoice (int choiceIndex)
+    {
+        currentStory.ChooseChoiceIndex(choiceIndex);
+        InputManager.GetInstance().RegisterSubmitPressed();
+        ContinueStory();
     }
 }
