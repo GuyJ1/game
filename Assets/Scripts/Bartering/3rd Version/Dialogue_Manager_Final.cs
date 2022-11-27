@@ -25,7 +25,7 @@ public class Dialogue_Manager_Final : MonoBehaviour
         choiceSelected = null;
     }
 
-    /*private void Update()
+    private void Update()
     {
         if(Input.GetKeyDown(KeyCode.Space))
         {
@@ -47,11 +47,29 @@ public class Dialogue_Manager_Final : MonoBehaviour
             }
         }
     }
-    */
 
     // Finished the Story (Dialogue)
     private void FinishDialogue()
     {
         Debug.Log("End of Dialogue!");
+    }
+
+    // Advance through the story
+    void AdvanceDialogue()
+    {
+        string currentSentence = story.Continue();
+        StopAllCoroutines();
+        StartCoroutine(TypeSentence(currentSentence));
+    }
+
+    // Type out the sentence letter by letter
+    IEnumerator TypeSentence (string sentence)
+    {
+        message.text = "";
+        foreach (char letter in sentence.ToCharArray())
+        {
+            message.text += letter;
+            yield return null;
+        }
     }
 }
