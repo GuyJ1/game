@@ -14,17 +14,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   friendly: 0
   requiresTarget: 1
+  free: 0
   totalDMG: 0
   totalHP: 0
   totalACC: 0
   baseDMG: 70
   baseHP: 0
   baseACC: 70
-  cost: 2
+  costAP: 0
   range: 1
   knockback: 3
+  selfMovement: 0
   displayName: Shield Bash
   shape: []
   targetModifiers: []
   selfModifiers: []
-  targetEffect: {fileID: 696958063292329688, guid: 00092c09e25beb54f813012f561ea1c0, type: 3}
+  targetEffect: {fileID: 4919172445937905561, guid: c403fc663c7883548b393edceefbf9ef, type: 3}
+  selfEffect: {fileID: 0}
