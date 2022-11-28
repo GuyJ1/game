@@ -335,7 +335,7 @@ public class CharacterStats : MonoBehaviour
         }
 
         // Display Damage
-        DamageText.GetComponent<TextDamage>().damageToDisplay = change;
+        DamageText.GetComponent<TextDamage>().damageToDisplay = Mathf.Abs(change);
         GameObject damageDisplay = Instantiate(DamageText, canvas.transform);
         damageDisplay.transform.position = Camera.main.WorldToScreenPoint(model.transform.position);
 

@@ -642,7 +642,7 @@ public class BattleEngine : MonoBehaviour
         if(!selectedAbility.free) acted = true;
         activeUnit.GetComponent<CharacterStats>().addAP(-selectedAbility.costAP);
         actionButton.interactable = false;
-        selectedAbility.affectCharacters(activeUnit, characters);
+        selectedAbility.affectCharacters(activeUnit, characters, this);
 
         //Pull and knockback
         if(selectedAbility.knockback != 0)
@@ -715,7 +715,7 @@ public class BattleEngine : MonoBehaviour
                 if(!simulate)
                 {
                     Debug.Log("Triggering combo attack...");
-                    getComboAttack(tile.characterOn).affectCharacter(tile.characterOn, targetCharacter);
+                    getComboAttack(tile.characterOn).affectCharacter(tile.characterOn, targetCharacter, this);
                 }
                 return true;
             }

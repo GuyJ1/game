@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEditor;
 
@@ -20,12 +22,14 @@ public class Ability : ScriptableObject
     public int range; //Distance from the user this ability can be used at
     public int knockback; //Movement to apply to targets (positive is push, negative is pull)
     public int selfMovement; //Movement to apply to user (positive is forwards, negative is backwards)
+    public int totalHits = 1; //determines total number of hits for a given ability
     public string displayName; //Display name for UI
     public List<Vector2Int> shape; //Shape in tiles facing north (0,0) is the center
     public List<StatModifier> targetModifiers; //Stat modifiers to apply to targets
     public List<StatModifier> selfModifiers; //Stat modifiers to apply to user
     [SerializeField] public GameObject targetEffect; //Visual effect to apply to affected targets
     [SerializeField] public GameObject selfEffect; //Visual effect to apply to user
+    
 
     // Start is called before the first frame update
     void Start()
@@ -98,19 +102,42 @@ public class Ability : ScriptableObject
     }
 
     // Apply ability to target character
-    public void affectCharacter(GameObject user, GameObject target) {
-        callAbility(user.GetComponent<CharacterStats>(), target.GetComponent<CharacterStats>());
+    public void affectCharacter(GameObject user, GameObject target, BattleEngine engine) {
+        callAbility(user.GetComponent<CharacterStats>(), target.GetComponent<CharacterStats>(), engine);
     }
 
     // Apply ability to target list of characters
-    public void affectCharacters(GameObject user, List<GameObject> targets) {
+    public void affectCharacters(GameObject user, List<GameObject> targets, BattleEngine engine) {
         foreach(GameObject target in targets) {
-            callAbility(user.GetComponent<CharacterStats>(), target.GetComponent<CharacterStats>());
+            callAbility(user.GetComponent<CharacterStats>(), target.GetComponent<CharacterStats>(), engine);
         }
     }
 
+    IEnumerator multiHitStop(CharacterStats user, CharacterStats target, int DMG, float waitTime, int totalHits, int HIT){
+
+        for(int i = 0; i < totalHits; i++){
+
+            if(user.determineHIT(HIT)){
+
+                GameObject hitParticle = Instantiate(targetEffect);
+                hitParticle.transform.position = target.transform.position;
+
+                target.adjustHP(-DMG, false);
+
+
+            }
+
+
+            yield return new WaitForSecondsRealtime(waitTime);
+        }
+
+
+
+
+    }
+
     //call an ability based on given display name
-    public void callAbility(CharacterStats user, CharacterStats target){
+    public void callAbility(CharacterStats user, CharacterStats target, BattleEngine engine){
         if(selfEffect != null) {
             GameObject particle = Instantiate(selfEffect);
             particle.transform.position = user.transform.position;
@@ -125,14 +152,14 @@ public class Ability : ScriptableObject
 
 
         else if(displayName == "Pierce")            Pierce(user, target);
-        else if(displayName == "Shooting Star")     ShootingStar(user, target);
+        else if(displayName == "Shooting Star")     ShootingStar(user, target, engine);
         else if(displayName == "Siphon")            Siphon(user, target);
         else if(displayName == "Life Swap")         LifeSwap(user, target);
         else if(displayName == "Soul Bash")         SoulBash(user, target);
         else if(displayName == "Persistence")       Persistence(user, target);
         else if(displayName == "Light Heal")        LightHeal(user);
         else if(displayName == "Quick Attack")      QuickAttack(user, target);
-        else if(displayName == "Gambit")            Gambit(user, target);
+        else if(displayName == "Gambit")            Gambit(user, target, engine);
 
         /// PIRATE ////
 
@@ -642,7 +669,7 @@ public class Ability : ScriptableObject
     }
 
     //attack the enemy 5 times, with each attack having 1/5 the power of a normal attack
-    void ShootingStar(CharacterStats user, CharacterStats target){
+    void ShootingStar(CharacterStats user, CharacterStats target, BattleEngine engine){
 
         //attack 5 times for 1/5 of attack power, but with same HIT and CRIT
 
@@ -667,6 +694,8 @@ public class Ability : ScriptableObject
             totalDMG = user.Attack(target, 1) / numAttack;
             target.adjustHP(-totalDMG, false);
             //might need a sleep statement here
+
+            engine.PauseBattleEngine(0.5f);
             
         }
 
@@ -778,7 +807,7 @@ public class Ability : ScriptableObject
     //1. The target dies
     //2. The move misses
     //3. 10 additional attacks are reached
-    void Gambit(CharacterStats user, CharacterStats target){
+    void Gambit(CharacterStats user, CharacterStats target, BattleEngine engine){
 
         int ACC = 70;
         int DMG = 20;
@@ -804,6 +833,8 @@ public class Ability : ScriptableObject
 
         target.adjustHP(-DMG, false); //100% to deal 20 damage
 
+        engine.PauseBattleEngine(0.5f);
+
         if(target.isDead()){//move ends if target dies
 
             return;
@@ -819,6 +850,8 @@ public class Ability : ScriptableObject
                 hitParticle.transform.position = target.transform.position;
 
                 target.adjustHP(-DMG, false);
+
+                engine.PauseBattleEngine(0.5f);
 
                 if(target.isDead()){//ability ends if target dies
 
@@ -875,18 +908,9 @@ public class Ability : ScriptableObject
 
     void PistolVolley(CharacterStats user, CharacterStats target){
 
-        for(int i = 0; i < 3; i++){
+        totalDMG = baseDMG;
 
-            if(user.determineHIT(baseACC)){
-
-                GameObject hitParticle = Instantiate(targetEffect);
-                hitParticle.transform.position = target.transform.position;
-
-                target.adjustHP(-totalDMG - baseDMG, false);
-
-            }
-
-        }
+        //StartCoroutine(multiHitStop(user, target, totalDMG, 0.5f, 3, baseACC));
     }
 
     void DeathWish(CharacterStats user, CharacterStats target){
