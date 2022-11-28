@@ -43,9 +43,9 @@ public class GridBehavior : MonoBehaviour
 
         // Spawn characters (random positions)
         foreach(GameObject crew in crews) {
+            crew.GetComponent<CrewSystem>().initCharacters();
             List<GameObject> characters = crew.GetComponent<CrewSystem>().characters;
             foreach(GameObject character in characters) {
-                crew.GetComponent<CrewSystem>().initCharacters();
                 SpawnCharacter(character);
             }
         }
@@ -145,7 +145,6 @@ public class GridBehavior : MonoBehaviour
                     Vector3 tilePos = spawningTile.transform.position;
                     Vector3 pos = new Vector3(tilePos.x, tilePos.y+0.5f, tilePos.z);
                     Debug.Log("Spawning character as position " + randX + " " + randY);
-                    character.transform.GetChild(0).gameObject.layer = gridLayer;
 
                     // Set tile data
                     if (newCharacter)
@@ -164,6 +163,8 @@ public class GridBehavior : MonoBehaviour
                     }
 
                     tilesScript.hasCharacter = true;
+                    tilesScript.characterOn.GetComponent<Animator>().Rebind();
+                    tilesScript.characterOn.transform.GetChild(0).gameObject.layer = gridLayer;
                     tilesScript.characterOn.GetComponent<CharacterStats>().gridPosition = new Vector2Int(randX, randY);
                     tilesScript.characterOn.GetComponent<CharacterStats>().myGrid = this.gameObject;
                     tilesScript.characterOn.layer = gridLayer;

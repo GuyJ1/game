@@ -2070,7 +2070,7 @@ GameObject:
   - component: {fileID: 833193605189897650}
   - component: {fileID: 833193605189897653}
   m_Layer: 5
-  m_Name: Weapon Slot
+  m_Name: MeleeWeapon Slot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
