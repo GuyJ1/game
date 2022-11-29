@@ -28,6 +28,8 @@ public class Weapon : EquippableItem
     public int MGT; //Might. Total attack is increased/decreased with this stat.
     public int DurabilityMAX;
     public List<Ability> abilities; //abilities attached to this weapon
+    public GameObject model;
+
     
 
     // Start is called before the first frame update

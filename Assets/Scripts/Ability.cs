@@ -24,6 +24,7 @@ public class Ability : ScriptableObject
     public int selfMovement; //Movement to apply to user (positive is forwards, negative is backwards)
     public int totalHits = 1; //determines total number of hits for a given ability
     public string displayName; //Display name for UI
+    public string description; //describes the ability in the UI
     public List<Vector2Int> shape; //Shape in tiles facing north (0,0) is the center
     public List<StatModifier> targetModifiers; //Stat modifiers to apply to targets
     public List<StatModifier> selfModifiers; //Stat modifiers to apply to user
@@ -254,7 +255,7 @@ public class Ability : ScriptableObject
 
                     totalDMG = user.Attack(target, 1);
 
-                    target.adjustHP(-totalDMG - baseDMG, false);
+                    target.adjustHP(-totalDMG -baseDMG, false);
 
                 }
             }
@@ -265,7 +266,7 @@ public class Ability : ScriptableObject
 
                 totalDMG = user.Attack(target, 1);
 
-                target.adjustHP(-totalDMG - baseDMG, false);
+                target.adjustHP(-totalDMG -baseDMG, false);
             }
         }
         else
