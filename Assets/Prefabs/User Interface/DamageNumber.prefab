@@ -61,11 +61,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 654b696fbfe299d4983b34bb9cfcc387, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  floatingText: {fileID: 6487533768386460398}
   damageText: {fileID: 5353300450763422122}
   damageToDisplay: 100
   damageColor:
     serializedVersion: 2
     rgba: 4294967295
+  objectFollowing: {fileID: 0}
 --- !u!1 &8284733198090911535
 GameObject:
   m_ObjectHideFlags: 0
@@ -216,3 +218,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   floatDistance: {x: 1, y: 0.8, z: 0}
   floatTime: 0.5
+  objFollow: {fileID: 0}

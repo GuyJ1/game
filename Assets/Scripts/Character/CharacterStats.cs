@@ -335,9 +335,10 @@ public class CharacterStats : MonoBehaviour
         }
 
         // Display Damage
-        DamageText.GetComponent<TextDamage>().damageToDisplay = Mathf.Abs(change);
+        var damageScript = DamageText.GetComponent<TextDamage>();
+        damageScript.damageToDisplay = Mathf.Abs(change);
+        damageScript.objectFollowing = model;
         GameObject damageDisplay = Instantiate(DamageText, canvas.transform);
-        damageDisplay.transform.position = Camera.main.WorldToScreenPoint(model.transform.position);
 
         // Update Healthbar
         healthBar.SetHealth(HP);

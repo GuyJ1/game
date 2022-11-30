@@ -6,6 +6,7 @@ public class TextFloat : MonoBehaviour
     // Public vars
     [SerializeField] public Vector3 floatDistance;
     [SerializeField] public float floatTime;
+    [SerializeField] public GameObject objFollow;
 
     // Private vars
     private float xDrift;
@@ -31,8 +32,12 @@ public class TextFloat : MonoBehaviour
         //percent -= Time.deltaTime;
         percent = Math.Max(0.0f, percent - Time.deltaTime / floatTime);
 
-        transform.position = new Vector3(transform.position.x + (xDrift * percent),
-                                         transform.position.y + (yDrift * percent),
-                                         transform.position.z + (zDrift * percent));
+        Vector3 currOffset = new Vector3((xDrift * percent),
+                                         (yDrift * percent),
+                                         (zDrift * percent));
+
+        // Update text pos
+        transform.position = Camera.main.WorldToScreenPoint(objFollow.transform.position + currOffset);
+
     }
 }
