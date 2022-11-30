@@ -65,7 +65,8 @@ public class StatModifier
     }
 }
 
-public enum StatType {
+public enum StatType 
+{
     HPMAX, APMAX, STR, DEF, SPD, DEX, LCK, MV
 }
 
@@ -74,8 +75,8 @@ public enum OpType
     ADD, MULTIPLY
 }
 
-public enum className {
-
+public enum className 
+{
     Pirate, Bard, Mercenary, Merchant, Buccaneer, Acolyte, PirateCaptain, MerchantCaptain, MonarchyCaptain
 }
 

@@ -12,7 +12,7 @@ public class PlayerActionList
     // Private Variables //
     ///////////////////////
 
-    private Queue<PlayerAction> _playerActions;
+    private List<PlayerAction> _playerActions;
     private int _capacity;
     
     // Start is called before the first frame update
@@ -30,7 +30,7 @@ public class PlayerActionList
     //Constructor
     public PlayerActionList()
     {
-        _playerActions = new Queue<PlayerAction>();
+        _playerActions = new List<PlayerAction>();
         _capacity = 50;
     }
 
@@ -43,32 +43,46 @@ public class PlayerActionList
     /////////////
     // Methods //
     /////////////
+    public PlayerAction this[int index]
+    {
+        get
+        {
+            PlayerAction temp = _playerActions[index];
+            return temp;
+        }
+
+        set
+        {
+            _playerActions[index] = value;
+        }
+    }
+
     public void add(PlayerAction newAction)
     {
-        //For now, we're experimenting with size 50 queue for holding player actions. If we're below 50, just enqueue. Otherwise, get rid of the oldest action and then enqueue.
+        //For now, we're experimenting with size 50 queue for holding player actions. If we're below 50, just add. Otherwise, get rid of the oldest action and then add.
         if(_playerActions.Count < _capacity)
         {
-            _playerActions.Enqueue(newAction);
+            _playerActions.Add(newAction);
         }
         else
         {
-            _playerActions.Dequeue();
-            _playerActions.Enqueue(newAction);
+            _playerActions.RemoveAt(0);
+            _playerActions.Add(newAction);
         }
     }
 
-    public void clear() 
-    {
-        if(_playerActions.Count > 0)
-        {
-            _playerActions.Dequeue();
-        }
-    }
+    // public void clear() 
+    // {
+    //     if(_playerActions.Count > 0)
+    //     {
+    //         _playerActions.RemoveAt(0);
+    //     }
+    // }
 
-    public PlayerAction Peek()
-    {
-        return _playerActions.Peek();
-    }
+    // public PlayerAction Peek()
+    // {
+    //     return _playerActions.Peek();
+    // }
 
     public bool isEmpty()
     {

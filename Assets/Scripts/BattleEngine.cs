@@ -531,14 +531,11 @@ public class BattleEngine : MonoBehaviour
                 playerActions.add(new PlayerAction(activeUnit.GetComponent<CharacterStats>(), selectedAbility, moved));
             }
 
-            //Logging to display what is being enqueued
-            //Debug.Log("AI Enqueue: " + activeUnit.GetComponent<CharacterStats>().Name + " " + playerTarget.GetComponent<CharacterStats>().Name + " " + selectedAbility + " " + moved);
-
             //Logging to show what is at the top of the playerActions queue
             if(!playerActions.isEmpty())
             {
                 //Usually shows the same thing over and over again, since player actions aren't being dequeued until the 50th turn
-                Debug.Log("AI Enqueue: " + playerActions.Peek().GetCharacter().Name + " " + playerActions.Peek().GetAbility().displayName + " " + playerActions.Peek().GetMovement() 
+                Debug.Log("AI Enqueue: " + playerActions[playerActions.Count() - 1].GetCharacter().Name + " " + playerActions[playerActions.Count() - 1].GetAbility().displayName + " " + playerActions[playerActions.Count() - 1].GetMovement() 
                 + "\n" + "Queue Size: " + playerActions.Count());
             }
             turnQueue.RemoveAt(0);
