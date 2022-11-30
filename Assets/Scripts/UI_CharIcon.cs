@@ -1,9 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class UI_CharIcon : MonoBehaviour
 {
+    [SerializeField] public BattleEngine battleScript;
+    [SerializeField] public TMP_Text turnOrderText;
+
     public GameObject myChar;
     public CharacterStats charScript = null;
     public HealthBar myHealthBar;
@@ -26,5 +30,23 @@ public class UI_CharIcon : MonoBehaviour
             myHealthBar.SetMaxHealth(charScript.getMaxHP());
             myHealthBar.SetHealth(charScript.HP);
         }
+    }
+
+    public void SelectMyChar()
+    {
+        if (myChar != null)
+        {
+            // Get Tile
+            Vector2Int tilePos = charScript.gridPosition;
+            GameObject myTile = charScript.myGrid.GetComponent<GridBehavior>().GetTileAtPos(tilePos);
+
+            // Select Char
+            battleScript.selectCharacter(myTile);
+        }
+    }
+
+    public void SetTurnOrderText(string turnText)
+    {
+        turnOrderText.text = turnText;
     }
 }

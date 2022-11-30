@@ -14,18 +14,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   friendly: 0
   requiresTarget: 1
+  free: 0
   totalDMG: 0
   totalHP: 0
   totalACC: 0
   baseDMG: 0
   baseHP: 0
   baseACC: 0
-  cost: 3
+  costAP: 0
   range: 1
   knockback: 0
+  selfMovement: 0
+  totalHits: 1
   displayName: Shooting Star
+  description: 
   shape:
   - {x: 0, y: 0}
   targetModifiers: []
   selfModifiers: []
-  targetEffect: {fileID: 696958063292329688, guid: 00092c09e25beb54f813012f561ea1c0, type: 3}
+  targetEffect: {fileID: 5715929136899716100, guid: 50cb25120d841ce468ec3a3fc6ced5ef, type: 3}
+  selfEffect: {fileID: 0}

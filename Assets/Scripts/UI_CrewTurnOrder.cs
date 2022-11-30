@@ -9,6 +9,7 @@ public class UI_CrewTurnOrder : MonoBehaviour
     public BattleEngine battleScript; // Battle engine ref
     public GameObject icon; // Icon game object to attach to canvas
     public uint iconCount; // Number of icons to display from the turn order
+    //public uint iconMaxLookahead; // Maximum number to look ahead in turn order
     public float iconSpacing; // Spacing for individual icons
     public float iconHeight; // Distance away from the bottom of the canvas
     public float leftMargin; // Spacing away from center of the canvas
@@ -38,16 +39,17 @@ public class UI_CrewTurnOrder : MonoBehaviour
     // Update Icons
     public void UpdateCrewTurnOrder()
     {
-        // For every icon
-        for (int i = 0; i < icons.Count && i < battleScript.turnQueue.Count; i++)
+        // Populate all icons w/ characters
+        for (int i = 0; i < icons.Count; i++)
         {
             GameObject currIcon = icons[i];
-            GameObject currChar = battleScript.turnQueue[i];
+            var iconScript = currIcon.GetComponent<UI_CharIcon>();
 
             // Set icon data
-            var iconScript = currIcon.GetComponent<UI_CharIcon>();
-            iconScript.myChar = currChar;
+            iconScript.battleScript = battleScript;
+            iconScript.myChar = battleScript.turnQueue[i];
             iconScript.UpdateChar = true;
+            iconScript.turnOrderText.text = i.ToString();
 
             // Modify rect transform
             RectTransform rect = icon.transform.GetComponent<RectTransform>();
