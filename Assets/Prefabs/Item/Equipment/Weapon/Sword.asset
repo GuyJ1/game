@@ -34,5 +34,7 @@ MonoBehaviour:
   lateGambit: 0
   MGT: 0
   DurabilityMAX: 0
-  abilities: []
+  abilities:
+  - {fileID: 11400000, guid: 7843dd702ca6e124487db21dc5f1a18d, type: 2}
+  model: {fileID: 919132149155446097, guid: 54866c9c2e6a58246b60aed529aa97a7, type: 3}
   type: 0

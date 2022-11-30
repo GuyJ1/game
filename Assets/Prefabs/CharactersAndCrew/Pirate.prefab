@@ -327,7 +327,7 @@ MonoBehaviour:
   gridPosition: {x: 3, y: 10}
   myGrid: {fileID: 0}
   crew: {fileID: 8677408311475748420, guid: ff7e742bfec002a4c80690599f895dce, type: 3}
-  weapon: {fileID: 0}
+  weapon: {fileID: 11400000, guid: 11dce2dd76d42aa438392628effc63ab, type: 2}
   armor: {fileID: 0}
   hat: {fileID: 0}
   ring: {fileID: 0}

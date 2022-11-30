@@ -15,17 +15,19 @@ MonoBehaviour:
   friendly: 0
   requiresTarget: 1
   free: 0
-  totalDMG: 65
+  totalDMG: 0
   totalHP: 0
   totalACC: 0
-  baseDMG: 50
+  baseDMG: 70
   baseHP: 0
   baseACC: 85
   costAP: 2
   range: 4
   knockback: 0
   selfMovement: 0
+  totalHits: 1
   displayName: Pistol Shot
+  description: 
   shape:
   - {x: 0, y: 0}
   targetModifiers: []

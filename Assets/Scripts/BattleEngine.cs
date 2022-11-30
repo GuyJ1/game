@@ -52,7 +52,7 @@ public class BattleEngine : MonoBehaviour
     [SerializeField] public CharacterCardUI charCard;
     [SerializeField] public UI_CrewTurnOrder crewTurnOrder;
     public GameObject canvas;
-    private Button actionButton, moveButton, endButton;
+    private Button actionButton, moveButton, endButton, surrenderButton;
     private List<GameObject> actionButtons = new List<GameObject>();
     private GameObject victoryText, defeatText, surrenderText;
     private HealthBar playerShipBar, playerMoraleBar, enemyShipBar, enemyMoraleBar;
@@ -90,6 +90,7 @@ public class BattleEngine : MonoBehaviour
         actionButton = GameObject.Find("ActionButton").GetComponent<Button>();
         moveButton = GameObject.Find("MoveButton").GetComponent<Button>();
         endButton = GameObject.Find("EndButton").GetComponent<Button>();
+        surrenderButton = GameObject.Find("SurrenderButton").GetComponent<Button>();
 
         // Get and Set Victory and Defeat Text
         victoryText = GameObject.Find("VictoryText");
@@ -499,6 +500,7 @@ public class BattleEngine : MonoBehaviour
         actionButton.interactable = isPlayerTurn;
         moveButton.interactable = isPlayerTurn;
         endButton.interactable = isPlayerTurn;
+        surrenderButton.interactable = isPlayerTurn;
 
         if(!isPlayerTurn)
         {
@@ -672,11 +674,11 @@ public class BattleEngine : MonoBehaviour
         if(tryComboAttack(activeUnitPos, tilePos, false)) yield return new WaitForSecondsRealtime(0.6f);
         // --------------------------
 
+        update();
         if(!moved) {
             moveButton.interactable = true;
             if(acted) selectMove(); //Move to move state if available
         }
-        update();
     }
 
     //Search for a possible combo attack and try it if not simulated. Returns true if a combo occurs.
@@ -756,10 +758,12 @@ public class BattleEngine : MonoBehaviour
         moved = true;
         moveButton.interactable = false;
         endButton.interactable = false;
+        surrenderButton.interactable = false;
         if(!acted) actionButton.interactable = false;
         yield return new WaitWhile(() => activeUnit.GetComponent<FollowPath>().pathToFollow.Count > 0 || activeUnit.GetComponent<FollowPath>().isMoving());
         yield return new WaitForSecondsRealtime(0.15f);
         endButton.interactable = true;
+        surrenderButton.interactable = true;
         if(!acted) {
             actionButton.interactable = true;
             selectAction(); //Move to action state if available
@@ -779,8 +783,10 @@ public class BattleEngine : MonoBehaviour
         interactable = false;
 
         endButton.interactable = false;
+        surrenderButton.interactable = false;
         yield return new WaitForSecondsRealtime(waitTime);
         endButton.interactable = true;
+        surrenderButton.interactable = true;
 
         // After wait
         active = true;
@@ -901,6 +907,7 @@ public class BattleEngine : MonoBehaviour
         actionButton.interactable = false;
         moveButton.interactable = false;
         endButton.interactable = false;
+        surrenderButton.interactable = false;
         deadUnits.Clear();
     }
 
@@ -953,8 +960,13 @@ public class BattleEngine : MonoBehaviour
         actionButtons.Clear();
 
         int count = 0;
+        var activeChar = activeUnit.GetComponent<CharacterStats>();
+        List<Ability> abilities = activeChar.getBattleAbilities(); //Class abilities
+        if(activeChar.weapon != null) {
+            foreach(Ability ability in activeChar.weapon.abilities) abilities.Add(ability); //Weapon abilities
+        }
         //Setup action buttons
-        foreach(Ability ability in activeUnit.GetComponent<CharacterStats>().getBattleAbilities()) {
+        foreach(Ability ability in abilities) {
             GameObject actionButton = Instantiate(buttonPrefab, this.actionButton.transform);
             actionButton.transform.GetComponent<RectTransform>().anchoredPosition += new Vector2(125, -10 - 25 * count);
             //actionButton.transform.position = new Vector3(actionButton.transform.position.x + 110, actionButton.transform.position.y - 30 * count, actionButton.transform.position.z);

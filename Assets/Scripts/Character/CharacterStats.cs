@@ -82,6 +82,7 @@ public enum className
 
 public class CharacterStats : MonoBehaviour
 {
+    public static readonly string WEAPON_MODEL = "WeaponModel";
     [SerializeField]
     public Stat HPMAX; //Maximum health
     public Stat APMAX; //Maximum ability points, default value is 3
@@ -180,7 +181,7 @@ public class CharacterStats : MonoBehaviour
 
         // Set health, ability points, etc.
 
-        refreshStats();
+        refresh();
 
 
         HP = getMaxHP();
@@ -293,10 +294,17 @@ public class CharacterStats : MonoBehaviour
         return list;
     }
 
-    // Clear all modifiers and re-apply equipment modifiers
-    public void refreshStats() {
+    // Clear and re-apply all permanent modifiers and reload equipment models
+    public void refresh() {
         clearModifiers();
-        if(weapon != null) weapon.applyModifiers(this);
+        if(weapon != null) {
+            weapon.applyModifiers(this);
+            //Remove the old model first
+            Transform oldModel = this.transform.Find(WEAPON_MODEL);
+            if(oldModel != null) GameObject.Destroy(oldModel.gameObject);
+            //Instantiate the new weapon and parent it to the right hand
+            GameObject newModel = Instantiate(weapon.model, RecursiveFind(this.transform, "Hand.R"));
+        }
         if(hat != null) hat.applyModifiers(this);
         if(ring != null) ring.applyModifiers(this);
         if(amulet != null) amulet.applyModifiers(this);
@@ -309,6 +317,25 @@ public class CharacterStats : MonoBehaviour
         HIT = getHIT(null, true);
         CRIT = getCRIT(null, true);
         ATK = getATK(null, true);
+    }
+
+    public static Transform RecursiveFind(Transform parent, string childName) {
+        foreach (Transform child in parent)
+        {
+            if(child.name == childName)
+            {
+                return child;
+            }
+            else
+            {
+                Transform found = RecursiveFind(child, childName);
+                if (found != null)
+                {
+                        return found;
+                }
+            }
+        }
+        return null;
     }
 
     // HP changed (either taking damage (negative) or healing (positive))

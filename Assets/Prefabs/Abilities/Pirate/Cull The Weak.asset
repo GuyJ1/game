@@ -10,25 +10,27 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 51fcb3cb7e2a5f24d84d8061e64ea368, type: 3}
-  m_Name: Flank
+  m_Name: Cull The Weak
   m_EditorClassIdentifier: 
   friendly: 0
   requiresTarget: 1
-  free: 1
+  free: 0
   totalDMG: 0
   totalHP: 0
   totalACC: 0
-  baseDMG: 0
+  baseDMG: 100
   baseHP: 0
-  baseACC: 0
-  costAP: 1
-  range: 2
-  knockback: 1
-  selfMovement: 1
-  displayName: Flank
+  baseACC: 65
+  costAP: 2
+  range: 1
+  knockback: 0
+  selfMovement: 0
+  totalHits: 1
+  displayName: Head Shot
+  description: 
   shape:
   - {x: 0, y: 0}
   targetModifiers: []
   selfModifiers: []
-  targetEffect: {fileID: 0}
+  targetEffect: {fileID: 8820781640881531597, guid: 087710016d3993a4aa5b9f9c02ffd114, type: 3}
   selfEffect: {fileID: 0}
