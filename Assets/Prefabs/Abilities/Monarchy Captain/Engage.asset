@@ -14,16 +14,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   friendly: 0
   requiresTarget: 1
+  free: 0
   totalDMG: 0
   totalHP: 0
   totalACC: 0
   baseDMG: 0
   baseHP: 0
   baseACC: 0
-  cost: 2
+  costAP: 0
   range: 3
   knockback: 0
+  selfMovement: 0
+  totalHits: 1
   displayName: Enrage
+  description: 
   shape:
   - {x: 0, y: 0}
   targetModifiers:
@@ -58,4 +62,5 @@ MonoBehaviour:
     chance: 1
     id: Taunt
   selfModifiers: []
-  targetEffect: {fileID: 0}
+  targetEffect: {fileID: 6736026631080487181, guid: 341e5df7d23acee4c97cbbe0f23a0fac, type: 3}
+  selfEffect: {fileID: 0}

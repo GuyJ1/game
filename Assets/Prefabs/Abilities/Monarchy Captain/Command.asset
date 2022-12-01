@@ -14,16 +14,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   friendly: 1
   requiresTarget: 1
+  free: 0
   totalDMG: 0
   totalHP: 0
   totalACC: 0
   baseDMG: 0
   baseHP: 0
   baseACC: 0
-  cost: 1
+  costAP: 0
   range: 5
   knockback: 0
+  selfMovement: 0
+  totalHits: 1
   displayName: Command
+  description: 
   shape:
   - {x: 0, y: 0}
   targetModifiers:
@@ -46,4 +50,5 @@ MonoBehaviour:
     chance: 1
     id: 
   selfModifiers: []
-  targetEffect: {fileID: 0}
+  targetEffect: {fileID: 8194730916865382081, guid: febe915fc11145c46812fe4f4967bd29, type: 3}
+  selfEffect: {fileID: 0}

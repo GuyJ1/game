@@ -14,16 +14,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   friendly: 1
   requiresTarget: 0
+  free: 0
   totalDMG: 0
   totalHP: 0
   totalACC: 0
   baseDMG: 0
   baseHP: 0
   baseACC: 0
-  cost: 3
+  costAP: 0
   range: 0
   knockback: 0
+  selfMovement: 0
+  totalHits: 1
   displayName: King's Will
+  description: 
   shape:
   - {x: 0, y: 0}
   targetModifiers:
@@ -40,4 +44,5 @@ MonoBehaviour:
     chance: 1
     id: Immune
   selfModifiers: []
-  targetEffect: {fileID: 0}
+  targetEffect: {fileID: 2982004211971960755, guid: b2105445850efad40a82d6af58bd3289, type: 3}
+  selfEffect: {fileID: 0}
