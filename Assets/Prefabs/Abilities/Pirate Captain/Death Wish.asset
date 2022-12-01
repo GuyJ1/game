@@ -25,10 +25,12 @@ MonoBehaviour:
   range: 1
   knockback: 0
   selfMovement: 0
+  totalHits: 1
   displayName: Death Wish
+  description: 
   shape:
   - {x: 0, y: 0}
   targetModifiers: []
   selfModifiers: []
-  targetEffect: {fileID: 696958063292329688, guid: 00092c09e25beb54f813012f561ea1c0, type: 3}
+  targetEffect: {fileID: 4800071643016473665, guid: f411c7e228ca30d47a781c1ed89b8323, type: 3}
   selfEffect: {fileID: 0}
