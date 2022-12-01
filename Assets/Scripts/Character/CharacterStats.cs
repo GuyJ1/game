@@ -300,10 +300,12 @@ public class CharacterStats : MonoBehaviour
         if(weapon != null) {
             weapon.applyModifiers(this);
             //Remove the old model first
-            Transform oldModel = this.transform.Find(WEAPON_MODEL);
+            Transform oldModel = RecursiveFind(this.transform, WEAPON_MODEL);
             if(oldModel != null) GameObject.Destroy(oldModel.gameObject);
             //Instantiate the new weapon and parent it to the right hand
             GameObject newModel = Instantiate(weapon.model, RecursiveFind(this.transform, "Hand.R"));
+            newModel.transform.Translate(-0.82f * 0.05f, 2.16f * 0.05f, 3.51f * 0.05f); //This should use a common attach point from the model instead
+            newModel.transform.Rotate(0f, 90f, -90f, Space.Self);
         }
         if(hat != null) hat.applyModifiers(this);
         if(ring != null) ring.applyModifiers(this);
