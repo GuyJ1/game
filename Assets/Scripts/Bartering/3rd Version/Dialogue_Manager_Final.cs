@@ -9,11 +9,17 @@ using UnityEngine.EventSystems;
 
 public class Dialogue_Manager_Final : MonoBehaviour
 {
+    [Header("Params")]
+    [SerializeField] private float typingSpeed = 0.04f;
+
+
     [Header("Dialogue UI")]
     [SerializeField] private GameObject dialoguePanel;
     [SerializeField] private TextMeshProUGUI dialogueText;
     [SerializeField] private TextMeshProUGUI displayNameText;
     [SerializeField] private Animator portraitAnimator;
+    [SerializeField] private GameObject continueIcon; 
+
 
     private Animator layoutAnimator; 
 
@@ -26,11 +32,15 @@ public class Dialogue_Manager_Final : MonoBehaviour
 
     public bool dialogueIsPlaying { get; private set; }
 
+    private Coroutine displayLineCoroutine;
+
     private static Dialogue_Manager_Final instance;
 
     private const string SPEAKER_TAG = "nancy_pelosi";
     private const string PORTRAIT_TAG = "portrait";
-    private const string LAYOUT_TAG = "layout"; 
+    private const string LAYOUT_TAG = "layout";
+
+    private bool canContinueToNextLine = false;
 
 
     private void Awake()
@@ -103,10 +113,19 @@ public class Dialogue_Manager_Final : MonoBehaviour
     }
 
     private void ContinueStory()
-    {
+    { 
         if (currentStory.canContinue)
         {
-            dialogueText.text = currentStory.Continue();
+           if(displayLineCoroutine != null)
+            {
+                StopCoroutine(displayLineCoroutine);
+            }
+
+           // displayLineCoroutine = StartCoroutine(DisplayLine(currentStory.Continue()));
+
+
+            //dialogueText.text = currentStory.Continue();
+         //   StartCoroutine(DisplayLine(currentStory.Continue()));
             //display choices, if any, for this dialogue line
             DisplayChoices();
             //handle tags 
@@ -116,6 +135,24 @@ public class Dialogue_Manager_Final : MonoBehaviour
         {
             StartCoroutine(ExitDialogueMode());
         }
+    }
+
+    private IEnumerable DisplayLine(string line)
+    {
+        dialogueText.text = "";
+
+        continueIcon.SetActive(false);
+
+        canContinueToNextLine = false;
+
+        foreach (char letter in line.ToCharArray())
+        {
+            dialogueText.text += letter;
+            yield return new WaitForSeconds(typingSpeed);
+        }
+
+        continueIcon.SetActive(true);
+        canContinueToNextLine = true;
     }
 
     private void HandleTags(List<string> currentTags)
