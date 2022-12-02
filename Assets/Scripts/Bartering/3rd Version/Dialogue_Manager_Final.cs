@@ -4,12 +4,16 @@ using UnityEngine;
 using TMPro;
 using Ink.Runtime;
 using UnityEngine.EventSystems;
+ 
+
 
 public class Dialogue_Manager_Final : MonoBehaviour
 {
     [Header("Dialogue UI")]
     [SerializeField] private GameObject dialoguePanel;
     [SerializeField] private TextMeshProUGUI dialogueText;
+    [SerializeField] private TextMeshProUGUI displayNameText;
+
 
     [Header("Choices UI")]
     [SerializeField] private GameObject [] choices;
@@ -21,6 +25,11 @@ public class Dialogue_Manager_Final : MonoBehaviour
     public bool dialogueIsPlaying { get; private set; }
 
     private static Dialogue_Manager_Final instance;
+
+    private const string SPEAKER_TAG = "nancy_pelosi";
+    private const string PORTRAIT_TAG = "portrait";
+    private const string LAYOUT_TAG = "layout"; 
+
 
     private void Awake()
     {
@@ -92,6 +101,8 @@ public class Dialogue_Manager_Final : MonoBehaviour
             dialogueText.text = currentStory.Continue();
             //display choices, if any, for this dialogue line
             DisplayChoices();
+            //handle tags 
+            HandleTags(currentStory.currentTags);
         }
         else
         {
@@ -99,6 +110,38 @@ public class Dialogue_Manager_Final : MonoBehaviour
         }
     }
 
+    private void HandleTags(List<string> currentTags)
+    {
+        foreach (string  tag  in currentTags)
+        {
+            string[] splitTag = tag.Split(':');
+            if(splitTag.Length != 2)
+            {
+                //write debug msg 
+            }
+            string tagKey = splitTag[0].Trim();
+            string tagValue = splitTag[1].Trim();
+
+            switch (tagKey)
+            {
+                case SPEAKER_TAG:
+                    displayNameText.text = tagValue;
+                    //Debug.LogWarning("Found more than one Dialogue Manager in the scene" + tagValue);
+                    break;
+                case PORTRAIT_TAG:
+                    Debug.LogWarning("Found more than one Dialogue Manager in the scene" + tagValue);
+
+                    break;
+                case LAYOUT_TAG:
+                    Debug.LogWarning("Found more than one Dialogue Manager in the scene" + tagValue);
+
+                    break;
+                default:
+                    Debug.LogWarning("Found more than one Dialogue Manager in the scene");
+                    break;
+            }
+        }
+    }
     private void DisplayChoices()
     {
         List<Choice> currentChoices = currentStory.currentChoices;
