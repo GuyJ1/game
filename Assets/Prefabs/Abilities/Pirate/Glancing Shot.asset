@@ -18,17 +18,19 @@ MonoBehaviour:
   totalDMG: 0
   totalHP: 0
   totalACC: 0
-  baseDMG: 0
+  baseDMG: 60
   baseHP: 0
-  baseACC: 0
+  baseACC: 10
   costAP: 1
   range: 2
-  knockback: 1
-  selfMovement: 1
-  displayName: Flank
+  knockback: 0
+  selfMovement: 0
+  totalHits: 1
+  displayName: Glancing Shot
+  description: 
   shape:
   - {x: 0, y: 0}
   targetModifiers: []
   selfModifiers: []
-  targetEffect: {fileID: 0}
+  targetEffect: {fileID: 1743301284569550, guid: ad2ab49d0a2a17148bd51c93d977bdbc, type: 3}
   selfEffect: {fileID: 0}

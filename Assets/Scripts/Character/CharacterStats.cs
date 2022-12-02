@@ -82,7 +82,7 @@ public enum className
 
 public class CharacterStats : MonoBehaviour
 {
-    public static readonly string WEAPON_MODEL = "WeaponModel";
+    public static readonly string WEAPON_MODEL = "Weapon.R";
     [SerializeField]
     public Stat HPMAX; //Maximum health
     public Stat APMAX; //Maximum ability points, default value is 3
@@ -273,6 +273,17 @@ public class CharacterStats : MonoBehaviour
         return myGrid.GetComponent<GridBehavior>().GetTileAtPos(gridPosition);
     }
 
+    // Rotate the character around the y-axis to face the target position over time, return true if already facing
+    public bool rotateTowards(Vector3 targetPos) {
+        // This logic is extremely cursed but it works
+        Vector2 xzDist = new Vector2(targetPos.x - transform.position.x, transform.position.z - targetPos.z);
+        float angle = Mathf.Atan2(xzDist.y, xzDist.x) * Mathf.Rad2Deg;
+        Quaternion q0 = Quaternion.AngleAxis(angle, Vector3.up);
+        Quaternion q1 = Quaternion.Euler(q0.eulerAngles.x, q0.eulerAngles.y + 90, q0.eulerAngles.z);
+        transform.rotation = Quaternion.Slerp(transform.rotation, q1, 12.0f * Time.deltaTime);
+        return Mathf.Abs(q1.eulerAngles.y - transform.eulerAngles.y) < 1f;
+    }
+
     // Whether this character is considered dead in battle
     public bool isDead() {
         return HP <= 0;
@@ -302,10 +313,9 @@ public class CharacterStats : MonoBehaviour
             //Remove the old model first
             Transform oldModel = RecursiveFind(this.transform, WEAPON_MODEL);
             if(oldModel != null) GameObject.Destroy(oldModel.gameObject);
-            //Instantiate the new weapon and parent it to the right hand
-            GameObject newModel = Instantiate(weapon.model, RecursiveFind(this.transform, "Hand.R"));
-            newModel.transform.Translate(-0.82f * 0.05f, 2.16f * 0.05f, 3.51f * 0.05f); //This should use a common attach point from the model instead
-            newModel.transform.Rotate(0f, 90f, -90f, Space.Self);
+            //Instantiate the new weapon and parent it to the right hand's attachment point for objects
+            GameObject newModel = Instantiate(weapon.model, RecursiveFind(this.transform, "Object.R"));
+            newModel.transform.Rotate(-90f, 0f, 0f, Space.Self); //Set up rotations (this should be done in the prefab if more stuff is used here besides swords)
         }
         if(hat != null) hat.applyModifiers(this);
         if(ring != null) ring.applyModifiers(this);

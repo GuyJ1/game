@@ -15,7 +15,7 @@ MonoBehaviour:
   friendly: 0
   requiresTarget: 1
   free: 0
-  totalDMG: 0
+  totalDMG: 130
   totalHP: 0
   totalACC: 0
   baseDMG: 100
@@ -26,7 +26,7 @@ MonoBehaviour:
   knockback: 0
   selfMovement: 0
   totalHits: 1
-  displayName: Head Shot
+  displayName: Cull The Weak
   description: 
   shape:
   - {x: 0, y: 0}

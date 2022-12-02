@@ -163,7 +163,7 @@ public class GridBehavior : MonoBehaviour
                     }
 
                     tilesScript.hasCharacter = true;
-                    tilesScript.characterOn.GetComponent<Animator>().Rebind();
+                    tilesScript.characterOn.GetComponent<Animator>().Play(0, -1, Random.value); //Randomize start frame
                     tilesScript.characterOn.transform.GetChild(0).gameObject.layer = gridLayer;
                     tilesScript.characterOn.GetComponent<CharacterStats>().gridPosition = new Vector2Int(randX, randY);
                     tilesScript.characterOn.GetComponent<CharacterStats>().myGrid = this.gameObject;
@@ -227,6 +227,8 @@ public class GridBehavior : MonoBehaviour
                 character.transform.rotation = transform.rotation;
                 character.transform.parent = this.transform;
             }
+
+            tilesScript.characterOn.GetComponent<Animator>().Play(0, -1, Random.value); //Randomize start frame
 
             tilesScript.hasCharacter = true;
             character.layer = gridLayer;

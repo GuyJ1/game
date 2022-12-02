@@ -256,13 +256,13 @@ public class BattleEngine : MonoBehaviour
                     if (charHighlighted)
                     {
                         if(moving) gridTiles.grid[highlightedCharPos.x, highlightedCharPos.y].GetComponent<Renderer>().material = isTileActive(highlightedCharPos) ? gridTiles.activeUnselected : gridTiles.unselected;
-                        else if(selectedAbility != null) {
+                        /*else if(selectedAbility != null) {
                             foreach(Vector2Int pos in selectedAbility.getRelativeShape(lastXDist, lastYDist)) {
                                 var selPos = new Vector2Int(highlightedCharPos.x + pos.x, highlightedCharPos.y + pos.y);
                                 var selTile = gridTiles.GetTileAtPos(selPos);
                                 if(selTile != null && selTile.GetComponent<TileScript>().passable) gridTiles.grid[selPos.x, selPos.y].GetComponent<Renderer>().material = isTileActive(selPos) ? gridTiles.activeUnselected : (Mathf.Abs(activeUnitPos.x - selPos.x) + Mathf.Abs(activeUnitPos.y - selPos.y) > selectedAbility.range ? gridTiles.unselected : gridTiles.abilityHighlighted);
                             }
-                        }
+                        }*/
                         charHighlighted = false;
                     }
                 }
@@ -390,11 +390,11 @@ public class BattleEngine : MonoBehaviour
             // Highlight move tiles
             ResetAllHighlights();
             gridPaths = gridScript.GetAllPathsFromTile(gridScript.GetTileAtPos(pos), range);
-            highlightPathTree(gridPaths, false);
+            highlightPathTree(gridPaths);
         }
     }
 
-    public void highlightPathTree(PathTreeNode root, bool action) {
+    public void highlightPathTree(PathTreeNode root) {
         // Get data from tile
         var gridTiles = grid.GetComponent<GridBehavior>();
         var tileRend = root.myTile.GetComponent<Renderer>();
@@ -402,12 +402,11 @@ public class BattleEngine : MonoBehaviour
         Vector2Int tilePos = tileScript.position;
 
         // Highlight tile
-        if(action) tileRend.material = isTileActive(tilePos) ? gridTiles.activeHighlighted : gridTiles.abilityHighlighted;
-        else tileRend.material = isTileActive(tilePos) ? gridTiles.activeHighlighted : gridTiles.highlighted;
-        if(root.up != null) highlightPathTree(root.up, action);
-        if(root.down != null) highlightPathTree(root.down, action);
-        if(root.left != null) highlightPathTree(root.left, action);
-        if(root.right != null) highlightPathTree(root.right, action);
+        tileRend.material = isTileActive(tilePos) ? gridTiles.activeHighlighted : gridTiles.highlighted;
+        if(root.up != null) highlightPathTree(root.up);
+        if(root.down != null) highlightPathTree(root.down);
+        if(root.left != null) highlightPathTree(root.left);
+        if(root.right != null) highlightPathTree(root.right);
     }
 
     public bool isTileActive(Vector2Int tilePos) {
@@ -650,7 +649,8 @@ public class BattleEngine : MonoBehaviour
         }
         //Self movement
         Vector2Int newPos = selectedAbility.applySelfMovement(activeUnit.GetComponent<CharacterStats>(), gridTiles, xDist, yDist);
-        if(newPos != activeUnitPos) {
+        if(newPos != activeUnitPos)
+        {
             activeUnitPos = newPos;
             activeUnitTile = gridTiles.GetTileAtPos(newPos);
             gridTiles.grid[selectedCharPos.x, selectedCharPos.y].GetComponent<Renderer>().material = isTileActive(selectedCharPos) ? gridTiles.activeUnselected : gridTiles.unselected;
@@ -665,6 +665,7 @@ public class BattleEngine : MonoBehaviour
 
     IEnumerator endActUnit(Vector2Int tilePos, List<GameObject> characters) {
         if(!moved) moveButton.interactable = false;
+        if(tilePos != activeUnitPos) yield return new WaitWhile(() => !activeUnit.GetComponent<CharacterStats>().rotateTowards(grid.GetComponent<GridBehavior>().GetTileAtPos(tilePos).transform.position)); //Wait for rotation first
         yield return new WaitForSecondsRealtime(0.6f);
 
         //AI: Forward the target(s) to AI handler for enqueue. Currently only forwards one character - for refactoring later
@@ -969,7 +970,6 @@ public class BattleEngine : MonoBehaviour
         foreach(Ability ability in abilities) {
             GameObject actionButton = Instantiate(buttonPrefab, this.actionButton.transform);
             actionButton.transform.GetComponent<RectTransform>().anchoredPosition += new Vector2(125, -10 - 25 * count);
-            //actionButton.transform.position = new Vector3(actionButton.transform.position.x + 110, actionButton.transform.position.y - 30 * count, actionButton.transform.position.z);
             Button button = actionButton.GetComponent<Button>();
 
             button.onClick.AddListener(() => { //Listen to setup ability when clicked
