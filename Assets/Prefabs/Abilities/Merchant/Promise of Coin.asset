@@ -14,16 +14,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   friendly: 1
   requiresTarget: 1
+  free: 0
   totalDMG: 0
   totalHP: 0
   totalACC: 0
   baseDMG: 0
   baseHP: 0
   baseACC: 0
-  cost: 2
+  costAP: 0
   range: 2
   knockback: 0
+  selfMovement: 0
+  totalHits: 1
   displayName: Promise of Coin
+  description: 
   shape:
   - {x: 0, y: 0}
   targetModifiers:
@@ -32,10 +36,13 @@ MonoBehaviour:
     duration: 2
     value: 6
     chance: 1
+    id: 
   - type: 6
     op: 0
     duration: 2
     value: 4
     chance: 1
+    id: 
   selfModifiers: []
-  targetEffect: {fileID: 0}
+  targetEffect: {fileID: 7032560619689099207, guid: 0f61fd23f39bf18418d3a023e7b6b431, type: 3}
+  selfEffect: {fileID: 0}
