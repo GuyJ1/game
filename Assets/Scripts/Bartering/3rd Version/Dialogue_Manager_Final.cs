@@ -127,6 +127,7 @@ public class Dialogue_Manager_Final : MonoBehaviour
             //dialogueText.text = currentStory.Continue();
          //   StartCoroutine(DisplayLine(currentStory.Continue()));
             //display choices, if any, for this dialogue line
+
             DisplayChoices();
             //handle tags 
             HandleTags(currentStory.currentTags);
@@ -142,17 +143,50 @@ public class Dialogue_Manager_Final : MonoBehaviour
         dialogueText.text = "";
 
         continueIcon.SetActive(false);
+        HideChoices();
 
         canContinueToNextLine = false;
 
+        bool isAddingRichTextTag = false; 
+
         foreach (char letter in line.ToCharArray())
         {
-            dialogueText.text += letter;
-            yield return new WaitForSeconds(typingSpeed);
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                dialogueText.text = line;
+                break;
+            }
+            
+            if(letter == '<' || isAddingRichTextTag)
+            {
+                isAddingRichTextTag = true;
+                dialogueText.text += letter;
+                if(letter == '>')
+                {
+                    isAddingRichTextTag = false;
+                }
+            }
+            else
+            {
+                dialogueText.text += letter;
+                yield return new WaitForSeconds(typingSpeed);
+            }
+
+            
         }
 
         continueIcon.SetActive(true);
+        DisplayChoices();
+
         canContinueToNextLine = true;
+    }
+
+    private void HideChoices()
+    {
+        foreach (GameObject choiceButton in choices)
+        {
+            choiceButton.SetActive(false);
+        }
     }
 
     private void HandleTags(List<string> currentTags)
