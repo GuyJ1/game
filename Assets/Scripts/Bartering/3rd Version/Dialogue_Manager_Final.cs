@@ -13,7 +13,9 @@ public class Dialogue_Manager_Final : MonoBehaviour
     [SerializeField] private GameObject dialoguePanel;
     [SerializeField] private TextMeshProUGUI dialogueText;
     [SerializeField] private TextMeshProUGUI displayNameText;
+    [SerializeField] private Animator portraitAnimator;
 
+    private Animator layoutAnimator; 
 
     [Header("Choices UI")]
     [SerializeField] private GameObject [] choices;
@@ -51,6 +53,7 @@ public class Dialogue_Manager_Final : MonoBehaviour
         dialogueIsPlaying = false;
         dialoguePanel.SetActive(false);
 
+        layoutAnimator = dialoguePanel.GetComponent<Animator>();
         // get all of the choices text
         choicesText = new TextMeshProUGUI[choices.Length];
         int index = 0;
@@ -81,7 +84,12 @@ public class Dialogue_Manager_Final : MonoBehaviour
         currentStory = new Story (inkJSON.text);
         dialogueIsPlaying = true;
         dialoguePanel.SetActive(true);
-        
+
+        displayNameText.text = "????";
+        portraitAnimator.Play("default");
+        layoutAnimator.Play("right");
+
+
         ContinueStory();
     }
 
@@ -129,11 +137,14 @@ public class Dialogue_Manager_Final : MonoBehaviour
                     //Debug.LogWarning("Found more than one Dialogue Manager in the scene" + tagValue);
                     break;
                 case PORTRAIT_TAG:
-                    Debug.LogWarning("Found more than one Dialogue Manager in the scene" + tagValue);
+                    //Debug.LogWarning("Found more than one Dialogue Manager in the scene" + tagValue);
+                    portraitAnimator.Play(tagValue);
 
                     break;
                 case LAYOUT_TAG:
-                    Debug.LogWarning("Found more than one Dialogue Manager in the scene" + tagValue);
+                    //Debug.LogWarning("Found more than one Dialogue Manager in the scene" + tagValue);
+                    layoutAnimator.Play(tagValue);
+
 
                     break;
                 default:
