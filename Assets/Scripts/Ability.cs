@@ -9,12 +9,12 @@ using UnityEditor;
   [CreateAssetMenu] //allows creating of item assets directly unity by right clicking project
 public class Ability : ScriptableObject
 {
+    private int totalDMG; //total damage dealt 
+    private int totalHP; //total HP healed
+    private int totalACC; //chance the ability hits
     public bool friendly; //Whether this ability targets allies or enemies (true for allies, false for enemies)
     public bool requiresTarget; //Whether this ability requires a selected target to execute
     public bool free; //Whether this ability consumes a turn action
-    public int totalDMG; //total damage dealt 
-    public int totalHP; //total HP healed
-    public int totalACC; //chance the ability hits
     public int baseDMG; //ability will always do a certain amount of damage regardless of DEF
     public int baseHP; //ability will always heal a certain amount of HP
     public int baseACC; //ability comes with a set accuracy
@@ -103,14 +103,14 @@ public class Ability : ScriptableObject
     }
 
     // Apply ability to target character
-    public void affectCharacter(GameObject user, GameObject target, BattleEngine engine) {
-        callAbility(user.GetComponent<CharacterStats>(), target.GetComponent<CharacterStats>(), engine);
+    public void affectCharacter(GameObject user, GameObject target) {
+        callAbility(user.GetComponent<CharacterStats>(), target.GetComponent<CharacterStats>());
     }
 
     // Apply ability to target list of characters
-    public void affectCharacters(GameObject user, List<GameObject> targets, BattleEngine engine) {
+    public void affectCharacters(GameObject user, List<GameObject> targets) {
         foreach(GameObject target in targets) {
-            callAbility(user.GetComponent<CharacterStats>(), target.GetComponent<CharacterStats>(), engine);
+            callAbility(user.GetComponent<CharacterStats>(), target.GetComponent<CharacterStats>());
         }
     }
 
@@ -138,7 +138,7 @@ public class Ability : ScriptableObject
     }
 
     //call an ability based on given display name
-    public void callAbility(CharacterStats user, CharacterStats target, BattleEngine engine){
+    public void callAbility(CharacterStats user, CharacterStats target){
         if(selfEffect != null) {
             GameObject particle = Instantiate(selfEffect);
             particle.transform.position = user.transform.position;
@@ -153,14 +153,14 @@ public class Ability : ScriptableObject
 
 
         else if(displayName == "Pierce")            Pierce(user, target);
-        else if(displayName == "Shooting Star")     ShootingStar(user, target, engine);
+        else if(displayName == "Shooting Star")     ShootingStar(user, target);
         else if(displayName == "Siphon")            Siphon(user, target);
         else if(displayName == "Life Swap")         LifeSwap(user, target);
         else if(displayName == "Soul Bash")         SoulBash(user, target);
         else if(displayName == "Persistence")       Persistence(user, target);
         else if(displayName == "Light Heal")        LightHeal(user);
         else if(displayName == "Quick Attack")      QuickAttack(user, target);
-        else if(displayName == "Gambit")            Gambit(user, target, engine);
+        else if(displayName == "Gambit")            Gambit(user, target);
 
         /// PIRATE ////
 
@@ -209,7 +209,7 @@ public class Ability : ScriptableObject
         /// PIRATE CAPTAIN ///
 
 
-        else if(displayName == "Pistol Volley")     PistolVolley(user, target);
+        //else if(displayName == "Pistol Volley")     PistolVolley(user, target);
         else if(displayName == "Death Wish")        DeathWish(user, target);
         else if(displayName == "Second Wind")       SecondWind(user);
         else if(displayName == "Whirling Steel")    WhirlingSteel(user, target);
@@ -670,7 +670,7 @@ public class Ability : ScriptableObject
     }
 
     //attack the enemy 5 times, with each attack having 1/5 the power of a normal attack
-    void ShootingStar(CharacterStats user, CharacterStats target, BattleEngine engine){
+    void ShootingStar(CharacterStats user, CharacterStats target){
 
         //attack 5 times for 1/5 of attack power, but with same HIT and CRIT
 
@@ -696,7 +696,7 @@ public class Ability : ScriptableObject
             target.adjustHP(-totalDMG, false);
             //might need a sleep statement here
 
-            engine.PauseBattleEngine(0.5f);
+            //engine.PauseBattleEngine(0.5f);
             
         }
 
@@ -808,7 +808,7 @@ public class Ability : ScriptableObject
     //1. The target dies
     //2. The move misses
     //3. 10 additional attacks are reached
-    void Gambit(CharacterStats user, CharacterStats target, BattleEngine engine){
+    void Gambit(CharacterStats user, CharacterStats target){
 
         int ACC = 70;
         int DMG = 20;
@@ -834,7 +834,7 @@ public class Ability : ScriptableObject
 
         target.adjustHP(-DMG, false); //100% to deal 20 damage
 
-        engine.PauseBattleEngine(0.5f);
+        //engine.PauseBattleEngine(0.5f);
 
         if(target.isDead()){//move ends if target dies
 
@@ -852,7 +852,7 @@ public class Ability : ScriptableObject
 
                 target.adjustHP(-DMG, false);
 
-                engine.PauseBattleEngine(0.5f);
+                //engine.PauseBattleEngine(0.5f);
 
                 if(target.isDead()){//ability ends if target dies
 
