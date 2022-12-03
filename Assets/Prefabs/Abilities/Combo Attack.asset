@@ -14,18 +14,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   friendly: 0
   requiresTarget: 1
+  free: 0
   totalDMG: 0
   totalHP: 0
   totalACC: 0
   baseDMG: 40
   baseHP: 0
   baseACC: 90
-  cost: 0
+  costAP: 0
   range: 1
   knockback: 0
+  selfMovement: 0
+  totalHits: 1
   displayName: Combo
+  description: 
   shape:
   - {x: 0, y: 0}
   targetModifiers: []
   selfModifiers: []
-  targetEffect: {fileID: 696958063292329688, guid: 00092c09e25beb54f813012f561ea1c0, type: 3}
+  targetEffect: {fileID: 6250282200195696410, guid: 42231af93621f91468f315d5a27e6542, type: 3}
+  selfEffect: {fileID: 0}
