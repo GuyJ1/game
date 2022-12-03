@@ -20,9 +20,9 @@ MonoBehaviour:
   baseACC: 10
   costAP: 1
   range: 2
-  knockback: 1
+  knockback: 0
   selfMovement: 0
-  totalHits: 0
+  totalHits: 1
   displayName: Glancing Shot
   description: 
   shape:
