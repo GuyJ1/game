@@ -1582,6 +1582,7 @@ MonoBehaviour:
   activeUnitTile: {fileID: 0}
   grid: {fileID: 0}
   activeUnitPos: {x: 0, y: 0}
+  aliveUnits: []
   deadUnits: []
   turnQueue: []
   charCard: {fileID: 792736054}
