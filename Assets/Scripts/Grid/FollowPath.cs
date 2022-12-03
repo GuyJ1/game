@@ -115,7 +115,7 @@ public class FollowPath : MonoBehaviour
                 transform.position += targetDirection * (wasAbility ? 8.0f : moveSpeed) * Time.deltaTime;
 
                 // Update y-axis rotation
-                this.gameObject.GetComponent<CharacterStats>().rotateTowards(targetPos);
+                if(!wasAbility) this.gameObject.GetComponent<CharacterStats>().rotateTowards(targetPos);
             }
         }
     }

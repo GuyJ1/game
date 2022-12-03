@@ -18,14 +18,16 @@ MonoBehaviour:
   totalDMG: 0
   totalHP: 0
   totalACC: 0
-  baseDMG: 25
+  baseDMG: 30
   baseHP: 0
   baseACC: 60
   costAP: 2
   range: 3
   knockback: 0
   selfMovement: 0
+  totalHits: 3
   displayName: Pistol Volley
+  description: 
   shape:
   - {x: 0, y: 0}
   targetModifiers: []

@@ -45,6 +45,7 @@ public class BattleEngine : MonoBehaviour
     public GameObject activeUnit, activeUnitTile;
     public GameObject grid; //Active grid that unit is on
     public Vector2Int activeUnitPos;
+    public List<GameObject> aliveUnits = new List<GameObject>();
     public List<GameObject> deadUnits = new List<GameObject>();
     public List<GameObject> turnQueue = new List<GameObject>(); //Stored units in the turn queue (units can repeat)
 
@@ -53,7 +54,8 @@ public class BattleEngine : MonoBehaviour
     [SerializeField] public UI_CrewTurnOrder crewTurnOrder;
     public GameObject canvas;
     private Button actionButton, moveButton, endButton, surrenderButton;
-    private List<GameObject> actionButtons = new List<GameObject>();
+    private List<Button> actionButtons = new List<Button>();
+    private List<Ability> usedAbilities = new List<Ability>(); //Abilities used this turn
     private GameObject victoryText, defeatText, surrenderText;
     private HealthBar playerShipBar, playerMoraleBar, enemyShipBar, enemyMoraleBar;
 
@@ -280,6 +282,7 @@ public class BattleEngine : MonoBehaviour
         foreach (GameObject character in characters)
         {
             units.Add(character);
+            aliveUnits.Add(character);
         }
 
         // Apply morale modifiers
@@ -420,9 +423,9 @@ public class BattleEngine : MonoBehaviour
             moving = false;
             actionButton.Select();
             showActionsList();
-            selectedAbility = getBasicAttack(activeUnit);
+            actionButtons[0].onClick.Invoke();
             setupAction(activeUnitTile);
-            actionButtons.ToArray()[0].GetComponent<Button>().Select(); //Temp highlight for basic attack button
+            actionButtons[0].Select(); //Temp highlight for basic attack button
         }
     }
 
@@ -488,6 +491,7 @@ public class BattleEngine : MonoBehaviour
 
         // Deselect ability
         selectedAbility = null;
+        usedAbilities.Clear();
         
         // Set the tile of which the character is on to be active
         activeUnitTile = gridScript.grid[activeUnitPos.x, activeUnitPos.y];
@@ -640,8 +644,19 @@ public class BattleEngine : MonoBehaviour
         if(!selectedAbility.free) acted = true;
         activeUnit.GetComponent<CharacterStats>().addAP(-selectedAbility.costAP);
         actionButton.interactable = false;
-        selectedAbility.affectCharacters(activeUnit, characters, this);
+        usedAbilities.Add(selectedAbility);
 
+        StartCoroutine(endActUnit(selectedCharacter == null ? tilePos : selectedCharacter.GetComponent<CharacterStats>().gridPosition, characters, xDist, yDist));
+        return true;
+    }
+
+    IEnumerator endActUnit(Vector2Int tilePos, List<GameObject> characters, int xDist, int yDist) {
+        if(!moved) moveButton.interactable = false;
+        foreach(GameObject unit in aliveUnits) if(unit != activeUnit && !characters.Contains(unit)) unit.GetComponent<CharacterStats>().hideBars();
+        foreach(Button button in actionButtons) button.interactable = false;
+        if(tilePos != activeUnitPos) yield return new WaitWhile(() => !activeUnit.GetComponent<CharacterStats>().rotateTowards(grid.GetComponent<GridBehavior>().GetTileAtPos(tilePos).transform.position)); //Wait for rotation first
+
+        var gridTiles = grid.GetComponent<GridBehavior>();
         //Pull and knockback
         if(selectedAbility.knockback != 0)
         {
@@ -658,15 +673,11 @@ public class BattleEngine : MonoBehaviour
         }
         ResetAllHighlights();
         if(!acted) highlightActionTiles(newPos, selectedAbility.range);
-
-        StartCoroutine(endActUnit(selectedCharacter == null ? tilePos : selectedCharacter.GetComponent<CharacterStats>().gridPosition, characters));
-        return true;
-    }
-
-    IEnumerator endActUnit(Vector2Int tilePos, List<GameObject> characters) {
-        if(!moved) moveButton.interactable = false;
-        if(tilePos != activeUnitPos) yield return new WaitWhile(() => !activeUnit.GetComponent<CharacterStats>().rotateTowards(grid.GetComponent<GridBehavior>().GetTileAtPos(tilePos).transform.position)); //Wait for rotation first
-        yield return new WaitForSecondsRealtime(0.6f);
+        for(int i = 0; i < selectedAbility.totalHits; i++)
+        {
+            selectedAbility.affectCharacters(activeUnit, characters);
+            yield return new WaitForSecondsRealtime(0.6f);
+        }
 
         //AI: Forward the target(s) to AI handler for enqueue. Currently only forwards one character - for refactoring later
         if(characters.Count > 0) playerTarget = characters[0];
@@ -675,11 +686,17 @@ public class BattleEngine : MonoBehaviour
         if(tryComboAttack(activeUnitPos, tilePos, false)) yield return new WaitForSecondsRealtime(0.6f);
         // --------------------------
 
-        update();
+        foreach(GameObject unit in aliveUnits) unit.GetComponent<CharacterStats>().showBars();
+        if(!acted) {
+            actionButtons[0].onClick.Invoke();
+            setupAction(activeUnitTile);
+        }
         if(!moved) {
             moveButton.interactable = true;
             if(acted) selectMove(); //Move to move state if available
         }
+        update();
+        yield break;
     }
 
     //Search for a possible combo attack and try it if not simulated. Returns true if a combo occurs.
@@ -715,12 +732,18 @@ public class BattleEngine : MonoBehaviour
                 if(!simulate)
                 {
                     Debug.Log("Triggering combo attack...");
-                    getComboAttack(tile.characterOn).affectCharacter(tile.characterOn, targetCharacter, this);
+                    StartCoroutine(endComboAttack(tile.characterOn, targetCharacter));
                 }
                 return true;
             }
         }
         return false;
+    }
+
+    IEnumerator endComboAttack(GameObject user, GameObject target) {
+        yield return new WaitWhile(() => !user.GetComponent<CharacterStats>().rotateTowards(target.GetComponent<CharacterStats>().getTileObject().transform.position)); //Wait for rotation first
+        getComboAttack(user).affectCharacter(user, target);
+        yield break;
     }
 
     //Try to move the unit to the specified position on the grid. Returns true if move succeeds. Will not affect game state if simulate is true.
@@ -761,6 +784,7 @@ public class BattleEngine : MonoBehaviour
         endButton.interactable = false;
         surrenderButton.interactable = false;
         if(!acted) actionButton.interactable = false;
+        foreach(GameObject unit in aliveUnits) unit.GetComponent<CharacterStats>().hideBars();
         yield return new WaitWhile(() => activeUnit.GetComponent<FollowPath>().pathToFollow.Count > 0 || activeUnit.GetComponent<FollowPath>().isMoving());
         yield return new WaitForSecondsRealtime(0.15f);
         endButton.interactable = true;
@@ -769,7 +793,9 @@ public class BattleEngine : MonoBehaviour
             actionButton.interactable = true;
             selectAction(); //Move to action state if available
         }
+        foreach(GameObject unit in aliveUnits) unit.GetComponent<CharacterStats>().showBars();
         update();
+        yield break;
     }
 
     // --------------------------------------------------------------
@@ -798,6 +824,7 @@ public class BattleEngine : MonoBehaviour
         {
             endTurn();
         }
+        yield break;
     }
 
     //Perform all end-of-turn logic
@@ -819,6 +846,7 @@ public class BattleEngine : MonoBehaviour
                 }
             }
         }
+        foreach(GameObject unit in deadUnits) aliveUnits.Remove(unit);
         playerShipBar.SetHealth(getPlayerCrew().getShip().HP);
         enemyShipBar.SetHealth(getEnemyCrew().getShip().HP);
         playerMoraleBar.SetHealth(getPlayerCrew().morale);
@@ -869,8 +897,8 @@ public class BattleEngine : MonoBehaviour
     private void checkVictory() {
         bool won = true;
         //Check if any enemies are alive
-        foreach(GameObject unit in units) {
-            if(isUnitAlive(unit) && !isAllyUnit(unit)) {
+        foreach(GameObject unit in aliveUnits) {
+            if(!isAllyUnit(unit)) {
                 won = false;
                 break;
             }
@@ -888,8 +916,8 @@ public class BattleEngine : MonoBehaviour
     private void checkDefeat() {
         bool loss = true;
         //Check if any allies are alive
-        foreach(GameObject unit in units) {
-            if(isUnitAlive(unit) && isAllyUnit(unit)) {
+        foreach(GameObject unit in aliveUnits) {
+            if(isAllyUnit(unit)) {
                 loss = false;
                 break;
             }
@@ -957,17 +985,14 @@ public class BattleEngine : MonoBehaviour
 
     public void refreshActionButtons() {
         if(activeUnit == null) return;
-        foreach(GameObject button in actionButtons) Destroy(button);
+        foreach(Button button in actionButtons) Destroy(button.gameObject);
         actionButtons.Clear();
+        if(acted) return;
 
         int count = 0;
         var activeChar = activeUnit.GetComponent<CharacterStats>();
-        List<Ability> abilities = activeChar.getBattleAbilities(); //Class abilities
-        if(activeChar.weapon != null) {
-            foreach(Ability ability in activeChar.weapon.abilities) abilities.Add(ability); //Weapon abilities
-        }
         //Setup action buttons
-        foreach(Ability ability in abilities) {
+        foreach(Ability ability in activeChar.getBattleAbilities()) {
             GameObject actionButton = Instantiate(buttonPrefab, this.actionButton.transform);
             actionButton.transform.GetComponent<RectTransform>().anchoredPosition += new Vector2(125, -10 - 25 * count);
             Button button = actionButton.GetComponent<Button>();
@@ -977,23 +1002,23 @@ public class BattleEngine : MonoBehaviour
                 setupAction(activeUnitTile);
             });
 
-            button.interactable = activeUnit.GetComponent<CharacterStats>().AP >= ability.costAP; //Only allow ability selection if AP is available
+            button.interactable = !usedAbilities.Contains(ability) && activeUnit.GetComponent<CharacterStats>().AP >= ability.costAP; //Only allow ability selection if it wasn't used already and AP is available
             var tmp = actionButton.GetComponentInChildren<TMPro.TextMeshProUGUI>();
             tmp.text = ability.displayName; //Set button name to ability name
-            actionButtons.Add(actionButton);
+            actionButtons.Add(button);
             count++;
         }
     }
 
     public void showActionsList() {
-        foreach(GameObject button in actionButtons) {
-            button.SetActive(true);
+        foreach(Button button in actionButtons) {
+            button.gameObject.SetActive(true);
         }
     }
 
     public void hideActionsList() {
-        foreach(GameObject button in actionButtons) {
-            button.SetActive(false);
+        foreach(Button button in actionButtons) {
+            button.gameObject.SetActive(false);
         }
     }
 

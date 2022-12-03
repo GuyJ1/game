@@ -15,17 +15,14 @@ MonoBehaviour:
   friendly: 0
   requiresTarget: 1
   free: 1
-  totalDMG: 0
-  totalHP: 0
-  totalACC: 0
   baseDMG: 60
   baseHP: 0
   baseACC: 10
   costAP: 1
   range: 2
-  knockback: 0
+  knockback: 1
   selfMovement: 0
-  totalHits: 1
+  totalHits: 0
   displayName: Glancing Shot
   description: 
   shape:
