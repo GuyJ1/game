@@ -994,7 +994,7 @@ public class BattleEngine : MonoBehaviour
         //Setup action buttons
         foreach(Ability ability in activeChar.getBattleAbilities()) {
             GameObject actionButton = Instantiate(buttonPrefab, this.actionButton.transform);
-            actionButton.transform.GetComponent<RectTransform>().anchoredPosition += new Vector2(125, -10 - 25 * count);
+            actionButton.transform.GetComponent<RectTransform>().anchoredPosition += new Vector2(150, -10 - 25 * count);
             Button button = actionButton.GetComponent<Button>();
 
             button.onClick.AddListener(() => { //Listen to setup ability when clicked

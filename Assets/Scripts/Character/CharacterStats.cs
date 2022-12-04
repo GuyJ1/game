@@ -162,7 +162,7 @@ public class CharacterStats : MonoBehaviour
     void Start()
     {
         // Attach healthbar to canvas
-        canvas = GameObject.Find("UI Menu");
+        canvas = GameObject.Find("UI Overlay");
         healthBar = Instantiate(healthBar, canvas.transform);
         APBar = Instantiate(APBar, canvas.transform);
 
