@@ -3650,10 +3650,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   battleScript: {fileID: 322437417}
-  fireCannonball: {fileID: 0}
-  fireCharacter: {fileID: 0}
-  fireCannonballImage: {fileID: 0}
-  fireCharacterImage: {fileID: 0}
+  fireCannonball: {fileID: 1327621837}
+  fireCharacter: {fileID: 836081614}
+  fireCannonballImage: {fileID: 2137479748}
+  fireCharacterImage: {fileID: 1785283752}
   battleSleepTime: 3
   camScript: {fileID: 2054579720}
 --- !u!114 &929316938
@@ -4426,7 +4426,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6194055163492304498, guid: 72764701fcbe3a84d99234b3364ec016, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -66.7
+      value: -66.70001
       objectReference: {fileID: 0}
     - target: {fileID: 6194055163492304498, guid: 72764701fcbe3a84d99234b3364ec016, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
