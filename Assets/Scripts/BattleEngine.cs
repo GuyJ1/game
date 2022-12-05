@@ -52,19 +52,19 @@ public class BattleEngine : MonoBehaviour
     //UI references
     [SerializeField] public CharacterCardUI charCard;
     [SerializeField] public UI_CrewTurnOrder crewTurnOrder;
-    public GameObject canvas;
-    private Button actionButton, moveButton, endButton, surrenderButton;
+    public GameObject canvas, actionCoin, moveCoin, endCoin, surrenderCoin;
+    private GameObject lastCoin;
+    private Animator actionCoinAnimator, moveCoinAnimator, endCoinAnimator, surrenderCoinAnimator;
     private List<Button> actionButtons = new List<Button>();
     private List<Ability> usedAbilities = new List<Ability>(); //Abilities used this turn
     private GameObject victoryText, defeatText, surrenderText;
     private HealthBar playerShipBar, playerMoraleBar, enemyShipBar, enemyMoraleBar;
 
     //Click Detection
-    private Camera cam;
+    private Camera cam, canvasCam;
     private Renderer rend;
-    private Ray ray;
     private RaycastHit hit;
-    private int gridMask = 1 << 6;
+    private static readonly int gridMask = 1 << 6, coinMask = 1 << 12;
 
     //Selection Management
     private bool charSelected = false;
@@ -87,12 +87,13 @@ public class BattleEngine : MonoBehaviour
 
         // Get Camera
         cam = Camera.main;
+        canvasCam = GameObject.Find("Canvas Camera").GetComponent<Camera>();
 
-        // Get Button Options
-        actionButton = GameObject.Find("ActionButton").GetComponent<Button>();
-        moveButton = GameObject.Find("MoveButton").GetComponent<Button>();
-        endButton = GameObject.Find("EndButton").GetComponent<Button>();
-        surrenderButton = GameObject.Find("SurrenderButton").GetComponent<Button>();
+        // Set coin animators
+        actionCoinAnimator = actionCoin.GetComponent<Animator>();
+        moveCoinAnimator = moveCoin.GetComponent<Animator>();
+        endCoinAnimator = endCoin.GetComponent<Animator>();
+        surrenderCoinAnimator = surrenderCoin.GetComponent<Animator>();
 
         // Get and Set Victory and Defeat Text
         victoryText = GameObject.Find("VictoryText");
@@ -141,9 +142,7 @@ public class BattleEngine : MonoBehaviour
         
         // Check whether the battle system is active
         if(active)
-        {
-            ray = cam.ScreenPointToRay(Input.mousePosition);
-            
+        {            
             if(!init)
             {
                 InitializeBattleSystem();
@@ -151,110 +150,157 @@ public class BattleEngine : MonoBehaviour
             else 
             {
                 var gridTiles = grid.GetComponent<GridBehavior>();
-
-                // Use physics to detect a "collision" from a ray
-                if (Physics.Raycast(ray, out hit, 1000f, gridMask) == true)
+                bool mouseOnGrid = false;
+                // Handle 3D UI interactions
+                if (Physics.Raycast(canvasCam.ScreenPointToRay(Input.mousePosition), out hit, 1000f, coinMask))
                 {
-                    // Get data from tile hit
-                    var objectHit   = hit.transform;
-                    var selectRend  = objectHit.GetComponent<Renderer>();
-                    var tileScript  = objectHit.GetComponent<TileScript>();
-                    Vector2Int tilePos = tileScript.position;
-                    int xDist = activeUnitPos.x - tilePos.x;
-                    int yDist = activeUnitPos.y - tilePos.y;
-
-                    // ----------------------------
-                    // Character Movement & Actions
-                    // ----------------------------
-                    if (Input.GetMouseButtonDown(0))
+                    GameObject coin = hit.transform.gameObject;
+                    if(lastCoin != coin)
                     {
-                        // Movement
-                        if(moving) 
+                        if(lastCoin != null)
                         {
-                            // If a tile has a character on it, then we can only select it
-                            if (tileScript.hasCharacter)
-                            {
-                                selectCharacter(objectHit.gameObject);
-                            }
-                            // If we have a selected character/tile, then we can move it to any
-                            // highlighted tile without a character already on it
-                            else
-                            {
-                                Debug.Log("Moving " + activeUnit);
-                                Debug.Log(gridTiles.GetCharacterAtPos(selectedCharPos));
-                                moveUnit(tilePos, false);
-                            }
+                            lastCoin.GetComponent<Animator>().SetBool("hovered", false);
+                            lastCoin.transform.GetChild(0).gameObject.SetActive(false);
                         }
-                        // Action
-                        else actUnit(tilePos, false);
+                        coin.GetComponent<Animator>().SetBool("hovered", true);
+                        hit.transform.GetChild(0).gameObject.SetActive(true); //Enable text of new coin
                     }
-                    else
-                    // -------------------------------
-                    // Character and Tile Highlighting
-                    // -------------------------------
+                    else coin.GetComponent<Animator>().SetBool("hovered", false);
+
+                    if(Input.GetMouseButtonDown(0))
                     {
-                        if(charSelected == false && moving) //Moving
+                        Animator coinAnimator = coin.GetComponent<Animator>();
+                        // Select coin if it's interactable
+                        if(coinAnimator.GetBool("interactable"))
                         {
-                            bool okayToHighlight = true;
-
-                            // Prevent highlighting the tile w/ a selected
-                            // character on it
-                            if (charSelected && selectedCharPos == tilePos)
-                            {
-                                okayToHighlight = false;
-                            }
-
-                            // Cannot highlight tiles without a character on it
-                            if (tileScript.hasCharacter == false)
-                            {
-                                okayToHighlight = false;
-                            }
-
-                            // If the mouse moved away from the highlighted tile,
-                            // then unhighlight it
-                            if (charHighlighted && highlightedCharPos != tilePos)
-                            {
-                                gridTiles.grid[highlightedCharPos.x, highlightedCharPos.y].GetComponent<Renderer>().material = isTileActive(highlightedCharPos) ? gridTiles.activeUnselected : gridTiles.unselected;
-                            }
-
-                            // Highlight mouse over tile if it's okay to highlight it
-                            if (okayToHighlight)
-                            {
-                                selectRend.material = isTileActive(highlightedCharPos) ? gridTiles.activeHighlighted : gridTiles.highlighted;
-                                highlightedCharPos = tilePos;
-                                charHighlighted = true;
-                            }
+                            actionCoinAnimator.SetBool("selected", false);
+                            moveCoinAnimator.SetBool("selected", false);
+                            endCoinAnimator.SetBool("selected", false);
+                            surrenderCoinAnimator.SetBool("selected", false);
+                            coinAnimator.SetBool("selected", true);
                         }
-                        else if(!moving && !acted) { //Acting
-                            if(charHighlighted && highlightedCharPos != tilePos) {
-                                foreach(GameObject selTile in gridTiles.GetAllTiles()) {
-                                    var selPos = selTile.GetComponent<TileScript>().position;
-                                    if(selPos != activeUnitPos && selTile.GetComponent<TileScript>().passable) selTile.GetComponent<Renderer>().material = isTileActive(selPos) ? gridTiles.activeUnselected : (Mathf.Abs(activeUnitPos.x - selPos.x) + Mathf.Abs(activeUnitPos.y - selPos.y) > selectedAbility.range ? gridTiles.unselected : gridTiles.abilityHighlighted);
+                        // Handle various click actions
+                        if(coin == actionCoin && actionCoinAnimator.GetBool("interactable")) selectAction();
+                        else if(coin == moveCoin && moveCoinAnimator.GetBool("interactable")) selectMove();
+                        else if(coin == endCoin && endCoinAnimator.GetBool("interactable")) endTurn();
+                        else if(coin == surrenderCoin && surrenderCoinAnimator.GetBool("interactable")) surrender();
+                    }
+                    lastCoin = coin;
+                }
+                // Handle grid interactions
+                else
+                {
+                    if(lastCoin != null)
+                    {
+                        lastCoin.GetComponent<Animator>().SetBool("hovered", false);
+                        lastCoin.transform.GetChild(0).gameObject.SetActive(false);
+                        lastCoin = null;
+                    }
+                    
+                    if (Physics.Raycast(cam.ScreenPointToRay(Input.mousePosition), out hit, 1000f, gridMask))
+                    {
+                        mouseOnGrid = true;
+                        // Get data from tile hit
+                        var objectHit   = hit.transform;
+                        var selectRend  = objectHit.GetComponent<Renderer>();
+                        var tileScript  = objectHit.GetComponent<TileScript>();
+                        Vector2Int tilePos = tileScript.position;
+                        int xDist = activeUnitPos.x - tilePos.x;
+                        int yDist = activeUnitPos.y - tilePos.y;
+
+                        // ----------------------------
+                        // Character Movement & Actions
+                        // ----------------------------
+                        if (Input.GetMouseButtonDown(0))
+                        {
+                            // Movement
+                            if(moving) 
+                            {
+                                // If a tile has a character on it, then we can only select it
+                                if (tileScript.hasCharacter)
+                                {
+                                    selectCharacter(objectHit.gameObject);
+                                }
+                                // If we have a selected character/tile, then we can move it to any
+                                // highlighted tile without a character already on it
+                                else
+                                {
+                                    Debug.Log("Moving " + activeUnit);
+                                    Debug.Log(gridTiles.GetCharacterAtPos(selectedCharPos));
+                                    moveUnit(tilePos, false);
                                 }
                             }
-                            if(selectedAbility != null && tileScript.highlighted && Mathf.Abs(activeUnitPos.x - tilePos.x) + Mathf.Abs(activeUnitPos.y - tilePos.y) <= selectedAbility.range) {
-                                foreach(Vector2Int pos in selectedAbility.getRelativeShape(xDist, yDist)) {
-                                    var selPos = new Vector2Int(tilePos.x + pos.x, tilePos.y + pos.y);
-                                    var selTile = gridTiles.GetTileAtPos(selPos);
-                                    if(selTile != null) {
-                                        var selTileScript = selTile.GetComponent<TileScript>();
-                                        if(selTileScript.passable && selTileScript.characterOn != activeUnit) {
-                                            if(pos.x == 0 && pos.y == 0) {
-                                                highlightedCharPos = selPos;
-                                                charHighlighted = true;
+                            // Action
+                            else actUnit(tilePos, false);
+                        }
+                        else
+                        // -------------------------------
+                        // Character and Tile Highlighting
+                        // -------------------------------
+                        {
+                            if(charSelected == false && moving) //Moving
+                            {
+                                bool okayToHighlight = true;
+
+                                // Prevent highlighting the tile w/ a selected
+                                // character on it
+                                if (charSelected && selectedCharPos == tilePos)
+                                {
+                                    okayToHighlight = false;
+                                }
+
+                                // Cannot highlight tiles without a character on it
+                                if (tileScript.hasCharacter == false)
+                                {
+                                    okayToHighlight = false;
+                                }
+
+                                // If the mouse moved away from the highlighted tile,
+                                // then unhighlight it
+                                if (charHighlighted && highlightedCharPos != tilePos)
+                                {
+                                    gridTiles.grid[highlightedCharPos.x, highlightedCharPos.y].GetComponent<Renderer>().material = isTileActive(highlightedCharPos) ? gridTiles.activeUnselected : gridTiles.unselected;
+                                }
+
+                                // Highlight mouse over tile if it's okay to highlight it
+                                if (okayToHighlight)
+                                {
+                                    selectRend.material = isTileActive(highlightedCharPos) ? gridTiles.activeHighlighted : gridTiles.highlighted;
+                                    highlightedCharPos = tilePos;
+                                    charHighlighted = true;
+                                }
+                            }
+                            else if(!moving && !acted) { //Acting
+                                if(charHighlighted && highlightedCharPos != tilePos) {
+                                    foreach(GameObject selTile in gridTiles.GetAllTiles()) {
+                                        var selPos = selTile.GetComponent<TileScript>().position;
+                                        if(selPos != activeUnitPos && selTile.GetComponent<TileScript>().passable) selTile.GetComponent<Renderer>().material = isTileActive(selPos) ? gridTiles.activeUnselected : (Mathf.Abs(activeUnitPos.x - selPos.x) + Mathf.Abs(activeUnitPos.y - selPos.y) > selectedAbility.range ? gridTiles.unselected : gridTiles.abilityHighlighted);
+                                    }
+                                }
+                                if(selectedAbility != null && tileScript.highlighted && Mathf.Abs(activeUnitPos.x - tilePos.x) + Mathf.Abs(activeUnitPos.y - tilePos.y) <= selectedAbility.range) {
+                                    foreach(Vector2Int pos in selectedAbility.getRelativeShape(xDist, yDist)) {
+                                        var selPos = new Vector2Int(tilePos.x + pos.x, tilePos.y + pos.y);
+                                        var selTile = gridTiles.GetTileAtPos(selPos);
+                                        if(selTile != null) {
+                                            var selTileScript = selTile.GetComponent<TileScript>();
+                                            if(selTileScript.passable && selTileScript.characterOn != activeUnit) {
+                                                if(pos.x == 0 && pos.y == 0) {
+                                                    highlightedCharPos = selPos;
+                                                    charHighlighted = true;
+                                                }
+                                                selTileScript.highlighted = true;
+                                                selTile.GetComponent<Renderer>().material = gridTiles.ability;
                                             }
-                                            selTileScript.highlighted = true;
-                                            selTile.GetComponent<Renderer>().material = gridTiles.ability;
                                         }
                                     }
                                 }
                             }
                         }
+                        lastXDist = xDist;
+                        lastYDist = yDist;
                     }
-                    lastXDist = xDist;
-                    lastYDist = yDist;
                 }
-                else {
+                if(!mouseOnGrid) {
                     if (charHighlighted)
                     {
                         if(moving) gridTiles.grid[highlightedCharPos.x, highlightedCharPos.y].GetComponent<Renderer>().material = isTileActive(highlightedCharPos) ? gridTiles.activeUnselected : gridTiles.unselected;
@@ -421,7 +467,7 @@ public class BattleEngine : MonoBehaviour
         if (interactable)
         {
             moving = false;
-            actionButton.Select();
+            //actionCoin.Select();
             showActionsList();
             actionButtons[0].onClick.Invoke();
             setupAction(activeUnitTile);
@@ -435,7 +481,7 @@ public class BattleEngine : MonoBehaviour
         {
             hideActionsList();
             moving = true;
-            moveButton.Select();
+            //moveCoin.Select();
             setupMove(activeUnitTile);
         }
     }
@@ -498,19 +544,27 @@ public class BattleEngine : MonoBehaviour
         activeUnitTile.GetComponent<Renderer>().material = gridScript.activeUnselected;
         camScript.LookAtPos(activeUnitTile.transform.position);
 
-        // Setup buttons based on whether it's the player's turn
+        // Setup coins based on whether it's the player's turn
         isPlayerTurn = isAllyUnit(activeUnit);
-        actionButton.interactable = isPlayerTurn;
-        moveButton.interactable = isPlayerTurn;
-        endButton.interactable = isPlayerTurn;
-        surrenderButton.interactable = isPlayerTurn;
+        actionCoinAnimator.SetBool("interactable", isPlayerTurn);
+        moveCoinAnimator.SetBool("interactable", isPlayerTurn);
+        endCoinAnimator.SetBool("interactable", isPlayerTurn);
+        surrenderCoinAnimator.SetBool("interactable", isPlayerTurn);
 
         if(!isPlayerTurn)
         {
+            actionCoinAnimator.SetBool("selected", false);
+            moveCoinAnimator.SetBool("selected", false);
+            endCoinAnimator.SetBool("selected", false);
+            surrenderCoinAnimator.SetBool("selected", false);
             doAITurn();
         }
         else 
         {
+            actionCoinAnimator.SetBool("selected", false);
+            moveCoinAnimator.SetBool("selected", true);
+            endCoinAnimator.SetBool("selected", false);
+            surrenderCoinAnimator.SetBool("selected", false);
             refreshActionButtons();
             selectMove(); //Default to move (generally units move before acting)
         }
@@ -643,7 +697,6 @@ public class BattleEngine : MonoBehaviour
 
         if(!selectedAbility.free) acted = true;
         activeUnit.GetComponent<CharacterStats>().addAP(-selectedAbility.costAP);
-        actionButton.interactable = false;
         usedAbilities.Add(selectedAbility);
 
         StartCoroutine(endActUnit(selectedCharacter == null ? tilePos : selectedCharacter.GetComponent<CharacterStats>().gridPosition, characters, xDist, yDist));
@@ -651,7 +704,7 @@ public class BattleEngine : MonoBehaviour
     }
 
     IEnumerator endActUnit(Vector2Int tilePos, List<GameObject> characters, int xDist, int yDist) {
-        if(!moved) moveButton.interactable = false;
+        disableCoins();
         foreach(GameObject unit in aliveUnits) if(unit != activeUnit && !characters.Contains(unit)) unit.GetComponent<CharacterStats>().hideBars();
         foreach(Button button in actionButtons) button.interactable = false;
         if(tilePos != activeUnitPos) yield return new WaitWhile(() => !activeUnit.GetComponent<CharacterStats>().rotateTowards(grid.GetComponent<GridBehavior>().GetTileAtPos(tilePos).transform.position)); //Wait for rotation first
@@ -687,12 +740,12 @@ public class BattleEngine : MonoBehaviour
         // --------------------------
 
         foreach(GameObject unit in aliveUnits) unit.GetComponent<CharacterStats>().showBars();
+        enableCoins();
         if(!acted) {
             actionButtons[0].onClick.Invoke();
             setupAction(activeUnitTile);
         }
         if(!moved) {
-            moveButton.interactable = true;
             if(acted) selectMove(); //Move to move state if available
         }
         update();
@@ -780,17 +833,12 @@ public class BattleEngine : MonoBehaviour
         charHighlighted = false;
         ResetAllHighlights();
         moved = true;
-        moveButton.interactable = false;
-        endButton.interactable = false;
-        surrenderButton.interactable = false;
-        if(!acted) actionButton.interactable = false;
+        disableCoins();
         foreach(GameObject unit in aliveUnits) unit.GetComponent<CharacterStats>().hideBars();
         yield return new WaitWhile(() => activeUnit.GetComponent<FollowPath>().pathToFollow.Count > 0 || activeUnit.GetComponent<FollowPath>().isMoving());
         yield return new WaitForSecondsRealtime(0.15f);
-        endButton.interactable = true;
-        surrenderButton.interactable = true;
+        enableCoins();
         if(!acted) {
-            actionButton.interactable = true;
             selectAction(); //Move to action state if available
         }
         foreach(GameObject unit in aliveUnits) unit.GetComponent<CharacterStats>().showBars();
@@ -809,11 +857,9 @@ public class BattleEngine : MonoBehaviour
         active = false;
         interactable = false;
 
-        endButton.interactable = false;
-        surrenderButton.interactable = false;
+        disableCoins();
         yield return new WaitForSecondsRealtime(waitTime);
-        endButton.interactable = true;
-        surrenderButton.interactable = true;
+        enableCoins();
 
         // After wait
         active = true;
@@ -933,10 +979,7 @@ public class BattleEngine : MonoBehaviour
 
     private void onEnd() {
         active = false;
-        actionButton.interactable = false;
-        moveButton.interactable = false;
-        endButton.interactable = false;
-        surrenderButton.interactable = false;
+        disableCoins();
         deadUnits.Clear();
     }
 
@@ -993,9 +1036,9 @@ public class BattleEngine : MonoBehaviour
         var activeChar = activeUnit.GetComponent<CharacterStats>();
         //Setup action buttons
         foreach(Ability ability in activeChar.getBattleAbilities()) {
-            GameObject actionButton = Instantiate(buttonPrefab, this.actionButton.transform);
-            actionButton.transform.GetComponent<RectTransform>().anchoredPosition += new Vector2(150, -10 - 25 * count);
-            Button button = actionButton.GetComponent<Button>();
+            GameObject actionCoin = Instantiate(buttonPrefab, canvas.transform);
+            actionCoin.transform.GetComponent<RectTransform>().anchoredPosition += new Vector2(70, -90 - 25 * count);
+            Button button = actionCoin.GetComponent<Button>();
 
             button.onClick.AddListener(() => { //Listen to setup ability when clicked
                 selectedAbility = ability;
@@ -1003,11 +1046,26 @@ public class BattleEngine : MonoBehaviour
             });
 
             button.interactable = !usedAbilities.Contains(ability) && activeUnit.GetComponent<CharacterStats>().AP >= ability.costAP; //Only allow ability selection if it wasn't used already and AP is available
-            var tmp = actionButton.GetComponentInChildren<TMPro.TextMeshProUGUI>();
+            var tmp = actionCoin.GetComponentInChildren<TMPro.TextMeshProUGUI>();
             tmp.text = ability.displayName; //Set button name to ability name
             actionButtons.Add(button);
             count++;
         }
+    }
+
+    public void enableCoins() {
+        if(!active) return;
+        if(!acted) actionCoinAnimator.SetBool("interactable", true);
+        if(!moved) moveCoinAnimator.SetBool("interactable", true);
+        endCoinAnimator.SetBool("interactable", true);
+        surrenderCoinAnimator.SetBool("interactable", true);
+    }
+
+    public void disableCoins() {
+        actionCoinAnimator.SetBool("interactable", false);
+        moveCoinAnimator.SetBool("interactable", false);
+        endCoinAnimator.SetBool("interactable", false);
+        surrenderCoinAnimator.SetBool("interactable", false);
     }
 
     public void showActionsList() {
