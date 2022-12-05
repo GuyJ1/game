@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ItemName: 
   Icon: {fileID: 0}
-  Type: 
-  Stats: 
+  Type: Scimitar
+  Stats: 'MGT: 10'
   Description: 
   modifiers: []
   EquipmentType: 0
@@ -32,8 +32,9 @@ MonoBehaviour:
   certainty: 0
   earlyGambit: 0
   lateGambit: 0
-  MGT: 0
-  DurabilityMAX: 0
-  abilities: []
+  MGT: 10
+  DurabilityMAX: 30
+  abilities:
+  - {fileID: 11400000, guid: 7843dd702ca6e124487db21dc5f1a18d, type: 2}
   model: {fileID: 0}
-  type: 0
+  type: 1

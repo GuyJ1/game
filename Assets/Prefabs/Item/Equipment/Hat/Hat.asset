@@ -14,8 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ItemName: 
   Icon: {fileID: 0}
-  Type: 
-  Stats: 
+  Type: Hat
+  Stats: DEX +8
   Description: 
-  modifiers: []
-  EquipmentType: 0
+  modifiers:
+  - type: 5
+    op: 0
+    duration: -1
+    value: 8
+    chance: 1
+    id: 
+  EquipmentType: 2

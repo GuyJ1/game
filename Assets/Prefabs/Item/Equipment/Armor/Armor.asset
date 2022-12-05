@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ItemName: 
   Icon: {fileID: 0}
-  Type: 
-  Stats: 
+  Type: Armor
+  Stats: 'RES: 10 CON: 10'
   Description: 
   modifiers: []
-  EquipmentType: 0
-  RES: 0
-  CON: 0
+  EquipmentType: 1
+  RES: 10
+  CON: 10

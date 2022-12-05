@@ -15,9 +15,6 @@ MonoBehaviour:
   friendly: 1
   requiresTarget: 0
   free: 0
-  totalDMG: 0
-  totalHP: 0
-  totalACC: 0
   baseDMG: 0
   baseHP: 50
   baseACC: 0
@@ -25,7 +22,10 @@ MonoBehaviour:
   range: 5
   knockback: 0
   selfMovement: 0
+  totalHits: 1
   displayName: Reckless Tune
+  description: '[BASE HEAL: 50, RANGE: 5, AP: 0] Heal an ally and grant +1 AP, but
+    inflict -3 DEF for 3 turns.'
   shape:
   - {x: 0, y: 0}
   targetModifiers:

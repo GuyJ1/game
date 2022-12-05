@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ItemName: 
   Icon: {fileID: 0}
-  Type: 
-  Stats: 
+  Type: Ring
+  Stats: CRIT/AVO +10
   Description: 
   modifiers: []
-  EquipmentType: 0
+  EquipmentType: 3
   ATKmodifier: 0
   HITmodifier: 0
-  CRITmodifier: 0
-  AVOmodifier: 0
+  CRITmodifier: 10
+  AVOmodifier: 10

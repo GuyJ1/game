@@ -15,9 +15,6 @@ MonoBehaviour:
   friendly: 1
   requiresTarget: 1
   free: 0
-  totalDMG: 0
-  totalHP: 0
-  totalACC: 0
   baseDMG: 0
   baseHP: 0
   baseACC: 0
@@ -25,7 +22,9 @@ MonoBehaviour:
   range: 4
   knockback: 0
   selfMovement: 0
+  totalHits: 1
   displayName: Inspiring Shanty
+  description: '[RANGE: 4, AP: 0] Grant +5 STR/SPD to an ally for 3 turns.'
   shape:
   - {x: 0, y: 0}
   targetModifiers:

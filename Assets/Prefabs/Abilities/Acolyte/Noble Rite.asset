@@ -15,9 +15,6 @@ MonoBehaviour:
   friendly: 1
   requiresTarget: 1
   free: 0
-  totalDMG: 0
-  totalHP: 0
-  totalACC: 0
   baseDMG: 0
   baseHP: 100
   baseACC: 0
@@ -25,7 +22,10 @@ MonoBehaviour:
   range: 4
   knockback: 0
   selfMovement: 0
+  totalHits: 1
   displayName: Noble Rite
+  description: '[BASE HEAL: 100, RANGE: 4, AP: 0] Heal an ally, also grants +6 LCK
+    for 2 turns.'
   shape:
   - {x: 0, y: 0}
   targetModifiers:

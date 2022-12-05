@@ -14,9 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ItemName: 
   Icon: {fileID: 0}
-  Type: 
-  Stats: 
+  Type: Bracelet
+  Stats: +1 AP
   Description: 
-  modifiers: []
-  EquipmentType: 0
+  modifiers:
+  - type: 1
+    op: 0
+    duration: -1
+    value: 1
+    chance: 1
+    id: 
+  EquipmentType: 5
   HealModifier: 0

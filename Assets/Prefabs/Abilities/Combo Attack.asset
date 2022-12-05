@@ -15,9 +15,6 @@ MonoBehaviour:
   friendly: 0
   requiresTarget: 1
   free: 0
-  totalDMG: 0
-  totalHP: 0
-  totalACC: 0
   baseDMG: 40
   baseHP: 0
   baseACC: 90
@@ -27,7 +24,8 @@ MonoBehaviour:
   selfMovement: 0
   totalHits: 1
   displayName: Combo
-  description: 
+  description: '[BASE DMG: 40, RANGE: 1, AP: 0] If unit and ally are on opposite
+    sides of the enemy, preform a combo attack.'
   shape:
   - {x: 0, y: 0}
   targetModifiers: []
