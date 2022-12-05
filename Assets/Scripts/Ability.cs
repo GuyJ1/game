@@ -476,7 +476,7 @@ public class Ability : ScriptableObject
             target.adjustHP(-totalDMG, false);
 
             foreach(StatModifier modifier in targetModifiers) {
-                if(modifier.chance > Random.Range(0.0F, 1.0F)) user.addModifier(modifier.clone());
+                if(modifier.chance > Random.Range(0.0F, 1.0F)) target.addModifier(modifier.clone());
             }
         }
  
@@ -494,7 +494,7 @@ public class Ability : ScriptableObject
             //effect
 
             foreach(StatModifier modifier in targetModifiers) {
-                if(modifier.chance > Random.Range(0.0F, 1.0F)) user.addModifier(modifier.clone());
+                if(modifier.chance > Random.Range(0.0F, 1.0F)) target.addModifier(modifier.clone());
             }
         }
         
@@ -508,7 +508,7 @@ public class Ability : ScriptableObject
             //effect
 
             foreach(StatModifier modifier in targetModifiers) {
-                if(modifier.chance > Random.Range(0.0F, 1.0F)) user.addModifier(modifier.clone());
+                if(modifier.chance > Random.Range(0.0F, 1.0F)) target.addModifier(modifier.clone());
             }
     
     }
@@ -526,7 +526,7 @@ public class Ability : ScriptableObject
         //effect
 
         foreach(StatModifier modifier in targetModifiers) {
-            if(modifier.chance > Random.Range(0.0F, 1.0F)) user.addModifier(modifier.clone());
+            if(modifier.chance > Random.Range(0.0F, 1.0F)) target.addModifier(modifier.clone());
         }
     
     }
@@ -566,7 +566,7 @@ public class Ability : ScriptableObject
             target.adjustHP(-baseDMG, false);
 
             foreach(StatModifier modifier in targetModifiers) {
-                if(modifier.chance > Random.Range(0.0F, 1.0F)) user.addModifier(modifier.clone());
+                if(modifier.chance > Random.Range(0.0F, 1.0F)) target.addModifier(modifier.clone());
             }
         }
         
@@ -612,7 +612,7 @@ public class Ability : ScriptableObject
         target.adjustHP(totalHP, true);
 
         foreach(StatModifier modifier in targetModifiers) {
-            if(modifier.chance > Random.Range(0.0F, 1.0F)) user.addModifier(modifier.clone());
+            if(modifier.chance > Random.Range(0.0F, 1.0F)) target.addModifier(modifier.clone());
         }
 
         
@@ -951,7 +951,7 @@ public class Ability : ScriptableObject
 
 
         foreach(StatModifier modifier in targetModifiers) {
-            if(modifier.chance > Random.Range(0.0F, 1.0F)) user.addModifier(modifier.clone());
+            if(modifier.chance > Random.Range(0.0F, 1.0F)) target.addModifier(modifier.clone());
         }
 
         user.resistCharm();
@@ -975,7 +975,7 @@ public class Ability : ScriptableObject
             if(!target.tauntRES){
 
                 foreach(StatModifier modifier in targetModifiers) {
-                    if(modifier.chance > Random.Range(0.0F, 1.0F)) user.addModifier(modifier.clone());
+                    if(modifier.chance > Random.Range(0.0F, 1.0F)) target.addModifier(modifier.clone());
                 }
 
 
@@ -1009,7 +1009,7 @@ public class Ability : ScriptableObject
             if(!target.charmRES){
 
                 foreach(StatModifier modifier in targetModifiers) {
-                    if(modifier.chance > Random.Range(0.0F, 1.0F)) user.addModifier(modifier.clone());
+                    if(modifier.chance > Random.Range(0.0F, 1.0F)) target.addModifier(modifier.clone());
                 }
 
 
@@ -1038,7 +1038,7 @@ public class Ability : ScriptableObject
     void Command(CharacterStats user, CharacterStats target){
 
         foreach(StatModifier modifier in targetModifiers) {
-            if(modifier.chance > Random.Range(0.0F, 1.0F)) user.addModifier(modifier.clone());
+            if(modifier.chance > Random.Range(0.0F, 1.0F)) target.addModifier(modifier.clone());
         }
 
    
@@ -1066,7 +1066,7 @@ public class Ability : ScriptableObject
             target.adjustHP(-totalDMG, false);
 
             foreach(StatModifier modifier in targetModifiers) {
-                if(modifier.chance > Random.Range(0.0F, 1.0F)) user.addModifier(modifier.clone());
+                if(modifier.chance > Random.Range(0.0F, 1.0F)) target.addModifier(modifier.clone());
             }
         }
         
