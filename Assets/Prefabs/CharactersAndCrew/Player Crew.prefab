@@ -50,7 +50,9 @@ MonoBehaviour:
   - {fileID: 5537537504233135668, guid: 35e9b644f5a473148bedf512f2340242, type: 3}
   - {fileID: 5537537504233135668, guid: 35e9b644f5a473148bedf512f2340242, type: 3}
   - {fileID: 5537537504233135668, guid: 35e9b644f5a473148bedf512f2340242, type: 3}
-  - {fileID: 5537537504233135668, guid: 35e9b644f5a473148bedf512f2340242, type: 3}
+  - {fileID: 4669722073133317754, guid: 9ff5783d01f3af2469391a49e3bc3756, type: 3}
+  ship: {fileID: 0}
+  morale: 100
   inventory_gold: 0
   inventory_wood: 0
   inventory_crew: 0

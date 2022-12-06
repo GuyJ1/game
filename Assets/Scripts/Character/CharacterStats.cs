@@ -41,6 +41,7 @@ public class StatModifier
     public float value; //Value for operation
     public float chance; //Chance to apply (0.0 to 1.0)
     public string id = ""; //Optional ID to identify this modifier after it's applied
+    public Sprite statusIcon;
 
     public StatModifier(StatType type, OpType op, int duration, float value, float chance) {
         this.type = type;
