@@ -35,6 +35,7 @@ MonoBehaviour:
     value: -3
     chance: 1
     id: 
+    statusIcon: {fileID: 0}
   selfModifiers: []
   targetEffect: {fileID: 3835916925245124943, guid: a335c85a2b5870e4299a8598ca53df11, type: 3}
   selfEffect: {fileID: 0}

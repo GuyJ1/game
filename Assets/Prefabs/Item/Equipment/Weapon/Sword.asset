@@ -19,9 +19,9 @@ MonoBehaviour:
   Description: 
   modifiers: []
   EquipmentType: 0
-  Durability: 0
+  Durability: -2
   isBroken: 0
-  doubleAttack: 0
+  speedSlash: 0
   strongSiphon: 0
   deadlyPierce: 0
   safeSwap: 0
@@ -35,6 +35,6 @@ MonoBehaviour:
   MGT: 10
   DurabilityMAX: 30
   abilities:
-  - {fileID: 11400000, guid: 032be9fb5059dd444b1fdf5a058deae3, type: 2}
+  - {fileID: 11400000, guid: 8d80614a2ea6c124990498329e0d6150, type: 2}
   model: {fileID: 919132149155446097, guid: 54866c9c2e6a58246b60aed529aa97a7, type: 3}
   type: 0

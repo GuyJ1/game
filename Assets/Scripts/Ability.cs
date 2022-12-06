@@ -1148,6 +1148,9 @@ public class Ability : ScriptableObject
 
         user.DMGimmune = true;
 
+        GameObject hitParticle = Instantiate(selfEffect);
+        hitParticle.transform.position = user.transform.position;
+
         foreach(StatModifier modifier in selfModifiers) {
             if(modifier.chance > Random.Range(0.0F, 1.0F)) user.addModifier(modifier.clone());
         }
