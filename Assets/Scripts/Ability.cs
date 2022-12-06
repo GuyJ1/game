@@ -15,6 +15,24 @@ public class Ability : ScriptableObject
     public bool friendly; //Whether this ability targets allies or enemies (true for allies, false for enemies)
     public bool requiresTarget; //Whether this ability requires a selected target to execute
     public bool free; //Whether this ability consumes a turn action
+
+    /*
+    The below variables might be needed for the description generator :
+
+    public bool willAttack; //Whether this ability will attack a target
+    public bool buffsTarget; //Whether this ability buffs a target
+    public bool buffsSelf; //Whether this ability buffs self
+    public bool debuffsTarget; //Whether ability debuffs a target
+    public bool debuffsSelf; //Whether ability debuffs self
+    public bool healsTarget; //Whether ability heals a target
+    public bool healsSelf; //whether this ability is a self heal
+    public bool statusAilment; //whether this ability will inflict a status ailment
+    public int totalDuration = 0; //determines total number of turns a buff/debuff will last for
+    public string modifierList; //lists buff/debuff modifiers
+    public string inflictedStatus; //status that will be inflicted
+
+    */
+
     public int baseDMG; //ability will always do a certain amount of damage regardless of DEF
     public int baseHP; //ability will always heal a certain amount of HP
     public int baseACC; //ability comes with a set accuracy
@@ -36,6 +54,8 @@ public class Ability : ScriptableObject
     void Start()
     {
 
+        //descriptionGenerator(descirption);
+
         
 
 
@@ -48,12 +68,67 @@ public class Ability : ScriptableObject
 
     }
 
+/*
     public void descriptionGenerator(string description){
 
+        description = "[";
+        if(baseDMG != 0){
 
+            description += "BASE DMG: " + baseDMG + ". ";
 
+        }
+        if(baseHP != 0){
+
+            description += "BASE HEAL: " + baseHP + ". ";
+        }
+        
+        description += "RANGE: " + range + ". " + "COST: " + costAP + "] ";
+
+        if(willAttack){
+
+            description += "Attack the enemy";
+
+            if(totalHits > 1){
+
+                description += " " + totalHits + "times.";
+            }
+            else{
+
+                descirption += ".";
+            }
+        }
+        else if(healsSelf){
+
+            description += "Heal the user.";
+
+        }
+        else if(healsTarget){
+
+            description += "Heal an ally.";
+        }
+        else if(buffsSelf){
+
+            decription += "Grants " + modifierList + " to the user for " + totalDuration + " turns.";
+        }
+        else if(buffsTarget){
+
+             decription += "Grants " + modifierList + " to an ally for " + totalDuration + " turns.";
+        }
+        else if(debuffsSelf){
+
+             decription += "Inflicts " + modifierList + " on the user for " + totalDuration + " turns.";
+        }
+        else if(debuffsTarget){
+
+            decription += "Inflicts " + modifierList + " on the enemy for " + totalDuration + " turns.";
+        }
+        else if(statusAilment){
+
+            description += "Inflicts [" + inflictedStatus + "] on the enemy for " + totalDuration + " turns.";
+        }
 
     }
+*/
 
     // Return knockback value rotated dependent on which way user is facing
     public Vector2Int getKnockback(int xDist, int yDist) {
