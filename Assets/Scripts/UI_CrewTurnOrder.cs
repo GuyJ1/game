@@ -48,6 +48,7 @@ public class UI_CrewTurnOrder : MonoBehaviour
             // Set icon data
             iconScript.battleScript = battleScript;
             iconScript.myChar = battleScript.turnQueue[i];
+            currIcon.GetComponent<Image>().sprite = iconScript.myChar.GetComponent<CharacterStats>().icon;
             iconScript.UpdateChar = true;
             iconScript.turnOrderText.text = i.ToString();
 

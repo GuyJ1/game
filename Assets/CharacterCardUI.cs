@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class CharacterCardUI : MonoBehaviour
@@ -7,6 +8,7 @@ public class CharacterCardUI : MonoBehaviour
     // Public vars
     [SerializeField] public TMP_Text statsPanel;
     [SerializeField] public TMP_Text abilitiesPanel;
+    [SerializeField] public Image portrait;
     [SerializeField] public Animator panelAnim;
     public CharacterStats CurrentCharacter;
 
@@ -32,6 +34,9 @@ public class CharacterCardUI : MonoBehaviour
     {
         // Set character
         CurrentCharacter = stats;
+
+        // Set portrait
+        portrait.sprite = stats.icon;
 
         // Update Panels
         statsPanel.text = statsList(CurrentCharacter);

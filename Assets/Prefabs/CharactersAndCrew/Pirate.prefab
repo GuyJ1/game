@@ -304,6 +304,7 @@ MonoBehaviour:
   canvas: {fileID: 0}
   DamageText: {fileID: 8133978484208511556, guid: 87660d197cb3d9c4a90de7de09cea50e, type: 3}
   model: {fileID: 80955432679685461}
+  icon: {fileID: 21300000, guid: e04eda63957e04c45913a068a6635b64, type: 3}
   gridPosition: {x: 3, y: 10}
   myGrid: {fileID: 0}
   crew: {fileID: 8677408311475748420, guid: ff7e742bfec002a4c80690599f895dce, type: 3}

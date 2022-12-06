@@ -60,6 +60,7 @@ public class UI_CrewIcons : MonoBehaviour
 
                     // Set Icon Data
                     newIcon.GetComponent<UI_CharIcon>().myChar = unit;
+                    newIcon.GetComponent<Image>().sprite = unit.GetComponent<CharacterStats>().icon;
 
                     // Position based on whether ally or enemy
                     if (BattleEngine.isAllyUnit(unit) == true)
