@@ -13,7 +13,7 @@ public class NodeInfo : MonoBehaviour
     public static TextMeshProUGUI textBox;
     public static GameObject textnode;
     public GameObject node;
-    
+    //public static bool displayTextBox;
     private struct Information{
         int Gold;
         int Booze;
@@ -65,7 +65,10 @@ public class NodeInfo : MonoBehaviour
     {
         if (NodeClick.clickobj == this.gameObject)
         {
-           this.showTextBox();
+            if (PlayerMove.displayTextBox == true)
+            {
+                this.showTextBox();
+            }
         }
 
     }
