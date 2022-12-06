@@ -15,4 +15,16 @@ public class NewBehaviourScript : MonoBehaviour
     {
         
     }
+
+    /////////////
+    // Methods //
+    /////////////
+
+    void resolveTurn()
+    {
+
+
+    }
+
+
 }

@@ -16,7 +16,7 @@ public class PlayerAction
     private CharacterStats _character;
 
     //The target of the character's actions (might be empty) ### MIGHT NEED TO MAKE THIS A LIST ###
-    private EnemyStats _target;
+    private CharacterStats _target;
 
     //The ability the character used on its turn (might be empty)
     private Ability _action;
@@ -54,7 +54,7 @@ public class PlayerAction
     }
 
     //Parameterized Constructor
-    public PlayerAction(CharacterStats character, EnemyStats target, Ability action, bool movement)
+    public PlayerAction(CharacterStats character, CharacterStats target, Ability action, bool movement)
     {
         _character = character;
         _target = target;
@@ -81,7 +81,7 @@ public class PlayerAction
         return _character;
     }
 
-    public EnemyStats GetTarget()
+    public CharacterStats GetTarget()
     {
         return _target;
     }
