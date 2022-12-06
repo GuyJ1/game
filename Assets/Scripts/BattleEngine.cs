@@ -586,19 +586,30 @@ public class BattleEngine : MonoBehaviour
 
             //Player turn enqueue handling - passes in the current active unit (if it is a player controlled unit), 
             //the target of this turn's action (if any), the type of action taken this turn (if any), and whether the character moved
-            if(isPlayerTurn && selectedAbility != null)
+            if(isPlayerTurn && selectedAbility != null && acted)
             {
                 //Add the new PlayerAction to the playerActions queue, using the overloaded constructor
-                playerActions.add(new PlayerAction(activeUnit.GetComponent<CharacterStats>(), selectedAbility, moved));
-            }
+                playerActions.add(new PlayerAction(activeUnit.GetComponent<CharacterStats>(), playerTarget.GetComponent<CharacterStats>(), selectedAbility, moved));
 
-            //Logging to show what is at the top of the playerActions queue
-            if(!playerActions.isEmpty())
-            {
-                //Usually shows the same thing over and over again, since player actions aren't being dequeued until the 50th turn
-                Debug.Log("AI Enqueue: " + playerActions[playerActions.Count() - 1].GetCharacter().Name + " " + playerActions[playerActions.Count() - 1].GetAbility().displayName + " " + playerActions[playerActions.Count() - 1].GetMovement() 
+                //Logging to show what was just enqueued
+                Debug.Log("AI: playerActions Enqueue: " + playerActions[playerActions.Count() - 1].GetCharacter().Name + " " 
+                + playerActions[playerActions.Count() - 1].GetTarget().Name + " "
+                + playerActions[playerActions.Count() - 1].GetAbility().displayName + " " 
+                + playerActions[playerActions.Count() - 1].GetMovement() 
                 + "\n" + "Queue Size: " + playerActions.Count());
             }
+
+            //If the player didn't act, don't send in a target
+            else if(isPlayerTurn && acted == false)
+            {
+                playerActions.add(new PlayerAction(activeUnit.GetComponent<CharacterStats>(), selectedAbility, moved));
+
+                //Logging to show what was just enqueued
+                Debug.Log("AI: playerActions Enqueue: " + playerActions[playerActions.Count() - 1].GetCharacter().Name + " "
+                + playerActions[playerActions.Count() - 1].GetMovement() 
+                + "\n" + "Queue Size: " + playerActions.Count());
+            }
+
             turnQueue.RemoveAt(0);
             moved = false;
             acted = false;
@@ -1100,8 +1111,46 @@ public class BattleEngine : MonoBehaviour
         return acted;
     }
 
-    public void doAITurn() {
-        //TODO: AI stuff here
+    public void doAITurn() 
+    {
+        Debug.Log("AI: AI Turn began");
+
+        // // Get active unit script
+        // activeUnit = turnQueue[0];
+        // var activeUnitScript = activeUnit.GetComponent<CharacterStats>();
+
+        // // Recover 1 AP
+        // activeUnitScript.addAP(1);
+
+        // // Get data from active unit
+        // grid = activeUnitScript.myGrid;
+        // var gridScript = grid.GetComponent<GridBehavior>();
+        // activeUnitPos = activeUnitScript.gridPosition;
+
+        // // Camera Culling
+        // var camScript = cam.GetComponent<CameraControl>();
+        // camScript.SetLayerMode((CameraControl.LAYERMODE)activeUnit.layer);
+
+        // // Deselect ability
+        // selectedAbility = null;
+        
+        // // Set the tile of which the character is on to be active
+        // activeUnitTile = gridScript.grid[activeUnitPos.x, activeUnitPos.y];
+        // activeUnitTile.GetComponent<Renderer>().material = gridScript.activeUnselected;
+        // camScript.LookAtPos(activeUnitTile.transform.position);
+
+        StartCoroutine(simpleWaiter());
+    }
+
+    IEnumerator simpleWaiter()
+    {
+        var gridScript = grid.GetComponent<GridBehavior>();
+
+        Debug.Log("AI: AI simple waiting");
+
+        setupMove(activeUnitTile);
+
+        yield return new WaitForSecondsRealtime(2);
         endTurn();
     }
 }
