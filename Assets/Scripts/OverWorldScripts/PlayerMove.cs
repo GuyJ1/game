@@ -25,7 +25,7 @@ public class PlayerMove : MonoBehaviour
     void Start()
     {
 
-        originalYAxis = 1;
+        originalYAxis = 1.5f;
         BOAT = this.gameObject;
         zAxis = currNode.transform.position.z;//BOAT.transform.position.z;
         xAxis = currNode.transform.position.x;
@@ -110,7 +110,7 @@ public class PlayerMove : MonoBehaviour
             distanceZ = zAxis - destination.transform.position.z;
 
         }
-
+        NodeInfo.loadScene();
     }
 
     public IEnumerator floating()

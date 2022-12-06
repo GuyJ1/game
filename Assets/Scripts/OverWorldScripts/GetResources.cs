@@ -36,17 +36,17 @@ public class GetResources : MonoBehaviour
     //will update these functions once resource system is implemented//
     public int getGold()
     {
-        return 1;
+        return 456;
     }
 
     public int getBooze()
     {
-        return 2;
+        return 132;
     }
 
     public int getMorale()
     {
-        return 3;
+        return 152;
     }
 }
 
