@@ -433,7 +433,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a2d3bc059b1d24f4cb23ee5e55f92c6d, type: 3}
---- !u!1001 &1464524383
+--- !u!1001 &1627905000
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -484,10 +484,34 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -4322150076345411516, guid: e0a008a389e65b94dbc86d5b06ff95e4, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: fdf7aacb6fa4b9446977f8efc656971a, type: 2}
+    - target: {fileID: -3032585343809474177, guid: e0a008a389e65b94dbc86d5b06ff95e4, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: fdf7aacb6fa4b9446977f8efc656971a, type: 2}
     - target: {fileID: 919132149155446097, guid: e0a008a389e65b94dbc86d5b06ff95e4, type: 3}
       propertyPath: m_Name
       value: PirateGalleon
       objectReference: {fileID: 0}
+    - target: {fileID: 2439998989573260347, guid: e0a008a389e65b94dbc86d5b06ff95e4, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: fdf7aacb6fa4b9446977f8efc656971a, type: 2}
+    - target: {fileID: 2444462011405123112, guid: e0a008a389e65b94dbc86d5b06ff95e4, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: fdf7aacb6fa4b9446977f8efc656971a, type: 2}
+    - target: {fileID: 5839376652260809555, guid: e0a008a389e65b94dbc86d5b06ff95e4, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: fdf7aacb6fa4b9446977f8efc656971a, type: 2}
+    - target: {fileID: 7106429467219697582, guid: e0a008a389e65b94dbc86d5b06ff95e4, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: fdf7aacb6fa4b9446977f8efc656971a, type: 2}
     - target: {fileID: 9203066935596755868, guid: e0a008a389e65b94dbc86d5b06ff95e4, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
