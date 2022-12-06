@@ -728,7 +728,7 @@ public class BattleEngine : MonoBehaviour
         if(!acted) highlightActionTiles(newPos, selectedAbility.range);
         for(int i = 0; i < selectedAbility.totalHits; i++)
         {
-            selectedAbility.affectCharacters(activeUnit, characters);
+            selectedAbility.affectCharacters(activeUnit, characters, i);
             yield return new WaitForSecondsRealtime(0.6f);
         }
 
@@ -795,7 +795,7 @@ public class BattleEngine : MonoBehaviour
 
     IEnumerator endComboAttack(GameObject user, GameObject target) {
         yield return new WaitWhile(() => !user.GetComponent<CharacterStats>().rotateTowards(target.GetComponent<CharacterStats>().getTileObject().transform.position)); //Wait for rotation first
-        getComboAttack(user).affectCharacter(user, target);
+        getComboAttack(user).affectCharacter(user, target, 0);
         yield break;
     }
 

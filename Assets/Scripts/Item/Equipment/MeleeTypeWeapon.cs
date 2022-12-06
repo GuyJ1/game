@@ -46,7 +46,7 @@ public class MeleeTypeWeapon : Weapon
                 */
 
                 //Passives:
-                doubleAttack = true;
+                speedSlash = true;
                 lastStand = true;
                 shiningStar = true;
                 certainty = true;

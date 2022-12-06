@@ -503,19 +503,15 @@ public class CharacterStats : MonoBehaviour
     //Type 1 = general attack, nothing changes
     //Type 2 = no defenses, attack while target.DEF is ignored
     //Type 3 = attack doesn't miss
-    public int Attack(CharacterStats target, int type){
+    //ATK/CRIT/HIT can be modified further with abilities/passives
+    public int Attack(CharacterStats target, int type, int atkMod, int hitMod, int critMod){
         int DEX = getDexterity(), STR = getStrength(), LCK = getLuck();
-        HIT = ((((DEX * 3 + LCK) / 2) + (2 * (Morale / 20))) - target.AVO) + accessoryBonus(1);
-        CRIT = ((((DEX / 2) - 5) + (Morale / 20)) - target.getLuck()) + accessoryBonus(2);
-
-        if(type == 2 && (weapon != null && weapon.deadlyPierce)){//Deadly Pierce grants +10 CRIT
-
-            CRIT += 10;
-        }
+        HIT = ((((DEX * 3 + LCK) / 2) + (2 * (Morale / 20))) - target.AVO) + accessoryBonus(1) + hitMod;
+        CRIT = ((((DEX / 2) - 5) + (Morale / 20)) - target.getLuck()) + accessoryBonus(2) + critMod;
 
         if(weapon != null && weapon.lastStand && HP == 1){//Last Stand gives a gauranteed crit
 
-            ATK = ((STR + (Morale / 20) + weaponBonus() + accessoryBonus(0)) - target.getDefense()) * 3;
+            ATK += ((STR + (Morale / 20) + weaponBonus() + accessoryBonus(0) + atkMod) - target.getDefense()) * 3;
             return ATK;
         }
 
@@ -523,15 +519,14 @@ public class CharacterStats : MonoBehaviour
 
             if(type == 2){
 
-                ATK = (STR + (Morale / 20) + weaponBonus() + accessoryBonus(0)) * 3;
+                ATK = (STR + (Morale / 20) + weaponBonus() + accessoryBonus(0) + atkMod) * 3;
             }
             else{
 
-                ATK = ((STR + (Morale / 20) + weaponBonus() + accessoryBonus(0)) - target.getDefense()) * 3; //CRITICAL HIT!
+                ATK = ((STR + (Morale / 20) + weaponBonus() + accessoryBonus(0) + atkMod) - target.getDefense()) * 3; //CRITICAL HIT!
 
 
             }
-            //target.adjustHP(-ATK);
 
             if(weapon != null){
 
@@ -544,18 +539,17 @@ public class CharacterStats : MonoBehaviour
 
             if(type == 2){
 
-                ATK = (STR + (Morale / 5) + weaponBonus() + accessoryBonus(0)); //HIT!
+                ATK = (STR + (Morale / 5) + weaponBonus() + accessoryBonus(0) + atkMod); //HIT!
 
 
             }
             else{
 
-                ATK = (STR + (Morale / 5) + weaponBonus() + accessoryBonus(0)) - target.getDefense(); //HIT!
+                ATK = (STR + (Morale / 5) + weaponBonus() + accessoryBonus(0) + atkMod) - target.getDefense(); //HIT!
 
 
 
             }
-            //target.adjustHP(-ATK);
 
             if(weapon != null){
 

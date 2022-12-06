@@ -12,13 +12,13 @@ public class Weapon : EquippableItem
 
     ///  PASSIVE WEAPON ABILITIES (false by default) ///
     
-    public bool doubleAttack = false; //certain weapons are able to attack again if the unit's SPD - target's SPD >= 5 
+    public bool speedSlash = false; //if the unit's SPD - target's SPD >= 5 , +2 ATK for every 5 SPD faster than target
     public bool strongSiphon = false; //when using Siphon, user will heal 20% more HP
-    public bool deadlyPierce = false; //when using Pierce, CRIT +10
+    public bool deadlyPierce = false; //when using Pierce, CRIT +15
     public bool safeSwap = false; //When using LifeSwap, uses healing bonus (gain more HP or take less damage)
     public bool strongSoul = false; //When using SoulBash, if user is at full HP, bonus damage = MAX HP
     public bool lastStand = false; //When using Persistance, if user is at 1 HP, gauranteed critical hit
-    public bool shiningStar = false; //When using Shooting Star, attack 10 times at 1/10th the power (same hit and crit rate)
+    public bool shiningStar = false; //When using Shooting Star, HIT/CRIT + 20
     public bool betterHeal = false; //When using LightHeal, baseHP is doubled
     public bool certainty = false; //When using QuickAttack, attack does not miss
     public bool earlyGambit = false; //When using Gambit, accuracy is better earlier
