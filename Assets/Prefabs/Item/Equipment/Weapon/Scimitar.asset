@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56b71694a57c3a64a8ebaf74359031cf, type: 3}
   m_Name: Scimitar
   m_EditorClassIdentifier: 
-  ItemName: 
+  ItemName: Basic Scimitar
   Icon: {fileID: 0}
   Type: Scimitar
   Stats: 'MGT: 10'
@@ -21,7 +21,7 @@ MonoBehaviour:
   EquipmentType: 0
   Durability: 0
   isBroken: 0
-  doubleAttack: 0
+  speedSlash: 0
   strongSiphon: 0
   deadlyPierce: 0
   safeSwap: 0

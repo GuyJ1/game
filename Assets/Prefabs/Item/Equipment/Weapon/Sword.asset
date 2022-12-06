@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56b71694a57c3a64a8ebaf74359031cf, type: 3}
   m_Name: Sword
   m_EditorClassIdentifier: 
-  ItemName: 
+  ItemName: Basic Sword
   Icon: {fileID: 0}
   Type: Sword
   Stats: 'MGT: 10'
   Description: 
   modifiers: []
   EquipmentType: 0
-  Durability: -2
+  Durability: 0
   isBroken: 0
   speedSlash: 0
   strongSiphon: 0

@@ -15,9 +15,6 @@ MonoBehaviour:
   friendly: 0
   requiresTarget: 0
   free: 0
-  totalDMG: 0
-  totalHP: 0
-  totalACC: 0
   baseDMG: 60
   baseHP: 0
   baseACC: 0
@@ -27,7 +24,7 @@ MonoBehaviour:
   selfMovement: 0
   totalHits: 1
   displayName: Whirling Steel
-  description: 
+  description: Attack all enemies in range.
   shape:
   - {x: 1, y: 0}
   - {x: -1, y: 0}

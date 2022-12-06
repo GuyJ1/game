@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2923f0e8e74d55643b5f07ff25ee92ed, type: 3}
   m_Name: Aura
   m_EditorClassIdentifier: 
-  ItemName: 
+  ItemName: Warrior's Aura
   Icon: {fileID: 0}
   Type: Aura
   Stats: STR/SPD/DEX +2, HIT +10
@@ -24,18 +24,21 @@ MonoBehaviour:
     value: 2
     chance: 1
     id: 
+    statusIcon: {fileID: 0}
   - type: 4
     op: 0
     duration: -1
     value: 2
     chance: 1
     id: 
+    statusIcon: {fileID: 0}
   - type: 5
     op: 0
     duration: -1
     value: 2
     chance: 1
     id: 
+    statusIcon: {fileID: 0}
   EquipmentType: 7
   HealModifier: 0
   ATKmodifier: 0

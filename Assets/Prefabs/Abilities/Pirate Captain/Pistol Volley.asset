@@ -15,9 +15,6 @@ MonoBehaviour:
   friendly: 0
   requiresTarget: 1
   free: 0
-  totalDMG: 0
-  totalHP: 0
-  totalACC: 0
   baseDMG: 30
   baseHP: 0
   baseACC: 60
@@ -27,7 +24,7 @@ MonoBehaviour:
   selfMovement: 0
   totalHits: 3
   displayName: Pistol Volley
-  description: 
+  description: Attack the enemy 3 times from a distance.
   shape:
   - {x: 0, y: 0}
   targetModifiers: []

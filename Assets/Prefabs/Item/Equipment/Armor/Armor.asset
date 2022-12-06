@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09298ffe99cac654bb08000ad90c760d, type: 3}
   m_Name: Armor
   m_EditorClassIdentifier: 
-  ItemName: 
+  ItemName: Basic Armor
   Icon: {fileID: 0}
   Type: Armor
   Stats: 'RES: 10 CON: 10'

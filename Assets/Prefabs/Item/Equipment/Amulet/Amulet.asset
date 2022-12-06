@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82b7e6de39a3e304380d5098f755ddf9, type: 3}
   m_Name: Amulet
   m_EditorClassIdentifier: 
-  ItemName: 
+  ItemName: Lucky Amulet
   Icon: {fileID: 0}
   Type: Amulet
   Stats: LCK +5
@@ -24,5 +24,6 @@ MonoBehaviour:
     value: 5
     chance: 1
     id: 
+    statusIcon: {fileID: 0}
   EquipmentType: 4
   HealModifier: 20

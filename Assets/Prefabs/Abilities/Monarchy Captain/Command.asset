@@ -15,9 +15,6 @@ MonoBehaviour:
   friendly: 1
   requiresTarget: 1
   free: 0
-  totalDMG: 0
-  totalHP: 0
-  totalACC: 0
   baseDMG: 0
   baseHP: 0
   baseACC: 0
@@ -27,7 +24,7 @@ MonoBehaviour:
   selfMovement: 0
   totalHits: 1
   displayName: Command
-  description: 
+  description: Grants +7 STR/DEX/LCK to an ally for 2 turns.
   shape:
   - {x: 0, y: 0}
   targetModifiers:
@@ -37,18 +34,21 @@ MonoBehaviour:
     value: 7
     chance: 1
     id: 
+    statusIcon: {fileID: 0}
   - type: 3
     op: 0
     duration: 2
     value: 7
     chance: 1
     id: 
+    statusIcon: {fileID: 0}
   - type: 6
     op: 0
     duration: 2
     value: 7
     chance: 1
     id: 
+    statusIcon: {fileID: 0}
   selfModifiers: []
   targetEffect: {fileID: 8194730916865382081, guid: febe915fc11145c46812fe4f4967bd29, type: 3}
   selfEffect: {fileID: 0}

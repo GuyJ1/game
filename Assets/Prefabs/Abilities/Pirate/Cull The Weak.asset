@@ -15,9 +15,6 @@ MonoBehaviour:
   friendly: 0
   requiresTarget: 1
   free: 0
-  totalDMG: 130
-  totalHP: 0
-  totalACC: 0
   baseDMG: 100
   baseHP: 0
   baseACC: 65
@@ -27,7 +24,7 @@ MonoBehaviour:
   selfMovement: 0
   totalHits: 1
   displayName: Cull The Weak
-  description: 
+  description: Attack the enemy.
   shape:
   - {x: 0, y: 0}
   targetModifiers: []

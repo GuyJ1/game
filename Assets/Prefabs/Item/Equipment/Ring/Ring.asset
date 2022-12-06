@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e33bc7652883e347b9c7566e5ba58b3, type: 3}
   m_Name: Ring
   m_EditorClassIdentifier: 
-  ItemName: 
+  ItemName: Dynamic Ring
   Icon: {fileID: 0}
   Type: Ring
   Stats: CRIT/AVO +10

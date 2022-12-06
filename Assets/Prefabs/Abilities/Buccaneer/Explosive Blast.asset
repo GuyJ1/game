@@ -24,7 +24,7 @@ MonoBehaviour:
   selfMovement: 0
   totalHits: 1
   displayName: Explosive Blast
-  description: '[BASE DMG: 75, RANGE: 2, AP: 0] Attack the enemy, light knockback.'
+  description: Attack the enemy, light knockback.
   shape: []
   targetModifiers: []
   selfModifiers: []

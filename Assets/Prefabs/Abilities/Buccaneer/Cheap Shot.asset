@@ -24,8 +24,7 @@ MonoBehaviour:
   selfMovement: 0
   totalHits: 1
   displayName: Cheap Shot
-  description: '[BASE DMG: 30, RANGE: 6, AP: 0] Attack the enemy and lower their
-    MV by 2'
+  description: Attack the enemy and lower their MV by 2 for 1 turn.
   shape:
   - {x: 0, y: 0}
   targetModifiers:

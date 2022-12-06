@@ -24,7 +24,8 @@ MonoBehaviour:
   selfMovement: 0
   totalHits: 5
   displayName: Shooting Star
-  description: 
+  description: Attack the enemy 5 times. Each attack does 20% of the amount of a
+    basic attack.
   shape:
   - {x: 0, y: 0}
   targetModifiers: []

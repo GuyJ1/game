@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6942e62d18bb1434abb50cfdf3ece19b, type: 3}
   m_Name: Shoes
   m_EditorClassIdentifier: 
-  ItemName: 
+  ItemName: Sneakers
   Icon: {fileID: 0}
   Type: Shoes
   Stats: MV +1
@@ -24,4 +24,5 @@ MonoBehaviour:
     value: 1
     chance: 1
     id: 
+    statusIcon: {fileID: 0}
   EquipmentType: 6

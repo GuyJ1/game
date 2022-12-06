@@ -15,9 +15,6 @@ MonoBehaviour:
   friendly: 0
   requiresTarget: 1
   free: 0
-  totalDMG: 0
-  totalHP: 0
-  totalACC: 0
   baseDMG: 0
   baseHP: 0
   baseACC: 0
@@ -27,7 +24,7 @@ MonoBehaviour:
   selfMovement: 0
   totalHits: 1
   displayName: Persistance
-  description: 
+  description: Attack the enemy. The less HP the user has, the more damage is dealt.
   shape:
   - {x: 0, y: 0}
   targetModifiers: []

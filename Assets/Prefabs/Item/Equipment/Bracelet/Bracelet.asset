@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcdc20ccd87e9d2449beab08bf8cd0d8, type: 3}
   m_Name: Bracelet
   m_EditorClassIdentifier: 
-  ItemName: 
+  ItemName: Tactical Bracelet
   Icon: {fileID: 0}
   Type: Bracelet
   Stats: +1 AP
@@ -24,5 +24,6 @@ MonoBehaviour:
     value: 1
     chance: 1
     id: 
+    statusIcon: {fileID: 0}
   EquipmentType: 5
   HealModifier: 0

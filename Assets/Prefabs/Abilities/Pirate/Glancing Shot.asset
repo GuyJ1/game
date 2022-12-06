@@ -24,7 +24,7 @@ MonoBehaviour:
   selfMovement: 0
   totalHits: 1
   displayName: Glancing Shot
-  description: 
+  description: Attack the enemy from a distance.
   shape:
   - {x: 0, y: 0}
   targetModifiers: []

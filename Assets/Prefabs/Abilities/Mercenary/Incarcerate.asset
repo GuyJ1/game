@@ -24,8 +24,7 @@ MonoBehaviour:
   selfMovement: 0
   totalHits: 1
   displayName: Incarcerate
-  description: '[BASE DMG: 65, RANGE: 3, AP: 0] Attack the enemy and inflict -8 SPD
-    and -3 MV for 2 turns.'
+  description: Attack the enemy and inflict -8 SPD and -3 MV for 2 turns.
   shape:
   - {x: 0, y: 0}
   targetModifiers:

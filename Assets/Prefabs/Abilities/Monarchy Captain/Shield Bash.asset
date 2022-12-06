@@ -15,17 +15,17 @@ MonoBehaviour:
   friendly: 0
   requiresTarget: 1
   free: 0
-  totalDMG: 0
-  totalHP: 0
-  totalACC: 0
   baseDMG: 70
   baseHP: 0
   baseACC: 70
   costAP: 0
   range: 1
   knockback: 3
-  selfMovement: 0
+  selfMovement: 1
+  totalHits: 1
   displayName: Shield Bash
+  description: Attack the enemy with medium knockback, also move forward one space.
+    If armor is equipped, bonus damage = user's DEF / 3.
   shape: []
   targetModifiers: []
   selfModifiers: []

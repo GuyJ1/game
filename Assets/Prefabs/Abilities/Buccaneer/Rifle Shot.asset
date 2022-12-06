@@ -24,8 +24,7 @@ MonoBehaviour:
   selfMovement: 0
   totalHits: 1
   displayName: Rifle Shot
-  description: '[BASE DMG: 60, RANGE: 8, AP: 0] Attack the enemy. Gain +5 HIT for
-    every movement space available.'
+  description: Attack the enemy. Gain +5 HIT for every movement space available.
   shape:
   - {x: 0, y: 0}
   targetModifiers: []

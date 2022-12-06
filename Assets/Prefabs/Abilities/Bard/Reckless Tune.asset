@@ -24,8 +24,7 @@ MonoBehaviour:
   selfMovement: 0
   totalHits: 1
   displayName: Reckless Tune
-  description: '[BASE HEAL: 50, RANGE: 5, AP: 0] Heal an ally and grant +1 AP, but
-    inflict -3 DEF for 3 turns.'
+  description: Heal an ally and grant +1 AP, but inflict -3 DEF for 3 turns.
   shape:
   - {x: 0, y: 0}
   targetModifiers:
