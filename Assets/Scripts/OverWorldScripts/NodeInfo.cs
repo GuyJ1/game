@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 public class NodeInfo : MonoBehaviour
 {
     
@@ -13,7 +14,9 @@ public class NodeInfo : MonoBehaviour
     public static TextMeshProUGUI textBox;
     public static GameObject textnode;
     public GameObject node;
-    
+    public static string sceneName;
+    public string goToScene;
+    //public static bool displayTextBox;
     private struct Information{
         int Gold;
         int Booze;
@@ -25,7 +28,7 @@ public class NodeInfo : MonoBehaviour
     public void Awake()
     {
         textnode = GameObject.Find("Text (TMP)");
-        
+        sceneName = goToScene;
         node = this.gameObject;
         textBox=textnode.GetComponent<TextMeshProUGUI>();
         
@@ -38,11 +41,15 @@ public class NodeInfo : MonoBehaviour
         textBox.text += "Morale Reward: " + MoraleReward + "\n";
         textBox.text += "Enemies: " + Enemies + "\n";
         textBox.text += description;
-        if(!NodeLines.isNeighbor(PlayerMove.getCurrNode(),PlayerMove.getDestination()))
+        if(PlayerMove.getCurrNode()== PlayerMove.getDestination())
+        {
+            textBox.text += "<color=red>\nYou're already here! \n Go Somewhere else!";
+        }
+        else if(!NodeLines.isNeighbor(PlayerMove.getCurrNode(),PlayerMove.getDestination()))
         {
             //string no = "\nCannot Travel to \nthis Destination yet.";
             
-            textBox.text +=  "<color=red>\nCannot Travel to \nthis Destination yet, \n<i> Matey</i>.</color>" ;
+            textBox.text +=  "<color=red>\nCannot Travel to \nthis Destination \n<i> Matey</i>.</color>" ;
            // textBox.color = Color.red;
         }
         textnode.SetActive(true);
@@ -60,12 +67,23 @@ public class NodeInfo : MonoBehaviour
         
     }
 
+    public static void loadScene()
+    {
+        if (sceneName != "")
+        {
+            SceneManager.LoadScene(sceneName);
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
         if (NodeClick.clickobj == this.gameObject)
         {
-           this.showTextBox();
+            if (PlayerMove.displayTextBox == true)
+            {
+                this.showTextBox();
+            }
         }
 
     }

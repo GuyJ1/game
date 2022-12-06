@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ItemName: 
   Icon: {fileID: 0}
-  Type: 
-  Stats: 
+  Type: Sword
+  Stats: 'MGT: 10'
   Description: 
   modifiers: []
   EquipmentType: 0
@@ -32,9 +32,9 @@ MonoBehaviour:
   certainty: 0
   earlyGambit: 0
   lateGambit: 0
-  MGT: 0
-  DurabilityMAX: 0
+  MGT: 10
+  DurabilityMAX: 30
   abilities:
-  - {fileID: 11400000, guid: 7843dd702ca6e124487db21dc5f1a18d, type: 2}
+  - {fileID: 11400000, guid: 032be9fb5059dd444b1fdf5a058deae3, type: 2}
   model: {fileID: 919132149155446097, guid: 54866c9c2e6a58246b60aed529aa97a7, type: 3}
   type: 0

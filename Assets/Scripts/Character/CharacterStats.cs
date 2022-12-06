@@ -41,6 +41,7 @@ public class StatModifier
     public float value; //Value for operation
     public float chance; //Chance to apply (0.0 to 1.0)
     public string id = ""; //Optional ID to identify this modifier after it's applied
+    public Sprite statusIcon;
 
     public StatModifier(StatType type, OpType op, int duration, float value, float chance) {
         this.type = type;
@@ -162,7 +163,7 @@ public class CharacterStats : MonoBehaviour
     void Start()
     {
         // Attach healthbar to canvas
-        canvas = GameObject.Find("UI Menu");
+        canvas = GameObject.Find("UI Overlay");
         healthBar = Instantiate(healthBar, canvas.transform);
         APBar = Instantiate(APBar, canvas.transform);
 
@@ -182,7 +183,6 @@ public class CharacterStats : MonoBehaviour
         // Set health, ability points, etc.
 
         refresh();
-
 
         HP = getMaxHP();
         healthBar.SetMaxHealth(HP);
@@ -246,7 +246,7 @@ public class CharacterStats : MonoBehaviour
     {
         // --------- Update bar positions ---------
         healthBar.transform.position = Camera.main.WorldToScreenPoint(model.transform.position + new Vector3(0, healthBarYOffset, 0));
-        APBar.transform.position = Camera.main.WorldToScreenPoint(model.transform.position + new Vector3(-0.45f, APBarYOffset, 0.2f));
+        APBar.transform.position = Camera.main.WorldToScreenPoint(model.transform.position + new Vector3(-0.375f, APBarYOffset, 0.2f));
 
         // --------- Update scale based on camera position ---------
         float camDist = Vector3.Distance(Camera.main.transform.position, this.transform.position);
@@ -265,8 +265,7 @@ public class CharacterStats : MonoBehaviour
     // Disable the character and associated elements
     public void removeFromGrid() {
         this.gameObject.SetActive(false);
-        healthBar.gameObject.SetActive(false);
-        APBar.gameObject.SetActive(false);
+        hideBars();
     }
 
     public GameObject getTileObject() {
@@ -284,6 +283,18 @@ public class CharacterStats : MonoBehaviour
         return Mathf.Abs(q1.eulerAngles.y - transform.eulerAngles.y) < 1f;
     }
 
+    // Activate bars
+    public void showBars() {
+        healthBar.gameObject.SetActive(true);
+        APBar.gameObject.SetActive(true);
+    }
+
+    // Deactivate bars
+    public void hideBars() {
+        healthBar.gameObject.SetActive(false);
+        APBar.gameObject.SetActive(false);
+    }
+
     // Whether this character is considered dead in battle
     public bool isDead() {
         return HP <= 0;
@@ -297,11 +308,14 @@ public class CharacterStats : MonoBehaviour
         return crew.GetComponent<CrewSystem>().isPlayer;
     }
 
-    // Return selectable abilities in battle (combo attack not included)
+    // Return all usable abilities in battle
     public List<Ability> getBattleAbilities() {
         List<Ability> list = new List<Ability>();
         list.Add(basicAttack);
-        foreach(Ability ability in abilities) list.Add(ability);
+        foreach(Ability ability in abilities) list.Add(ability); //Class abilities
+        if(weapon != null) {
+            foreach(Ability ability in weapon.abilities) list.Add(ability); //Weapon abilities
+        }
         return list;
     }
 
@@ -311,10 +325,10 @@ public class CharacterStats : MonoBehaviour
         if(weapon != null) {
             weapon.applyModifiers(this);
             //Remove the old model first
-            Transform oldModel = RecursiveFind(this.transform, WEAPON_MODEL);
+            Transform oldModel = recursiveFind(this.transform, WEAPON_MODEL);
             if(oldModel != null) GameObject.Destroy(oldModel.gameObject);
             //Instantiate the new weapon and parent it to the right hand's attachment point for objects
-            GameObject newModel = Instantiate(weapon.model, RecursiveFind(this.transform, "Object.R"));
+            GameObject newModel = Instantiate(weapon.model, recursiveFind(this.transform, "Object.R"));
             newModel.transform.Rotate(-90f, 0f, 0f, Space.Self); //Set up rotations (this should be done in the prefab if more stuff is used here besides swords)
         }
         if(hat != null) hat.applyModifiers(this);
@@ -331,7 +345,9 @@ public class CharacterStats : MonoBehaviour
         ATK = getATK(null, true);
     }
 
-    public static Transform RecursiveFind(Transform parent, string childName) {
+
+
+    public static Transform recursiveFind(Transform parent, string childName) {
         foreach (Transform child in parent)
         {
             if(child.name == childName)
@@ -340,7 +356,7 @@ public class CharacterStats : MonoBehaviour
             }
             else
             {
-                Transform found = RecursiveFind(child, childName);
+                Transform found = recursiveFind(child, childName);
                 if (found != null)
                 {
                         return found;
@@ -488,19 +504,15 @@ public class CharacterStats : MonoBehaviour
     //Type 1 = general attack, nothing changes
     //Type 2 = no defenses, attack while target.DEF is ignored
     //Type 3 = attack doesn't miss
-    public int Attack(CharacterStats target, int type){
+    //ATK/CRIT/HIT can be modified further with abilities/passives
+    public int Attack(CharacterStats target, int type, int atkMod, int hitMod, int critMod){
         int DEX = getDexterity(), STR = getStrength(), LCK = getLuck();
-        HIT = ((((DEX * 3 + LCK) / 2) + (2 * (Morale / 20))) - target.AVO) + accessoryBonus(1);
-        CRIT = ((((DEX / 2) - 5) + (Morale / 20)) - target.getLuck()) + accessoryBonus(2);
-
-        if(type == 2 && (weapon != null && weapon.deadlyPierce)){//Deadly Pierce grants +10 CRIT
-
-            CRIT += 10;
-        }
+        HIT = ((((DEX * 3 + LCK) / 2) + (2 * (Morale / 20))) - target.AVO) + accessoryBonus(1) + hitMod;
+        CRIT = ((((DEX / 2) - 5) + (Morale / 20)) - target.getLuck()) + accessoryBonus(2) + critMod;
 
         if(weapon != null && weapon.lastStand && HP == 1){//Last Stand gives a gauranteed crit
 
-            ATK = ((STR + (Morale / 20) + weaponBonus() + accessoryBonus(0)) - target.getDefense()) * 3;
+            ATK += ((STR + (Morale / 20) + weaponBonus() + accessoryBonus(0) + atkMod) - target.getDefense()) * 3;
             return ATK;
         }
 
@@ -508,15 +520,14 @@ public class CharacterStats : MonoBehaviour
 
             if(type == 2){
 
-                ATK = (STR + (Morale / 20) + weaponBonus() + accessoryBonus(0)) * 3;
+                ATK = (STR + (Morale / 20) + weaponBonus() + accessoryBonus(0) + atkMod) * 3;
             }
             else{
 
-                ATK = ((STR + (Morale / 20) + weaponBonus() + accessoryBonus(0)) - target.getDefense()) * 3; //CRITICAL HIT!
+                ATK = ((STR + (Morale / 20) + weaponBonus() + accessoryBonus(0) + atkMod) - target.getDefense()) * 3; //CRITICAL HIT!
 
 
             }
-            //target.adjustHP(-ATK);
 
             if(weapon != null){
 
@@ -529,18 +540,17 @@ public class CharacterStats : MonoBehaviour
 
             if(type == 2){
 
-                ATK = (STR + (Morale / 5) + weaponBonus() + accessoryBonus(0)); //HIT!
+                ATK = (STR + (Morale / 5) + weaponBonus() + accessoryBonus(0) + atkMod); //HIT!
 
 
             }
             else{
 
-                ATK = (STR + (Morale / 5) + weaponBonus() + accessoryBonus(0)) - target.getDefense(); //HIT!
+                ATK = (STR + (Morale / 5) + weaponBonus() + accessoryBonus(0) + atkMod) - target.getDefense(); //HIT!
 
 
 
             }
-            //target.adjustHP(-ATK);
 
             if(weapon != null){
 

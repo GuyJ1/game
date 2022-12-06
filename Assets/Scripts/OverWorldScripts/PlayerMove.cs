@@ -14,7 +14,7 @@ public class PlayerMove : MonoBehaviour
     public static GameObject destination2;
     public bool travel = false;
     public static GameObject currNode;//=GameObject.Find("StartNode");
-
+    public static bool displayTextBox;
 
     private void Awake()
     {
@@ -25,7 +25,7 @@ public class PlayerMove : MonoBehaviour
     void Start()
     {
 
-        originalYAxis = 1;
+        originalYAxis = 1.5f;
         BOAT = this.gameObject;
         zAxis = currNode.transform.position.z;//BOAT.transform.position.z;
         xAxis = currNode.transform.position.x;
@@ -42,6 +42,7 @@ public class PlayerMove : MonoBehaviour
         BOAT.transform.position = new Vector3(xAxis, yAxis, zAxis);
         if (Input.GetMouseButtonDown(0))
         {
+            displayTextBox = true;
             if (travel != true)
             {
                 if (destination != null)
@@ -53,6 +54,7 @@ public class PlayerMove : MonoBehaviour
                         {
                             travel = true;
                             currNode = destination2;
+                            
                             StartCoroutine(Sail());
                         }
                     }
@@ -63,6 +65,7 @@ public class PlayerMove : MonoBehaviour
                     }
                 }
                 destination = NodeClick.GetClickObj();
+                
             }
         }
     }
@@ -73,7 +76,8 @@ public class PlayerMove : MonoBehaviour
         float distanceZ = zAxis-destination.transform.position.z;        
         float velocity = 3f;
         Vector3 look = new Vector3(destination.transform.position.x, BOAT.transform.position.y, destination.transform.position.z);
-
+        displayTextBox = false;
+        NodeInfo.hideTextBox();
         while (travel == true)
         {
             yield return new WaitForSeconds(0.0f);
@@ -106,7 +110,7 @@ public class PlayerMove : MonoBehaviour
             distanceZ = zAxis - destination.transform.position.z;
 
         }
-
+        NodeInfo.loadScene();
     }
 
     public IEnumerator floating()

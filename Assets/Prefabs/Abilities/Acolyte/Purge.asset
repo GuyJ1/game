@@ -14,18 +14,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   friendly: 1
   requiresTarget: 1
-  totalDMG: 0
-  totalHP: 0
-  totalACC: 0
+  free: 0
   baseDMG: 0
   baseHP: 0
   baseACC: 95
-  cost: 2
+  costAP: 0
   range: 4
   knockback: 0
+  selfMovement: 0
+  totalHits: 1
   displayName: Purge
+  description: '[RANGE: 4, AP: 0] Clear all debuffs and grant +1 AP to an ally.'
   shape:
   - {x: 0, y: 0}
   targetModifiers: []
   selfModifiers: []
   targetEffect: {fileID: 6874435940801072556, guid: 7244c87914833384b88fc1bb07b8eb51, type: 3}
+  selfEffect: {fileID: 0}

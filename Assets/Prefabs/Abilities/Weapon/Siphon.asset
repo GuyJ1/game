@@ -14,18 +14,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   friendly: 0
   requiresTarget: 1
+  free: 0
   totalDMG: 0
   totalHP: 0
   totalACC: 0
   baseDMG: 0
   baseHP: 0
   baseACC: 0
-  cost: 2
+  costAP: 0
   range: 1
   knockback: 0
+  selfMovement: 0
+  totalHits: 1
   displayName: Siphon
+  description: 
   shape:
   - {x: 0, y: 0}
   targetModifiers: []
   selfModifiers: []
-  targetEffect: {fileID: 696958063292329688, guid: 00092c09e25beb54f813012f561ea1c0, type: 3}
+  targetEffect: {fileID: 5118769624622574380, guid: 25dc810276633c44486e034c9f9108f2, type: 3}
+  selfEffect: {fileID: 6777231671719962741, guid: 411e4b589b36e574f8b9556232fc0ee8, type: 3}

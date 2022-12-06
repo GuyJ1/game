@@ -94,6 +94,7 @@ public class FollowPath : MonoBehaviour
         // When we have a tile to travel to
         if (tileSet)
         {
+            this.gameObject.GetComponent<Animator>().SetBool("isMoving", true);
             // Get the position of the corresponding tile
             Vector3 pos = targetTile.transform.position;
 
@@ -115,9 +116,10 @@ public class FollowPath : MonoBehaviour
                 transform.position += targetDirection * (wasAbility ? 8.0f : moveSpeed) * Time.deltaTime;
 
                 // Update y-axis rotation
-                this.gameObject.GetComponent<CharacterStats>().rotateTowards(targetPos);
+                if(!wasAbility) this.gameObject.GetComponent<CharacterStats>().rotateTowards(targetPos);
             }
         }
+        else this.gameObject.GetComponent<Animator>().SetBool("isMoving", false);
     }
 
     public bool isMoving() {

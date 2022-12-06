@@ -15,9 +15,6 @@ MonoBehaviour:
   friendly: 0
   requiresTarget: 1
   free: 0
-  totalDMG: 0
-  totalHP: 0
-  totalACC: 0
   baseDMG: 0
   baseHP: 0
   baseACC: 85
@@ -25,7 +22,9 @@ MonoBehaviour:
   range: 4
   knockback: 0
   selfMovement: 0
+  totalHits: 1
   displayName: Maddening Jig
+  description: '[RANGE: 4, AP: 0] Inflicts -5 DEF/DEX on an enemy for 3 turns.'
   shape:
   - {x: 0, y: 0}
   targetModifiers:

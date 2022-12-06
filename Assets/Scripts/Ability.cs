@@ -9,12 +9,30 @@ using UnityEditor;
   [CreateAssetMenu] //allows creating of item assets directly unity by right clicking project
 public class Ability : ScriptableObject
 {
+    private int totalDMG; //total damage dealt 
+    private int totalHP; //total HP healed
+    private int totalACC; //chance the ability hits
     public bool friendly; //Whether this ability targets allies or enemies (true for allies, false for enemies)
     public bool requiresTarget; //Whether this ability requires a selected target to execute
     public bool free; //Whether this ability consumes a turn action
-    public int totalDMG; //total damage dealt 
-    public int totalHP; //total HP healed
-    public int totalACC; //chance the ability hits
+
+    /*
+    The below variables might be needed for the description generator :
+
+    public bool willAttack; //Whether this ability will attack a target
+    public bool buffsTarget; //Whether this ability buffs a target
+    public bool buffsSelf; //Whether this ability buffs self
+    public bool debuffsTarget; //Whether ability debuffs a target
+    public bool debuffsSelf; //Whether ability debuffs self
+    public bool healsTarget; //Whether ability heals a target
+    public bool healsSelf; //whether this ability is a self heal
+    public bool statusAilment; //whether this ability will inflict a status ailment
+    public int totalDuration = 0; //determines total number of turns a buff/debuff will last for
+    public string modifierList; //lists buff/debuff modifiers
+    public string inflictedStatus; //status that will be inflicted
+
+    */
+
     public int baseDMG; //ability will always do a certain amount of damage regardless of DEF
     public int baseHP; //ability will always heal a certain amount of HP
     public int baseACC; //ability comes with a set accuracy
@@ -36,6 +54,12 @@ public class Ability : ScriptableObject
     void Start()
     {
 
+        //descriptionGenerator(descirption);
+
+        
+
+
+
     }
 
     // Update is called once per frame
@@ -43,6 +67,68 @@ public class Ability : ScriptableObject
     {
 
     }
+
+/*
+    public void descriptionGenerator(string description){
+
+        description = "[";
+        if(baseDMG != 0){
+
+            description += "BASE DMG: " + baseDMG + ". ";
+
+        }
+        if(baseHP != 0){
+
+            description += "BASE HEAL: " + baseHP + ". ";
+        }
+        
+        description += "RANGE: " + range + ". " + "COST: " + costAP + "] ";
+
+        if(willAttack){
+
+            description += "Attack the enemy";
+
+            if(totalHits > 1){
+
+                description += " " + totalHits + "times.";
+            }
+            else{
+
+                descirption += ".";
+            }
+        }
+        else if(healsSelf){
+
+            description += "Heal the user.";
+
+        }
+        else if(healsTarget){
+
+            description += "Heal an ally.";
+        }
+        else if(buffsSelf){
+
+            decription += "Grants " + modifierList + " to the user for " + totalDuration + " turns.";
+        }
+        else if(buffsTarget){
+
+             decription += "Grants " + modifierList + " to an ally for " + totalDuration + " turns.";
+        }
+        else if(debuffsSelf){
+
+             decription += "Inflicts " + modifierList + " on the user for " + totalDuration + " turns.";
+        }
+        else if(debuffsTarget){
+
+            decription += "Inflicts " + modifierList + " on the enemy for " + totalDuration + " turns.";
+        }
+        else if(statusAilment){
+
+            description += "Inflicts [" + inflictedStatus + "] on the enemy for " + totalDuration + " turns.";
+        }
+
+    }
+*/
 
     // Return knockback value rotated dependent on which way user is facing
     public Vector2Int getKnockback(int xDist, int yDist) {
@@ -103,42 +189,19 @@ public class Ability : ScriptableObject
     }
 
     // Apply ability to target character
-    public void affectCharacter(GameObject user, GameObject target, BattleEngine engine) {
-        callAbility(user.GetComponent<CharacterStats>(), target.GetComponent<CharacterStats>(), engine);
+    public void affectCharacter(GameObject user, GameObject target, int currentHit) {
+        callAbility(user.GetComponent<CharacterStats>(), target.GetComponent<CharacterStats>(), currentHit);
     }
 
     // Apply ability to target list of characters
-    public void affectCharacters(GameObject user, List<GameObject> targets, BattleEngine engine) {
+    public void affectCharacters(GameObject user, List<GameObject> targets, int currentHit) {
         foreach(GameObject target in targets) {
-            callAbility(user.GetComponent<CharacterStats>(), target.GetComponent<CharacterStats>(), engine);
+            callAbility(user.GetComponent<CharacterStats>(), target.GetComponent<CharacterStats>(), currentHit);
         }
-    }
-
-    IEnumerator multiHitStop(CharacterStats user, CharacterStats target, int DMG, float waitTime, int totalHits, int HIT){
-
-        for(int i = 0; i < totalHits; i++){
-
-            if(user.determineHIT(HIT)){
-
-                GameObject hitParticle = Instantiate(targetEffect);
-                hitParticle.transform.position = target.transform.position;
-
-                target.adjustHP(-DMG, false);
-
-
-            }
-
-
-            yield return new WaitForSecondsRealtime(waitTime);
-        }
-
-
-
-
     }
 
     //call an ability based on given display name
-    public void callAbility(CharacterStats user, CharacterStats target, BattleEngine engine){
+    public void callAbility(CharacterStats user, CharacterStats target, int currentHit){
         if(selfEffect != null) {
             GameObject particle = Instantiate(selfEffect);
             particle.transform.position = user.transform.position;
@@ -153,14 +216,17 @@ public class Ability : ScriptableObject
 
 
         else if(displayName == "Pierce")            Pierce(user, target);
-        else if(displayName == "Shooting Star")     ShootingStar(user, target, engine);
+        else if(displayName == "Shooting Star")     ShootingStar(user, target);
         else if(displayName == "Siphon")            Siphon(user, target);
         else if(displayName == "Life Swap")         LifeSwap(user, target);
         else if(displayName == "Soul Bash")         SoulBash(user, target);
         else if(displayName == "Persistence")       Persistence(user, target);
         else if(displayName == "Light Heal")        LightHeal(user);
         else if(displayName == "Quick Attack")      QuickAttack(user, target);
-        else if(displayName == "Gambit")            Gambit(user, target, engine);
+        else if(displayName == "Gambit")            Gambit(user, target, currentHit);
+
+
+                   
 
         /// PIRATE ////
 
@@ -246,27 +312,27 @@ public class Ability : ScriptableObject
     void Generic(CharacterStats user, CharacterStats target) {
         if(!friendly)
         {//attack the enemy
-            if(user.weapon != null && (user.weapon.doubleAttack && (user.getSpeed() - target.getSpeed() >= 5))){//if the equipped weapon can double attack
+            if(user.weapon != null && (user.weapon.speedSlash && (user.getSpeed() - target.getSpeed() >= 5))){
 
-                for(int i = 0; i < 2; i++){
+                int bonusDMG = ((user.getSpeed() - target.getSpeed()) / 5) * 2;
 
-                    GameObject hitParticle = Instantiate(targetEffect);
-                    hitParticle.transform.position = target.transform.position;
+                GameObject hitParticle = Instantiate(targetEffect);
+                hitParticle.transform.position = target.transform.position;
 
-                    totalDMG = user.Attack(target, 1);
+                totalDMG = user.Attack(target, 1, bonusDMG, 0, 0) + baseDMG;
 
-                    target.adjustHP(-totalDMG -baseDMG, false);
+                target.adjustHP(-totalDMG, false);
 
-                }
+                
             }
             else
             {
                 GameObject hitParticle = Instantiate(targetEffect);
                 hitParticle.transform.position = target.transform.position;
 
-                totalDMG = user.Attack(target, 1);
+                totalDMG = user.Attack(target, 1, 0, 0, 0) + baseDMG;
 
-                target.adjustHP(-totalDMG -baseDMG, false);
+                target.adjustHP(-totalDMG, false);
             }
         }
         else
@@ -476,7 +542,7 @@ public class Ability : ScriptableObject
             target.adjustHP(-totalDMG, false);
 
             foreach(StatModifier modifier in targetModifiers) {
-                if(modifier.chance > Random.Range(0.0F, 1.0F)) user.addModifier(modifier.clone());
+                if(modifier.chance > Random.Range(0.0F, 1.0F)) target.addModifier(modifier.clone());
             }
         }
  
@@ -494,7 +560,7 @@ public class Ability : ScriptableObject
             //effect
 
             foreach(StatModifier modifier in targetModifiers) {
-                if(modifier.chance > Random.Range(0.0F, 1.0F)) user.addModifier(modifier.clone());
+                if(modifier.chance > Random.Range(0.0F, 1.0F)) target.addModifier(modifier.clone());
             }
         }
         
@@ -508,7 +574,7 @@ public class Ability : ScriptableObject
             //effect
 
             foreach(StatModifier modifier in targetModifiers) {
-                if(modifier.chance > Random.Range(0.0F, 1.0F)) user.addModifier(modifier.clone());
+                if(modifier.chance > Random.Range(0.0F, 1.0F)) target.addModifier(modifier.clone());
             }
     
     }
@@ -526,7 +592,7 @@ public class Ability : ScriptableObject
         //effect
 
         foreach(StatModifier modifier in targetModifiers) {
-            if(modifier.chance > Random.Range(0.0F, 1.0F)) user.addModifier(modifier.clone());
+            if(modifier.chance > Random.Range(0.0F, 1.0F)) target.addModifier(modifier.clone());
         }
     
     }
@@ -566,7 +632,7 @@ public class Ability : ScriptableObject
             target.adjustHP(-baseDMG, false);
 
             foreach(StatModifier modifier in targetModifiers) {
-                if(modifier.chance > Random.Range(0.0F, 1.0F)) user.addModifier(modifier.clone());
+                if(modifier.chance > Random.Range(0.0F, 1.0F)) target.addModifier(modifier.clone());
             }
         }
         
@@ -612,7 +678,7 @@ public class Ability : ScriptableObject
         target.adjustHP(totalHP, true);
 
         foreach(StatModifier modifier in targetModifiers) {
-            if(modifier.chance > Random.Range(0.0F, 1.0F)) user.addModifier(modifier.clone());
+            if(modifier.chance > Random.Range(0.0F, 1.0F)) target.addModifier(modifier.clone());
         }
 
         
@@ -643,7 +709,7 @@ public class Ability : ScriptableObject
         GameObject hitParticle = Instantiate(targetEffect);
         hitParticle.transform.position = target.transform.position;
 
-        totalDMG = user.Attack(target, 1);
+        totalDMG = user.Attack(target, 1, 0, 0, 0);
 
         target.adjustHP(-totalDMG, false);
 
@@ -662,45 +728,49 @@ public class Ability : ScriptableObject
         GameObject hitParticle = Instantiate(targetEffect);
         hitParticle.transform.position = target.transform.position;
 
-        totalDMG = user.Attack(target, 2);
-        target.adjustHP(-totalDMG - baseDMG, false);
+        if(user.weapon != null && user.weapon.deadlyPierce){
+
+            totalDMG = user.Attack(target, 2, 0, 0, 15) + baseDMG;
+            target.adjustHP(-totalDMG, false);
+
+
+        }
+        else{
+
+            totalDMG = user.Attack(target, 2, 0, 0, 0) + baseDMG;
+            target.adjustHP(-totalDMG, false);
+
+
+        }
+
 
         
 
     }
 
     //attack the enemy 5 times, with each attack having 1/5 the power of a normal attack
-    void ShootingStar(CharacterStats user, CharacterStats target, BattleEngine engine){
-
-        //attack 5 times for 1/5 of attack power, but with same HIT and CRIT
-
-        GameObject hitParticle = null;
-
-        int numAttack = 0;
+    void ShootingStar(CharacterStats user, CharacterStats target){
 
         if(user.weapon != null && user.weapon.shiningStar){
 
-            numAttack = 10;
+            GameObject hitParticle = Instantiate(selfEffect);
+            hitParticle.transform.position = target.transform.position;
+
+            totalDMG = user.Attack(target, 1, 0, 20, 20) / 5;
+            target.adjustHP(-totalDMG, false);
+
+            
         }
         else{
 
-            numAttack = 5;
-        }
-
-        for(int i = 0; i < numAttack; i++){
-
-            hitParticle = Instantiate(targetEffect);//?
+            GameObject hitParticle = Instantiate(selfEffect);
             hitParticle.transform.position = target.transform.position;
 
-            totalDMG = user.Attack(target, 1) / numAttack;
+            totalDMG = user.Attack(target, 1, 0, 0, 0) / 5;
             target.adjustHP(-totalDMG, false);
-            //might need a sleep statement here
 
-            engine.PauseBattleEngine(0.5f);
             
-        }
-
-        
+        }  
 
     }
 
@@ -731,7 +801,7 @@ public class Ability : ScriptableObject
     //Attack the target. Bonus dmg is applied depending on current HP (more HP, more dmg)
     void SoulBash(CharacterStats user, CharacterStats target){
 
-        baseDMG = user.Attack(target, 1);
+        baseDMG = user.Attack(target, 1, 0, 0, 0);
 
         if(user.weapon != null && user.weapon.strongSoul && user.isFullHealth()){
 
@@ -755,7 +825,7 @@ public class Ability : ScriptableObject
     //Attack the target. Bonus dmg is applied depending on current HP (less HP, more dmg)
     void Persistence(CharacterStats user, CharacterStats target){
 
-        baseDMG = user.Attack(target, 1);
+        baseDMG = user.Attack(target, 1, 0, 0, 0);
 
         totalDMG = baseDMG + (user.getMaxHP() - user.HP);
 
@@ -784,13 +854,13 @@ public class Ability : ScriptableObject
 
         if(user.weapon != null && user.weapon.certainty){//attack doesn't miss
 
-            totalDMG = (user.Attack(target, 3) / 2) + user.getSpeed();
+            totalDMG = (user.Attack(target, 3, 0, 0, 0) / 2) + user.getSpeed();
 
 
         }
         else{
 
-            totalDMG = (user.Attack(target, 1) / 2) + user.getSpeed();
+            totalDMG = (user.Attack(target, 1, 0, 0, 0) / 2) + user.getSpeed();
 
 
         }
@@ -801,84 +871,59 @@ public class Ability : ScriptableObject
         target.adjustHP(-totalDMG, false);
     }
 
-    //Attack the enemy for as many times as this move is successful. The first attack never misses
+    //Attack the enemy 1 + 10 times. The first attack never misses
     //This ability can't crit
-    //This ability starts at 20 damage, and gets +5 damage each success, for a max of 70 damage
-    //This ability will only end under 3 conditions:
-    //1. The target dies
-    //2. The move misses
-    //3. 10 additional attacks are reached
-    void Gambit(CharacterStats user, CharacterStats target, BattleEngine engine){
+    //This ability starts at 20 damage, and gets +5 damage each attempt, for a max of 70 damage
+    //This ability will end when the target dies or when all hits were attempted
+    void Gambit(CharacterStats user, CharacterStats target, int currentHit){
 
-        int ACC = 70;
-        int DMG = 20;
-        bool accUp = false;
-        bool accDown = false;
+        int ACC = 0;
+        int DMG = 0;
 
-        if(user.weapon != null && user.weapon.earlyGambit){
+        if(currentHit == 0){
 
-            ACC = 95;
-            accDown = true;
-            
+            GameObject hitParticle = Instantiate(targetEffect);
+            hitParticle.transform.position = target.transform.position;
 
-
-        }
-        else if(user.weapon != null && user.weapon.lateGambit){
-
-            ACC = 55;
-            accUp = true;
-        }
-
-        GameObject hitParticle = Instantiate(targetEffect);
-        hitParticle.transform.position = target.transform.position;
-
-        target.adjustHP(-DMG, false); //100% to deal 20 damage
-
-        engine.PauseBattleEngine(0.5f);
-
-        if(target.isDead()){//move ends if target dies
+            target.adjustHP(-20, false);
 
             return;
         }
+        else{
 
-        for(int i = 0; i < 10; i++){
+            DMG = 20 + (5 * currentHit);
 
-            DMG += 5;
+            if(user.weapon != null && user.weapon.earlyGambit){
+
+                ACC = 95 - (5 * currentHit);
+
+            }
+            else if(user.weapon != null && user.weapon.lateGambit){
+
+                ACC = 55 + (5 * currentHit);
+
+            }
+            else{
+
+                ACC = 70;
+
+            }
 
             if(user.determineHIT(ACC)){
 
-                hitParticle = Instantiate(targetEffect);
+                GameObject hitParticle = Instantiate(targetEffect);
                 hitParticle.transform.position = target.transform.position;
 
                 target.adjustHP(-DMG, false);
 
-                engine.PauseBattleEngine(0.5f);
-
-                if(target.isDead()){//ability ends if target dies
-
-                    return;
-                }
-
-                if(accUp){//increase ACC for lateGambit
-
-                    ACC += 5;
-                }
-                else if(accDown){//decrease ACC for earlyGambit
-
-                    ACC -= 5;
-                }
-
             }
-            else{//ability ends on miss
-
-                return;
-            }
-
-
         }
-        
-        
+
+
     }
+        
+        
+    
 
 
 
@@ -910,8 +955,9 @@ public class Ability : ScriptableObject
     void PistolVolley(CharacterStats user, CharacterStats target){
 
         totalDMG = baseDMG;
+        target.adjustHP(-totalDMG, false);
 
-        //StartCoroutine(multiHitStop(user, target, totalDMG, 0.5f, 3, baseACC));
+        
     }
 
     void DeathWish(CharacterStats user, CharacterStats target){
@@ -951,7 +997,7 @@ public class Ability : ScriptableObject
 
 
         foreach(StatModifier modifier in targetModifiers) {
-            if(modifier.chance > Random.Range(0.0F, 1.0F)) user.addModifier(modifier.clone());
+            if(modifier.chance > Random.Range(0.0F, 1.0F)) target.addModifier(modifier.clone());
         }
 
         user.resistCharm();
@@ -975,7 +1021,7 @@ public class Ability : ScriptableObject
             if(!target.tauntRES){
 
                 foreach(StatModifier modifier in targetModifiers) {
-                    if(modifier.chance > Random.Range(0.0F, 1.0F)) user.addModifier(modifier.clone());
+                    if(modifier.chance > Random.Range(0.0F, 1.0F)) target.addModifier(modifier.clone());
                 }
 
 
@@ -1009,7 +1055,7 @@ public class Ability : ScriptableObject
             if(!target.charmRES){
 
                 foreach(StatModifier modifier in targetModifiers) {
-                    if(modifier.chance > Random.Range(0.0F, 1.0F)) user.addModifier(modifier.clone());
+                    if(modifier.chance > Random.Range(0.0F, 1.0F)) target.addModifier(modifier.clone());
                 }
 
 
@@ -1038,7 +1084,7 @@ public class Ability : ScriptableObject
     void Command(CharacterStats user, CharacterStats target){
 
         foreach(StatModifier modifier in targetModifiers) {
-            if(modifier.chance > Random.Range(0.0F, 1.0F)) user.addModifier(modifier.clone());
+            if(modifier.chance > Random.Range(0.0F, 1.0F)) target.addModifier(modifier.clone());
         }
 
    
@@ -1066,7 +1112,7 @@ public class Ability : ScriptableObject
             target.adjustHP(-totalDMG, false);
 
             foreach(StatModifier modifier in targetModifiers) {
-                if(modifier.chance > Random.Range(0.0F, 1.0F)) user.addModifier(modifier.clone());
+                if(modifier.chance > Random.Range(0.0F, 1.0F)) target.addModifier(modifier.clone());
             }
         }
         

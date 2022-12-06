@@ -15,9 +15,6 @@ MonoBehaviour:
   friendly: 0
   requiresTarget: 1
   free: 0
-  totalDMG: 0
-  totalHP: 0
-  totalACC: 0
   baseDMG: 0
   baseHP: 0
   baseACC: 0
@@ -32,5 +29,5 @@ MonoBehaviour:
   - {x: 0, y: 0}
   targetModifiers: []
   selfModifiers: []
-  targetEffect: {fileID: 5715929136899716100, guid: 50cb25120d841ce468ec3a3fc6ced5ef, type: 3}
-  selfEffect: {fileID: 0}
+  targetEffect: {fileID: 0}
+  selfEffect: {fileID: 5715929136899716100, guid: 50cb25120d841ce468ec3a3fc6ced5ef, type: 3}
