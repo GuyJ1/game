@@ -15,9 +15,6 @@ MonoBehaviour:
   friendly: 0
   requiresTarget: 1
   free: 0
-  totalDMG: 0
-  totalHP: 0
-  totalACC: 0
   baseDMG: 0
   baseHP: 0
   baseACC: 0
@@ -27,7 +24,8 @@ MonoBehaviour:
   selfMovement: 0
   totalHits: 1
   displayName: Enrage
-  description: 
+  description: 'Inflicts [Taunt] on an enemy for 1 turn. [Taunt: +5 STR/SPD / -10
+    DEF/LCK/DEX]'
   shape:
   - {x: 0, y: 0}
   targetModifiers:
@@ -37,30 +35,35 @@ MonoBehaviour:
     value: 5
     chance: 1
     id: Taunt
+    statusIcon: {fileID: 0}
   - type: 4
     op: 0
     duration: 1
     value: 5
     chance: 1
     id: Taunt
+    statusIcon: {fileID: 0}
   - type: 3
     op: 0
     duration: 1
     value: -10
     chance: 1
     id: Taunt
+    statusIcon: {fileID: 0}
   - type: 5
     op: 0
     duration: 1
     value: -10
     chance: 1
     id: Taunt
+    statusIcon: {fileID: 0}
   - type: 6
     op: 0
     duration: 1
     value: -10
     chance: 1
     id: Taunt
+    statusIcon: {fileID: 0}
   selfModifiers: []
   targetEffect: {fileID: 6736026631080487181, guid: 341e5df7d23acee4c97cbbe0f23a0fac, type: 3}
   selfEffect: {fileID: 0}

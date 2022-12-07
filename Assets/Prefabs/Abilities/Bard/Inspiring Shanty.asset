@@ -24,7 +24,7 @@ MonoBehaviour:
   selfMovement: 0
   totalHits: 1
   displayName: Inspiring Shanty
-  description: '[RANGE: 4, AP: 0] Grant +5 STR/SPD to an ally for 3 turns.'
+  description: Grant +5 STR/SPD to an ally for 3 turns.
   shape:
   - {x: 0, y: 0}
   targetModifiers:
@@ -34,12 +34,14 @@ MonoBehaviour:
     value: 5
     chance: 1
     id: 
+    statusIcon: {fileID: 0}
   - type: 2
     op: 0
     duration: 3
     value: 5
     chance: 1
     id: 
+    statusIcon: {fileID: 0}
   selfModifiers: []
   targetEffect: {fileID: 8264263621278272052, guid: 7939fc48cdf6f8a4bbe84f10b601f29f, type: 3}
   selfEffect: {fileID: 0}

@@ -15,9 +15,6 @@ MonoBehaviour:
   friendly: 0
   requiresTarget: 1
   free: 0
-  totalDMG: 0
-  totalHP: 0
-  totalACC: 0
   baseDMG: 0
   baseHP: 0
   baseACC: 0
@@ -25,9 +22,10 @@ MonoBehaviour:
   range: 1
   knockback: 0
   selfMovement: 0
-  totalHits: 10
+  totalHits: 11
   displayName: Gambit
-  description: 
+  description: Attack the enemy once with a gauranteed hit, and then attack up to
+    10 additional times with variable accuracy. Damage increases for every attack.
   shape: []
   targetModifiers: []
   selfModifiers: []

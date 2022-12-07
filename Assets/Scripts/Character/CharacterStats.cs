@@ -139,6 +139,7 @@ public class CharacterStats : MonoBehaviour
 
     // Model reference
     public GameObject model;
+    public Sprite icon;
 
     // Character's logical position on the grid
     public Vector2Int gridPosition;

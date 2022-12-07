@@ -15,9 +15,6 @@ MonoBehaviour:
   friendly: 1
   requiresTarget: 1
   free: 0
-  totalDMG: 0
-  totalHP: 0
-  totalACC: 0
   baseDMG: 0
   baseHP: 0
   baseACC: 0
@@ -27,7 +24,7 @@ MonoBehaviour:
   selfMovement: 0
   totalHits: 1
   displayName: Promise of Coin
-  description: 
+  description: Grants +6 DEF and +4 LCK to an ally for 2 turns
   shape:
   - {x: 0, y: 0}
   targetModifiers:
@@ -37,12 +34,14 @@ MonoBehaviour:
     value: 6
     chance: 1
     id: 
+    statusIcon: {fileID: 0}
   - type: 6
     op: 0
     duration: 2
     value: 4
     chance: 1
     id: 
+    statusIcon: {fileID: 0}
   selfModifiers: []
   targetEffect: {fileID: 7032560619689099207, guid: 0f61fd23f39bf18418d3a023e7b6b431, type: 3}
   selfEffect: {fileID: 0}

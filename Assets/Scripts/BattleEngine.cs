@@ -82,8 +82,8 @@ public class BattleEngine : MonoBehaviour
     void Start() 
     {
         // Temporary assignment of ships, crews should be passed in somewhere since they're permanent
-        playerCrew.GetComponent<CrewSystem>().ship = GameObject.Find("Player Ship");
-        enemyCrew.GetComponent<CrewSystem>().ship = GameObject.Find("Enemy Ship");
+        playerCrew.GetComponent<CrewSystem>().ship = GameObject.Find("PlayerShip");
+        enemyCrew.GetComponent<CrewSystem>().ship = GameObject.Find("PlayerShip");
 
         // Get Camera
         cam = Camera.main;
@@ -159,8 +159,9 @@ public class BattleEngine : MonoBehaviour
                     {
                         if(lastCoin != null)
                         {
-                            lastCoin.GetComponent<Animator>().SetBool("hovered", false);
-                            lastCoin.transform.GetChild(0).gameObject.SetActive(false);
+                            Animator lastCoinAnimator = lastCoin.GetComponent<Animator>();
+                            lastCoinAnimator.SetBool("hovered", false);
+                            if(!lastCoinAnimator.GetBool("selected")) lastCoin.transform.GetChild(0).gameObject.SetActive(false); //Disable text of old coin
                         }
                         coin.GetComponent<Animator>().SetBool("hovered", true);
                         hit.transform.GetChild(0).gameObject.SetActive(true); //Enable text of new coin
@@ -173,11 +174,11 @@ public class BattleEngine : MonoBehaviour
                         // Select coin if it's interactable
                         if(coinAnimator.GetBool("interactable"))
                         {
-                            actionCoinAnimator.SetBool("selected", false);
-                            moveCoinAnimator.SetBool("selected", false);
-                            endCoinAnimator.SetBool("selected", false);
-                            surrenderCoinAnimator.SetBool("selected", false);
-                            coinAnimator.SetBool("selected", true);
+                            selectCoin(actionCoin, actionCoinAnimator, false);
+                            selectCoin(moveCoin, moveCoinAnimator, false);
+                            selectCoin(endCoin, endCoinAnimator, false);
+                            selectCoin(surrenderCoin, surrenderCoinAnimator, false);
+                            selectCoin(coin, coinAnimator, true);
                         }
                         // Handle various click actions
                         if(coin == actionCoin && actionCoinAnimator.GetBool("interactable")) selectAction();
@@ -192,8 +193,9 @@ public class BattleEngine : MonoBehaviour
                 {
                     if(lastCoin != null)
                     {
-                        lastCoin.GetComponent<Animator>().SetBool("hovered", false);
-                        lastCoin.transform.GetChild(0).gameObject.SetActive(false);
+                        Animator lastCoinAnimator = lastCoin.GetComponent<Animator>();
+                        lastCoinAnimator.SetBool("hovered", false);
+                        if(!lastCoinAnimator.GetBool("selected")) lastCoin.transform.GetChild(0).gameObject.SetActive(false); //Disable text of old coin
                         lastCoin = null;
                     }
                     
@@ -553,18 +555,18 @@ public class BattleEngine : MonoBehaviour
 
         if(!isPlayerTurn)
         {
-            actionCoinAnimator.SetBool("selected", false);
-            moveCoinAnimator.SetBool("selected", false);
-            endCoinAnimator.SetBool("selected", false);
-            surrenderCoinAnimator.SetBool("selected", false);
+            selectCoin(actionCoin, actionCoinAnimator, false);
+            selectCoin(moveCoin, moveCoinAnimator, false);
+            selectCoin(endCoin, endCoinAnimator, false);
+            selectCoin(surrenderCoin, surrenderCoinAnimator, false);
             doAITurn();
         }
         else 
         {
-            actionCoinAnimator.SetBool("selected", false);
-            moveCoinAnimator.SetBool("selected", true);
-            endCoinAnimator.SetBool("selected", false);
-            surrenderCoinAnimator.SetBool("selected", false);
+            selectCoin(actionCoin, actionCoinAnimator, false);
+            selectCoin(moveCoin, moveCoinAnimator, true);
+            selectCoin(endCoin, endCoinAnimator, false);
+            selectCoin(surrenderCoin, surrenderCoinAnimator, false);
             refreshActionButtons();
             selectMove(); //Default to move (generally units move before acting)
         }
@@ -584,7 +586,7 @@ public class BattleEngine : MonoBehaviour
 
             //Player turn enqueue handling - passes in the current active unit (if it is a player controlled unit), 
             //the target of this turn's action (if any), the type of action taken this turn (if any), and whether the character moved
-            if(isPlayerTurn && selectedAbility != null && acted)
+            if(isPlayerTurn && selectedAbility != null && acted && playerTarget != null)
             {
                 //Add the new PlayerAction to the playerActions queue, using the overloaded constructor
                 playerActions.add(new PlayerAction(activeUnit.GetComponent<CharacterStats>(), playerTarget.GetComponent<CharacterStats>(), selectedAbility, moved));
@@ -717,7 +719,11 @@ public class BattleEngine : MonoBehaviour
     IEnumerator endActUnit(Vector2Int tilePos, List<GameObject> characters, int xDist, int yDist) {
         disableCoins();
         foreach(GameObject unit in aliveUnits) if(unit != activeUnit && !characters.Contains(unit)) unit.GetComponent<CharacterStats>().hideBars();
-        foreach(Button button in actionButtons) button.interactable = false;
+        foreach(Button button in actionButtons)
+        {
+            button.interactable = false;
+            button.gameObject.GetComponentInChildren<TMPro.TextMeshProUGUI>().color = new Color(0.4f, 0.4f, 0.4f, 1.0f);
+        }
         if(tilePos != activeUnitPos) yield return new WaitWhile(() => !activeUnit.GetComponent<CharacterStats>().rotateTowards(grid.GetComponent<GridBehavior>().GetTileAtPos(tilePos).transform.position)); //Wait for rotation first
 
         var gridTiles = grid.GetComponent<GridBehavior>();
@@ -1058,6 +1064,7 @@ public class BattleEngine : MonoBehaviour
 
             button.interactable = !usedAbilities.Contains(ability) && activeUnit.GetComponent<CharacterStats>().AP >= ability.costAP; //Only allow ability selection if it wasn't used already and AP is available
             var tmp = actionCoin.GetComponentInChildren<TMPro.TextMeshProUGUI>();
+            if(!button.interactable) tmp.color = new Color(0.4f, 0.4f, 0.4f, 1.0f);
             tmp.text = ability.displayName; //Set button name to ability name
             actionButtons.Add(button);
             count++;
@@ -1077,6 +1084,11 @@ public class BattleEngine : MonoBehaviour
         moveCoinAnimator.SetBool("interactable", false);
         endCoinAnimator.SetBool("interactable", false);
         surrenderCoinAnimator.SetBool("interactable", false);
+    }
+
+    public void selectCoin(GameObject coin, Animator animator, bool value) {
+        animator.SetBool("selected", value);
+        coin.transform.GetChild(0).gameObject.SetActive(value); //Set text
     }
 
     public void showActionsList() {

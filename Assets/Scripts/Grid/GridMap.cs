@@ -82,6 +82,70 @@ public class GridMap
     };
     // ------------------------
 
+    // ------- Grid Two -------
+    public const uint GridTwoWidth = 8;
+    public const uint GridTwoHeight = 25;
+    public static bool[,] GridTwoPassableFlags = 
+    {
+        {false, false, false, false, false, false, false, false },
+        {false, false, false, false, false, false, false, false },
+        {false, false, false, false, false, false, false, false },
+        {false, false, false, true , true , true , false, false },
+        {false, false, false, true , true , true , false, false },
+        {false, false, false, false, false, false, false, false },
+        {false, false, false, false, false, false, false, false },
+        {false, false, false, true , true , false, false, false },
+        {false, false, false, true , true , false, false, false },
+        {false, false, false, true , true , false, false, false },
+        {false, false, false, true , true , false, false, false },
+        {false, false, false, false, false, false, false, false },
+        {false, false, false, false, false, false, false, false },
+        {false, false, false, false, false, false, false, false },
+        {false, false, false, false, false, false, false, false },
+        {false, false, false, false, false, false, false, false },
+        {false, false, true , true , true , true , false, false },
+        {false, false, true , true , true , true , false, false },
+        {true , false, false, false, false, false, false, true },
+        {true , false, false, false, false, false, false, true },
+        {true , false, false, false, false, false, false, true },
+        {true , true , false, false, false, false, true , true },
+        {true , true , false, false, false, false, true , true },
+        {true , true , true , false, false, true , true , true },
+        {true , true , true , false, false, true , true , true }
+
+    };
+
+    public static float[,] GridTwoHeightOffsets = 
+    {
+        {-2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f },
+        {-2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f },
+        {-2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f },
+        {-2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f },
+        {-2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f },
+        {-2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f },
+        {-2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f },
+        {-2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f },
+        {-2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f },
+        {-2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f },
+        {-2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f },
+        {-2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f },
+        {-2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f },
+        {-2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f },
+        {-2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f },
+        {-2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f },
+        {-2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f },
+        {-1.8f, -1.8f, -2.3f, -2.3f, -2.3f, -2.3f, -1.8f, -1.8f },
+        {-1.2f, -1.2f, -1.2f, -1.2f, -1.2f, -1.2f, -1.2f, -1.2f },
+        {-1.2f, -1.2f, -1.2f, -1.2f, -1.2f, -1.2f, -1.2f, -1.2f },
+        {-1.2f, -1.2f, -1.2f, -1.2f, -1.2f, -1.2f, -1.2f, -1.2f },
+        {-1.2f, -1.2f, -1.2f, -1.2f, -1.2f, -1.2f, -1.2f, -1.2f },
+        {-1.2f, -1.2f, -1.2f, -1.2f, -1.2f, -1.2f, -1.2f, -1.2f },
+        {-1.2f, -1.2f, -1.2f, -1.2f, -1.2f, -1.2f, -1.2f, -1.2f },
+        {-1.2f, -1.2f, -1.2f, -1.2f, -1.2f, -1.2f, -1.2f, -1.2f }
+    };
+
+    // ------------------------
+
     // Constructors
     public GridMap() {}
     public GridMap(int gridNumber) {gridSelected = gridNumber;}
@@ -96,6 +160,9 @@ public class GridMap
                 break;
             case 1:
                 gridSelected = 1;
+                break;
+            case 2:
+                gridSelected = 2;
                 break;
             default:
                 Debug.Log("SelectGrid(): Error! Grid number is out of range. Selecting default grid instead");
@@ -116,6 +183,9 @@ public class GridMap
                 break;
             case 1:
                 widthToReturn = GridOneWidth;
+                break;
+            case 2:
+                widthToReturn = GridTwoWidth;
                 break;
             default:
                 Debug.Log("GetGridWidth(): Error! Cannot find selected grid");
@@ -138,6 +208,9 @@ public class GridMap
             case 1:
                 heightToReturn = GridOneHeight;
                 break;
+            case 2:
+                heightToReturn = GridTwoHeight;
+                break;
             default:
                 Debug.Log("GetGridHeight(): Error! Cannot find selected grid");
                 break;
@@ -159,6 +232,9 @@ public class GridMap
             case 1:
                 flagAtPos = GridOnePassableFlags[pos.y, pos.x];
                 break;
+            case 2:
+                flagAtPos = GridTwoPassableFlags[pos.y, pos.x];
+                break;
             default:
                 Debug.Log("GetFlagAtPos(): Error! Cannot find selected grid");
                 break;
@@ -179,6 +255,9 @@ public class GridMap
                 break;
             case 1:
                 offsetAtPos = GridOneHeightOffsets[pos.y, pos.x];
+                break;
+            case 2:
+                offsetAtPos = GridTwoHeightOffsets[pos.y, pos.x];
                 break;
             default:
                 Debug.Log("GetHeightOffsetAtPos(): Error! Cannot find selected grid");

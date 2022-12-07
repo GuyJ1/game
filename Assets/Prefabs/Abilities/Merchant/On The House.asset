@@ -14,16 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   friendly: 1
   requiresTarget: 1
-  totalDMG: 0
-  totalHP: 0
-  totalACC: 0
+  free: 0
   baseDMG: 0
   baseHP: 0
   baseACC: 0
-  cost: 2
+  costAP: 0
   range: 1
   knockback: 0
+  selfMovement: 0
+  totalHits: 1
   displayName: On The House
+  description: Grants a random set of buffs to an ally for 3 turns.
   shape:
   - {x: 0, y: 0}
   targetModifiers:
@@ -33,29 +34,35 @@ MonoBehaviour:
     value: 3
     chance: 0.9
     id: 
+    statusIcon: {fileID: 0}
   - type: 3
     op: 0
     duration: 3
     value: 3
     chance: 0.5
     id: 
+    statusIcon: {fileID: 0}
   - type: 4
     op: 0
     duration: 3
     value: 3
     chance: 0.3
     id: 
+    statusIcon: {fileID: 0}
   - type: 5
     op: 0
     duration: 3
     value: 3
     chance: 0.1
     id: 
+    statusIcon: {fileID: 0}
   - type: 6
     op: 0
     duration: 3
     value: 3
     chance: 0.01
     id: 
+    statusIcon: {fileID: 0}
   selfModifiers: []
   targetEffect: {fileID: 0}
+  selfEffect: {fileID: 0}

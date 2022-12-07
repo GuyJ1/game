@@ -14,16 +14,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   friendly: 0
   requiresTarget: 1
-  totalDMG: 0
-  totalHP: 0
-  totalACC: 0
+  free: 0
   baseDMG: 0
   baseHP: 0
   baseACC: 0
-  cost: 3
+  costAP: 0
   range: 6
   knockback: 0
+  selfMovement: 0
+  totalHits: 1
   displayName: Silver Tongue
+  description: 'Inflict [Charm] on the enemy for 1 turn, depending on enemy morale.
+    [Charm: -6 STR/DEF/DEX]'
   shape:
   - {x: 0, y: 0}
   targetModifiers:
@@ -33,17 +35,21 @@ MonoBehaviour:
     value: -6
     chance: 1
     id: Charm
+    statusIcon: {fileID: 0}
   - type: 3
     op: 0
     duration: 1
     value: -6
     chance: 1
     id: Charm
+    statusIcon: {fileID: 0}
   - type: 5
     op: 0
     duration: 1
     value: -6
     chance: 1
     id: Charm
+    statusIcon: {fileID: 0}
   selfModifiers: []
   targetEffect: {fileID: 0}
+  selfEffect: {fileID: 0}

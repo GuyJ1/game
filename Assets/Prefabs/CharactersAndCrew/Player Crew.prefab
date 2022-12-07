@@ -48,9 +48,9 @@ MonoBehaviour:
   characters:
   - {fileID: 8956543942384057099, guid: a0726b4463e7ded44b6835154fccabf3, type: 3}
   - {fileID: 5537537504233135668, guid: 35e9b644f5a473148bedf512f2340242, type: 3}
+  - {fileID: 1036252945995398137, guid: 5de198ff35cf8f749840b1a22523a725, type: 3}
   - {fileID: 5537537504233135668, guid: 35e9b644f5a473148bedf512f2340242, type: 3}
-  - {fileID: 5537537504233135668, guid: 35e9b644f5a473148bedf512f2340242, type: 3}
-  - {fileID: 4669722073133317754, guid: 9ff5783d01f3af2469391a49e3bc3756, type: 3}
+  - {fileID: 1036252945995398137, guid: 5de198ff35cf8f749840b1a22523a725, type: 3}
   ship: {fileID: 0}
   morale: 100
   inventory_gold: 0
