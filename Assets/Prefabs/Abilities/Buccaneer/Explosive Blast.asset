@@ -15,9 +15,6 @@ MonoBehaviour:
   friendly: 0
   requiresTarget: 1
   free: 0
-  totalDMG: 0
-  totalHP: 0
-  totalACC: 0
   baseDMG: 75
   baseHP: 0
   baseACC: 70
@@ -25,7 +22,9 @@ MonoBehaviour:
   range: 2
   knockback: 1
   selfMovement: 0
+  totalHits: 1
   displayName: Explosive Blast
+  description: Attack the enemy, light knockback.
   shape: []
   targetModifiers: []
   selfModifiers: []

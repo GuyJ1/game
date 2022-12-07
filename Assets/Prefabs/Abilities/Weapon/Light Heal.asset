@@ -15,9 +15,6 @@ MonoBehaviour:
   friendly: 1
   requiresTarget: 0
   free: 0
-  totalDMG: 0
-  totalHP: 0
-  totalACC: 0
   baseDMG: 0
   baseHP: 25
   baseACC: 0
@@ -25,7 +22,9 @@ MonoBehaviour:
   range: 0
   knockback: 0
   selfMovement: 0
+  totalHits: 1
   displayName: 
+  description: Heals the user. Heal more if current class is Acolyte.
   shape: []
   targetModifiers: []
   selfModifiers: []

@@ -15,9 +15,6 @@ MonoBehaviour:
   friendly: 0
   requiresTarget: 1
   free: 0
-  totalDMG: 0
-  totalHP: 0
-  totalACC: 0
   baseDMG: 0
   baseHP: 0
   baseACC: 0
@@ -27,7 +24,8 @@ MonoBehaviour:
   selfMovement: 0
   totalHits: 1
   displayName: Quick Attack
-  description: 
+  description: Attack the enemy with 50% of the user's ATK with bonus damage applied
+    based on the user's SPD.
   shape: []
   targetModifiers: []
   selfModifiers: []

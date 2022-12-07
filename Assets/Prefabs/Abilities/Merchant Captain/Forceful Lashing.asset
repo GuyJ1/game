@@ -14,16 +14,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   friendly: 0
   requiresTarget: 1
-  totalDMG: 0
-  totalHP: 0
-  totalACC: 95
+  free: 0
   baseDMG: 50
   baseHP: 0
   baseACC: 0
-  cost: 2
+  costAP: 0
   range: 3
   knockback: 1
+  selfMovement: 0
+  totalHits: 1
   displayName: Forceful Lashing
+  description: 'Attack the enemy with light knockback. Also inflicts [Taunt] for
+    1 turn. [Taunt: +5 STR/SPD / -10 DEF/LCK/DEX to the enemy]'
   shape:
   - {x: 0, y: 0}
   targetModifiers:
@@ -33,29 +35,35 @@ MonoBehaviour:
     value: 5
     chance: 1
     id: Taunt
+    statusIcon: {fileID: 0}
   - type: 4
     op: 0
     duration: 1
     value: 5
     chance: 1
     id: Taunt
+    statusIcon: {fileID: 0}
   - type: 3
     op: 0
     duration: 1
     value: -10
     chance: 1
     id: Taunt
+    statusIcon: {fileID: 0}
   - type: 5
     op: 0
     duration: 1
     value: -10
     chance: 1
     id: Taunt
+    statusIcon: {fileID: 0}
   - type: 6
     op: 0
     duration: 1
     value: -10
     chance: 1
     id: Taunt
+    statusIcon: {fileID: 0}
   selfModifiers: []
   targetEffect: {fileID: 0}
+  selfEffect: {fileID: 0}

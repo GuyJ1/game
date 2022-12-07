@@ -14,18 +14,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   friendly: 0
   requiresTarget: 1
-  totalDMG: 0
-  totalHP: 0
-  totalACC: 0
+  free: 0
   baseDMG: 0
   baseHP: 0
   baseACC: 40
-  cost: 3
+  costAP: 0
   range: 1
   knockback: 0
+  selfMovement: 0
+  totalHits: 1
   displayName: Life Swap
+  description: Swap current HP with the enemy's, does not kill.
   shape:
   - {x: 0, y: 0}
   targetModifiers: []
   selfModifiers: []
   targetEffect: {fileID: 0}
+  selfEffect: {fileID: 0}

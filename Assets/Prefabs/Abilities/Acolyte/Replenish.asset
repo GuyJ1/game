@@ -24,7 +24,7 @@ MonoBehaviour:
   selfMovement: 0
   totalHits: 1
   displayName: Replenish
-  description: '[BASE HP: 50, RANGE: 4, AP: 0] Heal an ally.'
+  description: Heal an ally.
   shape:
   - {x: 0, y: 0}
   targetModifiers: []

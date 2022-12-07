@@ -24,7 +24,7 @@ MonoBehaviour:
   selfMovement: 0
   totalHits: 1
   displayName: Purge
-  description: '[RANGE: 4, AP: 0] Clear all debuffs and grant +1 AP to an ally.'
+  description: Clear all debuffs and grant +1 AP to an ally.
   shape:
   - {x: 0, y: 0}
   targetModifiers: []

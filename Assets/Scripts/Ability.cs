@@ -203,7 +203,7 @@ public class Ability : ScriptableObject
     //call an ability based on given display name
     public void callAbility(CharacterStats user, CharacterStats target, int currentHit){
         if(selfEffect != null) {
-            GameObject particle = Instantiate(selfEffect);
+            GameObject particle = Instantiate(selfEffect, user.transform);
             particle.transform.position = user.transform.position;
         }
 
@@ -763,7 +763,7 @@ public class Ability : ScriptableObject
         }
         else{
 
-            GameObject hitParticle = Instantiate(selfEffect);
+            GameObject hitParticle = Instantiate(targetEffect, target.transform);
             hitParticle.transform.position = target.transform.position;
 
             totalDMG = user.Attack(target, 1, 0, 0, 0) / 5;
@@ -1147,6 +1147,9 @@ public class Ability : ScriptableObject
     void KingsWill(CharacterStats user){
 
         user.DMGimmune = true;
+
+        GameObject hitParticle = Instantiate(selfEffect);
+        hitParticle.transform.position = user.transform.position;
 
         foreach(StatModifier modifier in selfModifiers) {
             if(modifier.chance > Random.Range(0.0F, 1.0F)) user.addModifier(modifier.clone());

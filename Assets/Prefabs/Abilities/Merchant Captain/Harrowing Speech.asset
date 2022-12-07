@@ -14,18 +14,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   friendly: 0
   requiresTarget: 1
-  totalDMG: 0
-  totalHP: 0
-  totalACC: 0
+  free: 0
   baseDMG: 0
   baseHP: 0
   baseACC: 0
-  cost: 3
+  costAP: 0
   range: 6
   knockback: 0
+  selfMovement: 0
+  totalHits: 1
   displayName: Harrowing Speech
+  description: For each enemy hit, lower enemy Morale by 3.
   shape:
   - {x: 0, y: 0}
   targetModifiers: []
   selfModifiers: []
   targetEffect: {fileID: 0}
+  selfEffect: {fileID: 0}
