@@ -45,10 +45,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dea2f5de34948424ebfc40b91ad9ecfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 5
-  height: 5
+  cabinGrid: {fileID: 0}
+  linkBox: {fileID: 0}
+  gridNum: 0
   tilesize: 1
+  gridLayer: 0
   Tile: {fileID: 2968087839482331240, guid: 56f49a443e7bc4f40bc6d0603e82630a, type: 3}
+  height: 5
+  width: 5
   unselected: {fileID: 2100000, guid: 7b860dc907468f94c926f9d3528ddb15, type: 2}
   highlighted: {fileID: 2100000, guid: 56f5da568bf34ce45804ebe0468202b6, type: 2}
   selected: {fileID: 2100000, guid: 071f6e423333f3f468ef8032b6be4b12, type: 2}
@@ -56,6 +60,7 @@ MonoBehaviour:
   activeHighlighted: {fileID: 2100000, guid: 9d9216b03654f524d8a4fd306d97ac0f, type: 2}
   activeSelected: {fileID: 2100000, guid: f68252263c999344d999dd07ae7c65c3, type: 2}
   ability: {fileID: 2100000, guid: db91749294350764c82a65f20ff911ed, type: 2}
+  abilityHighlighted: {fileID: 2100000, guid: 0e31bc8d5de7c1140a992c4f29cd57ae, type: 2}
   impassible: {fileID: 2100000, guid: 11c6b3eb101252b459fce2e184b82649, type: 2}
   crews: []
 --- !u!1 &6455160471617079445
@@ -69,7 +74,6 @@ GameObject:
   - component: {fileID: 3374352494009361424}
   - component: {fileID: 7725412294915859934}
   - component: {fileID: 1396833275124054830}
-  - component: {fileID: 7316087251409829}
   m_Layer: 0
   m_Name: Plane
   m_TagString: Untagged
@@ -99,7 +103,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6455160471617079445}
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 0}
 --- !u!23 &1396833275124054830
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -142,15 +146,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &7316087251409829
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6455160471617079445}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f9bd8d7c2fa97449ad7f0185756114a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
