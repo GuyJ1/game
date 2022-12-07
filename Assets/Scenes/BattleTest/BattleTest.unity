@@ -1580,15 +1580,19 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 991232462003145200, guid: a3e6463538b16bd43a2ee13c9e1eff61, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -18.98
+      value: -13
       objectReference: {fileID: 0}
     - target: {fileID: 991232462003145200, guid: a3e6463538b16bd43a2ee13c9e1eff61, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 10.07
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 991232462003145200, guid: a3e6463538b16bd43a2ee13c9e1eff61, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -4.32
+      value: -3.32
+      objectReference: {fileID: 0}
+    - target: {fileID: 5755669321042413843, guid: a3e6463538b16bd43a2ee13c9e1eff61, type: 3}
+      propertyPath: gridNum
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8515472688152868816, guid: a3e6463538b16bd43a2ee13c9e1eff61, type: 3}
       propertyPath: m_Name
