@@ -82,7 +82,7 @@ public class CharacterCardUI : MonoBehaviour
 
         foreach(Ability ability in stats.abilities)
         {
-            text += ability.displayName + "\n\n";
+            text += ability.displayName + "\n" + ability.description + "\n\n";
         }
 
         return text;
