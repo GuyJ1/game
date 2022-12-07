@@ -59,18 +59,20 @@ public class UI_CrewIcons : MonoBehaviour
                     //Vector3 pos = newIcon.transform.position; // store pos
 
                     // Set Icon Data
-                    newIcon.GetComponent<UI_CharIcon>().myChar = unit;
-                    newIcon.GetComponent<Image>().sprite = unit.GetComponent<CharacterStats>().icon;
+                    UI_CharIcon iconScript = newIcon.GetComponent<UI_CharIcon>();
+                    iconScript.myChar = unit;
+                    newIcon.transform.GetChild(0).GetComponent<Image>().sprite = iconScript.myChar.GetComponent<CharacterStats>().icon;
 
                     // Position based on whether ally or enemy
-                    if (BattleEngine.isAllyUnit(unit) == true)
+                    if (iconScript.myChar.GetComponent<CharacterStats>().isPlayer())
                     {
                         // Add icon to list
                         goodIcons.Add(newIcon);
 
-                        // Modify position and healthbar
+                        // Modify position and healthbar, set background
                         newIcon.transform.GetComponent<RectTransform>().anchoredPosition = new Vector2(-shiftAmount(goodChars, true), iconHeight);
-                        newIcon.transform.GetChild(0).GetChild(0).GetComponent<HealthBar>().gradient = CharacterStats.HealthBarGradient(true);
+                        newIcon.transform.GetChild(2).GetChild(0).GetComponent<HealthBar>().gradient = CharacterStats.HealthBarGradient(true);
+                        newIcon.GetComponent<Image>().sprite = iconScript.backgroundAlly;
 
                         // Increment counter
                         goodChars++;
@@ -80,9 +82,10 @@ public class UI_CrewIcons : MonoBehaviour
                         // Add icon to list
                         badIcons.Add(newIcon);
 
-                        // Modify position and healthbar
+                        // Modify position and healthbar, set background
                         newIcon.transform.GetComponent<RectTransform>().anchoredPosition = new Vector2(shiftAmount(badChars, false), iconHeight);
-                        newIcon.transform.GetChild(0).GetChild(0).GetComponent<HealthBar>().gradient = CharacterStats.HealthBarGradient(false);
+                        newIcon.transform.GetChild(2).GetChild(0).GetComponent<HealthBar>().gradient = CharacterStats.HealthBarGradient(false);
+                        newIcon.GetComponent<Image>().sprite = iconScript.backgroundEnemy;
 
                         // Increment counter
                         badChars++;

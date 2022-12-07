@@ -891,7 +891,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 0.8769559, b: 0.7794118, a: 1}
-  m_Intensity: 1.26
+  m_Intensity: 1.25
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -948,14 +948,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 190423197}
-  m_LocalRotation: {x: 0.99555874, y: 0.0018516283, z: -0.0046825022, w: 0.09400736}
+  m_LocalRotation: {x: 0.97638255, y: 0.022665638, z: -0.12854315, w: 0.17216267}
   m_LocalPosition: {x: 16.11, y: 5.679, z: 4.5740013}
   m_LocalScale: {x: 0.99999994, y: 1.0000006, z: 1.0000007}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 169.211, y: 0.5239868, z: -0.16400146}
+  m_LocalEulerAnglesHint: {x: 160, y: 15, z: 0}
 --- !u!1 &196450498
 GameObject:
   m_ObjectHideFlags: 0
@@ -2840,7 +2840,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   battleScript: {fileID: 322437417}
   icon: {fileID: 3239360924737938845, guid: 22a0297e84fd6854bad99c51ea3d02e8, type: 3}
-  iconCount: 20
+  iconCount: 15
   iconSpacing: 50
   iconHeight: 25
   leftMargin: 30

@@ -7,7 +7,7 @@ public class UI_CharIcon : MonoBehaviour
 {
     [SerializeField] public BattleEngine battleScript;
     [SerializeField] public TMP_Text turnOrderText;
-
+    [SerializeField] public Sprite backgroundAlly, backgroundEnemy;
     public GameObject myChar;
     public CharacterStats charScript = null;
     public HealthBar myHealthBar;
@@ -20,7 +20,7 @@ public class UI_CharIcon : MonoBehaviour
         if (UpdateChar)
         {
             charScript = myChar.GetComponent<CharacterStats>();
-            transform.GetChild(0).GetChild(0).GetComponent<HealthBar>().gradient = CharacterStats.HealthBarGradient(BattleEngine.isAllyUnit(myChar));
+            transform.GetChild(2).GetChild(0).GetComponent<HealthBar>().gradient = CharacterStats.HealthBarGradient(BattleEngine.isAllyUnit(myChar));
             UpdateChar = false;
         }
 

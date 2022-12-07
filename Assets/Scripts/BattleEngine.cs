@@ -586,7 +586,7 @@ public class BattleEngine : MonoBehaviour
 
             //Player turn enqueue handling - passes in the current active unit (if it is a player controlled unit), 
             //the target of this turn's action (if any), the type of action taken this turn (if any), and whether the character moved
-            if(isPlayerTurn && selectedAbility != null && acted)
+            if(isPlayerTurn && selectedAbility != null && acted && playerTarget != null)
             {
                 //Add the new PlayerAction to the playerActions queue, using the overloaded constructor
                 playerActions.add(new PlayerAction(activeUnit.GetComponent<CharacterStats>(), playerTarget.GetComponent<CharacterStats>(), selectedAbility, moved));

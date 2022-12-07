@@ -47,10 +47,10 @@ MonoBehaviour:
   isPlayer: 0
   characters:
   - {fileID: 3143647663270985119, guid: 08d95405b7e47f64abf8c8c0eff07024, type: 3}
-  - {fileID: 4189546098157036346, guid: fad7574384f2b654cbf07071079c871e, type: 3}
-  - {fileID: 4189546098157036346, guid: fad7574384f2b654cbf07071079c871e, type: 3}
-  - {fileID: 4189546098157036346, guid: fad7574384f2b654cbf07071079c871e, type: 3}
-  - {fileID: 4189546098157036346, guid: fad7574384f2b654cbf07071079c871e, type: 3}
+  - {fileID: 3117358775316834439, guid: fe58982e63c96874e8837bed0167ffbe, type: 3}
+  - {fileID: 4669722073133317754, guid: 9ff5783d01f3af2469391a49e3bc3756, type: 3}
+  - {fileID: 3117358775316834439, guid: fe58982e63c96874e8837bed0167ffbe, type: 3}
+  - {fileID: 4669722073133317754, guid: 9ff5783d01f3af2469391a49e3bc3756, type: 3}
   ship: {fileID: 0}
   morale: 100
   inventory_gold: 0
