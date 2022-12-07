@@ -82,8 +82,8 @@ public class BattleEngine : MonoBehaviour
     void Start() 
     {
         // Temporary assignment of ships, crews should be passed in somewhere since they're permanent
-        playerCrew.GetComponent<CrewSystem>().ship = GameObject.Find("Player Ship");
-        enemyCrew.GetComponent<CrewSystem>().ship = GameObject.Find("Enemy Ship");
+        playerCrew.GetComponent<CrewSystem>().ship = GameObject.Find("PlayerShip");
+        enemyCrew.GetComponent<CrewSystem>().ship = GameObject.Find("PlayerShip");
 
         // Get Camera
         cam = Camera.main;
