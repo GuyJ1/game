@@ -28,7 +28,7 @@ public class BattleEngine : MonoBehaviour
     public GameObject buttonPrefab;
 
     public List<GameObject> grids = new List<GameObject>(); //All grids
-    public GameObject playerCrew, enemyCrew;
+    public GameObject playerCrew, enemyCrew, playerShip, enemyShip; //Crews & ships
     public List<GameObject> units = new List<GameObject>(); //All units
     public PathTreeNode gridPaths;
     public bool active = false; //Activation flag to be set by other systems
@@ -82,8 +82,8 @@ public class BattleEngine : MonoBehaviour
     void Start() 
     {
         // Temporary assignment of ships, crews should be passed in somewhere since they're permanent
-        playerCrew.GetComponent<CrewSystem>().ship = GameObject.Find("PlayerShip");
-        enemyCrew.GetComponent<CrewSystem>().ship = GameObject.Find("PlayerShip");
+        playerCrew.GetComponent<CrewSystem>().ship = playerShip;
+        enemyCrew.GetComponent<CrewSystem>().ship = enemyShip;
 
         // Get Camera
         cam = Camera.main;
@@ -1115,42 +1115,110 @@ public class BattleEngine : MonoBehaviour
     {
         Debug.Log("AI: AI Turn began");
 
-        // // Get active unit script
-        // activeUnit = turnQueue[0];
-        // var activeUnitScript = activeUnit.GetComponent<CharacterStats>();
-
-        // // Recover 1 AP
-        // activeUnitScript.addAP(1);
-
-        // // Get data from active unit
-        // grid = activeUnitScript.myGrid;
-        // var gridScript = grid.GetComponent<GridBehavior>();
-        // activeUnitPos = activeUnitScript.gridPosition;
-
-        // // Camera Culling
-        // var camScript = cam.GetComponent<CameraControl>();
-        // camScript.SetLayerMode((CameraControl.LAYERMODE)activeUnit.layer);
-
-        // // Deselect ability
-        // selectedAbility = null;
-        
-        // // Set the tile of which the character is on to be active
-        // activeUnitTile = gridScript.grid[activeUnitPos.x, activeUnitPos.y];
-        // activeUnitTile.GetComponent<Renderer>().material = gridScript.activeUnselected;
-        // camScript.LookAtPos(activeUnitTile.transform.position);
-
         StartCoroutine(simpleWaiter());
     }
 
     IEnumerator simpleWaiter()
     {
-        var gridScript = grid.GetComponent<GridBehavior>();
-
         Debug.Log("AI: AI simple waiting");
 
-        setupMove(activeUnitTile);
+        //Get the grid script
+        var gridScript = grid.GetComponent<GridBehavior>();
+        PathTreeNode tempPathTree = null;
 
-        yield return new WaitForSecondsRealtime(2);
+        //Initialize variables based on the current character
+        var activeChar = activeUnit.GetComponent<CharacterStats>();
+        //This is a list of lists of Vectors, used for storing the positions of possible targets for each ability.
+        List<List<TileScript>> abilityTargetsLists = new List<List<TileScript>>();
+        
+        Debug.Log("@@@@Current character isPlayer: " + activeChar.isPlayer().ToString() 
+        + " || character at: " + activeUnitTile.GetComponent<TileScript>().position.x + ", " + activeUnitTile.GetComponent<TileScript>().position.y + "@@@@");
+
+        //Iterate through the abilities of the character. For each ability, we'll keep a list of possible targets
+        foreach(Ability selectedAbility in activeChar.abilities)
+        {
+            //This is a temporary list of Vectors, used for storing the results of the targetAcquisitionTree to be added to the abilityTargetsLists lists
+            List<TileScript> tempTiles = new List<TileScript>();
+
+            Debug.Log("####Testing ability " + selectedAbility.displayName + " (friendly: " + selectedAbility.friendly.ToString() + ")"
+            + " with range " + selectedAbility.range 
+            + ". Character movement range " + activeChar.getMovement() 
+            + ", Total Range " + (activeChar.getMovement() + selectedAbility.range) + "####");
+
+            //If the ability that is currently selected is marked for use on friendlies, that means for enemies it is supposed to be used for their opponents.
+            if(selectedAbility.friendly)
+            {
+                Debug.Log("Ability is friendly");
+                //Retrieve the pathtreenode of the total range for this ability (character movement + ability range)
+                tempPathTree = gridScript.GetAllPathsFromTile(activeUnitTile, (activeChar.getMovement() + selectedAbility.range));
+
+                targetAcquisitionTree(tempPathTree, tempTiles, false);
+
+                abilityTargetsLists.Add(tempTiles);
+            }
+            //Otherwise, the ability is one that targets enemies, or in this case is a 'friendly' ability
+            else if(!selectedAbility.friendly)
+            {
+                Debug.Log("Ability is not friendly");
+                //Retrieve the pathtreenode of the total range for this ability (character movement + ability range)
+                tempPathTree = gridScript.GetAllPathsFromTile(activeUnitTile, (activeChar.getMovement() + selectedAbility.range));
+
+                targetAcquisitionTree(tempPathTree, tempTiles, true);
+
+                abilityTargetsLists.Add(tempTiles);
+            }
+        }
+
+        Debug.Log("AI: abilityTargetsLists size: " + abilityTargetsLists.Count);
+        
+        foreach(List<TileScript> targetList in abilityTargetsLists)
+        {
+            Debug.Log("AI: List of size" + targetList.Count);
+        }
+
+        yield return new WaitForSecondsRealtime(0.1f);
+
+        //while(!Input.GetKeyDown(KeyCode.Space)) yield return null;
         endTurn();
     }
+    
+
+    public void targetAcquisitionTree(PathTreeNode root, List<TileScript> returnList, bool validTarget) 
+    {
+        // Get data from tile
+        var tileScript = root.myTile.GetComponent<TileScript>();
+
+        if(tileScript.hasCharacter)
+        {
+            Debug.Log("****Acquiring targets. Character at: " + tileScript.position.x + ", " + tileScript.position.y
+            + " || List redundancy: " + (!returnList.Contains(tileScript)).ToString()
+            + " || Character isPlayer: " + tileScript.characterOn.GetComponent<CharacterStats>().isPlayer().ToString() 
+            + " || validTarget passed in: " + validTarget
+            + " || target is fully valid: " + (tileScript.characterOn.GetComponent<CharacterStats>().isPlayer() == validTarget).ToString() + "****");
+        }
+
+        //If there's a character on the tile, the list doesn't already have this tile, and the target is valid
+        if(tileScript.hasCharacter && !returnList.Contains(tileScript) && tileScript.characterOn.GetComponent<CharacterStats>().isPlayer() == validTarget)
+        {
+            //add this tile to the list of possible targets
+            returnList.Add(tileScript);
+
+            Debug.Log("////Adding target on grid " + tileScript.position.x + ", " + tileScript.position.y 
+            + " with character class " + tileScript.characterOn.GetComponent<CharacterStats>().classname.ToString() 
+            + " with isPlayer " + tileScript.characterOn.GetComponent<CharacterStats>().isPlayer() + "////");
+        }
+
+        //recurse through all tiles
+        if(root.up != null) targetAcquisitionTree(root.up, returnList, validTarget);
+        if(root.down != null) targetAcquisitionTree(root.down, returnList, validTarget);
+        if(root.left != null) targetAcquisitionTree(root.left, returnList, validTarget);
+        if(root.right != null) targetAcquisitionTree(root.right, returnList, validTarget);
+    }
+
+    public bool sharedAlliance(GameObject unit)
+    {
+        //A unit is an ally if it shares the
+        return (unit.GetComponent<CharacterStats>().crew.GetComponent<CrewSystem>().isPlayer == activeUnit.GetComponent<CharacterStats>().crew.GetComponent<CrewSystem>().isPlayer);
+    }
+
 }

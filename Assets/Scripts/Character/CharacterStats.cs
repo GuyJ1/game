@@ -232,12 +232,12 @@ public class CharacterStats : MonoBehaviour
     void Update()
     {
         // Health Testing
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
+        // if (Input.GetKeyDown(KeyCode.Space))
+        // {
 
-            //damage
-            adjustHP(-20, false);
-        }
+        //     //damage
+        //     adjustHP(-20, false);
+        // }
 
         //updateAVO(ring, aura);
         //update equipment
