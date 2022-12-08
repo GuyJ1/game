@@ -9,9 +9,12 @@ public class BarteringTrigger : MonoBehaviour
 
     private void Update()
     {
-        if (InputManager.GetInstance().GetSubmitPressed())
+        if (!BarteringManager.GetInstance().dialogueIsPlaying)
         {
-            Dialogue_Manager_Final.GetInstance().EnterDialogueMode(inkJSON);
+            if (InputManager.GetInstance().GetInteractPressed())
+            {
+                BarteringManager.GetInstance().EnterDialogueMode(inkJSON);
+            }
         }
     }
 }
