@@ -617,19 +617,19 @@ public class GridBehavior : MonoBehaviour
                     queue.Enqueue(tempNode.up);
                 }
 
-                if (passThrough || ValidHighlightTile(downTile, isPlayer, passThrough))
+                if (ValidHighlightTile(downTile, isPlayer, passThrough))
                 {
                     tempNode.down = new PathTreeNode(tempNode, downTile, tempNode.tileRange-1);
                     queue.Enqueue(tempNode.down);
                 }
 
-                if (passThrough || ValidHighlightTile(leftTile, isPlayer, passThrough))
+                if (ValidHighlightTile(leftTile, isPlayer, passThrough))
                 {
                     tempNode.left = new PathTreeNode(tempNode, leftTile, tempNode.tileRange-1);
                     queue.Enqueue(tempNode.left);
                 }
 
-                if (passThrough || ValidHighlightTile(rightTile, isPlayer, passThrough))
+                if (ValidHighlightTile(rightTile, isPlayer, passThrough))
                 {
                     tempNode.right = new PathTreeNode(tempNode, rightTile, tempNode.tileRange-1);
                     queue.Enqueue(tempNode.right);
