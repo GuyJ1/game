@@ -11,6 +11,7 @@ public class EscapeMenu : MonoBehaviour
     public Button returnMainMenu;
     public Button exitGame;
     public bool escapeMenuOpen = false;
+    int currentScene;
 
     
     // Start is called before the first frame update
@@ -25,19 +26,21 @@ public class EscapeMenu : MonoBehaviour
         // checks if "ESC" is pressed in a given frame
         if(Input.GetKeyDown(KeyCode.Escape))
         {
-            // opens the menu since it wasnt open
+            // pause the game
             if(!escapeMenuOpen)
             {
                 escapeMenuOpen = true;
+                Cursor.lockState = CursorLockMode.None;
                 titleText.gameObject.SetActive(true);
                 returnMainMenu.gameObject.SetActive(true);
                 exitGame.gameObject.SetActive(true);
             }
 
-            // closes the menu since it was open
+            // resume game
             else
             {
                 escapeMenuOpen = false;
+                Cursor.lockState = CursorLockMode.Locked;
                 titleText.gameObject.SetActive(false);
                 returnMainMenu.gameObject.SetActive(false);
                 exitGame.gameObject.SetActive(false);
