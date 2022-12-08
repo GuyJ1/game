@@ -4142,12 +4142,13 @@ MonoBehaviour:
   HP: 500
   HPMAX: 500
   isEnemy: 1
-  dus: 0
   shipSinkAnim: {fileID: 2752115821006640458}
   myMoveScript: {fileID: 2918592252996794388}
   waterCollider: {fileID: 7524198869669570551, guid: 00bb22ed195b02e438741c83d92782c4, type: 3}
   foamCollider: {fileID: 5530040058716571913}
   deckGrid: {fileID: 0}
+  sinkTiltAmount: 50
+  sinkTiltSpeed: 15
 --- !u!111 &2752115821006640458
 Animation:
   m_ObjectHideFlags: 0

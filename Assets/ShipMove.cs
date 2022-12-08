@@ -7,6 +7,8 @@ public class ShipMove : MonoBehaviour
     [SerializeField] public float moveSpeed;
     [SerializeField] public Vector3 moveDirection;
 
+    [SerializeField] public Quaternion spawnRotation;
+
     [SerializeField] public float tiltSpeed;
     [SerializeField] public float tiltAmount;
     [SerializeField] public Vector3 tiltDirection;
@@ -19,6 +21,9 @@ public class ShipMove : MonoBehaviour
         // Normalize move direction and tilt direction
         moveDirection.Normalize();
         tiltDirection.Normalize();
+
+        // Update Rotation
+        transform.rotation = spawnRotation;
     }
     void Update()
     {

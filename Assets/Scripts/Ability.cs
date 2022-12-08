@@ -470,6 +470,9 @@ public class Ability : ScriptableObject
     //if ability hits, debuff target's DEF (-5) and accuraccy (DEX) (-5) for 3 turns
     void MaddeningJig(CharacterStats user, CharacterStats target){
 
+        GameObject hitParticle = Instantiate(targetEffect);
+        hitParticle.transform.position = target.transform.position;
+
         if(user.determineHIT(baseACC)){
 
             //possible effect
@@ -661,6 +664,9 @@ public class Ability : ScriptableObject
     //heal the target (moderate)
     void Replenish(CharacterStats user, CharacterStats target){
 
+        GameObject hitParticle = Instantiate(targetEffect);
+        hitParticle.transform.position = target.transform.position;
+
         totalHP = user.Heal(target) + baseHP;
 
         target.adjustHP(totalHP, true);
@@ -672,6 +678,9 @@ public class Ability : ScriptableObject
 
     //heal the target (strong) and grant +6 LCK
     void NobleRite(CharacterStats user, CharacterStats target){
+
+        GameObject hitParticle = Instantiate(targetEffect);
+        hitParticle.transform.position = target.transform.position;
 
         totalHP = user.Heal(target) + baseHP + target.getLuck();
 
@@ -687,6 +696,9 @@ public class Ability : ScriptableObject
 
     //clear all debuffs and grant 1 AP to target
     void Purge(CharacterStats user, CharacterStats target){
+
+        GameObject hitParticle = Instantiate(targetEffect);
+        hitParticle.transform.position = target.transform.position;
 
         if(user.determineHIT(baseACC)){
 
@@ -946,17 +958,20 @@ public class Ability : ScriptableObject
 
     void SecondWind(CharacterStats user){
 
+        GameObject hitParticle = Instantiate(targetEffect, user.transform);
+
 
         totalHP = user.Heal(user) + baseHP;
-
         user.adjustHP(totalHP, true);
     }
 
     void PistolVolley(CharacterStats user, CharacterStats target){
 
+        GameObject hitParticle = Instantiate(targetEffect);
+        hitParticle.transform.position = target.transform.position;
+
         totalDMG = baseDMG;
         target.adjustHP(-totalDMG, false);
-
         
     }
 

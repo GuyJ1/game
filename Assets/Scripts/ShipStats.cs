@@ -16,6 +16,9 @@ public class ShipStats : MonoBehaviour
 
     [SerializeField] public GameObject deckGrid;
 
+    [SerializeField] public float sinkTiltAmount;
+    [SerializeField] public float sinkTiltSpeed;
+
     private bool isSinking = false;
 
     // Start is called before the first frame update
@@ -62,8 +65,8 @@ public class ShipStats : MonoBehaviour
 
         // Animation
         shipSinkAnim.Play();
-        myMoveScript.tiltAmount = 50;
-        myMoveScript.tiltSpeed = 15;
+        myMoveScript.tiltAmount = sinkTiltAmount;
+        myMoveScript.tiltSpeed = sinkTiltSpeed;
 
         // Audio audio
         var audioData = GetComponent<AudioSource>();
