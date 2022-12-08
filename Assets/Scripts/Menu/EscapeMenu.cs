@@ -11,7 +11,6 @@ public class EscapeMenu : MonoBehaviour
     public Button returnMainMenu;
     public Button exitGame;
     public bool escapeMenuOpen = false;
-    int currentScene;
 
     
     // Start is called before the first frame update
