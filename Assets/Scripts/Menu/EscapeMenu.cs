@@ -29,7 +29,7 @@ public class EscapeMenu : MonoBehaviour
             if(!escapeMenuOpen)
             {
                 escapeMenuOpen = true;
-                Cursor.lockState = CursorLockMode.None;
+                //Cursor.lockState = CursorLockMode.None;
                 titleText.gameObject.SetActive(true);
                 returnMainMenu.gameObject.SetActive(true);
                 exitGame.gameObject.SetActive(true);
@@ -39,7 +39,7 @@ public class EscapeMenu : MonoBehaviour
             else
             {
                 escapeMenuOpen = false;
-                Cursor.lockState = CursorLockMode.Locked;
+                //Cursor.lockState = CursorLockMode.Locked;
                 titleText.gameObject.SetActive(false);
                 returnMainMenu.gameObject.SetActive(false);
                 exitGame.gameObject.SetActive(false);
