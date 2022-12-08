@@ -1,4 +1,3 @@
-/*
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,19 +9,22 @@ using UnityEngine.EventSystems;
 
 public class BarteringManager : MonoBehaviour
 {
+
+    /*
     [Header("Params")]
     [SerializeField] private float typingSpeed = 0.04f;
 
+    */
 
     [Header("Dialogue UI")]
     [SerializeField] private GameObject dialoguePanel;
     [SerializeField] private TextMeshProUGUI dialogueText;
-    [SerializeField] private TextMeshProUGUI displayNameText;
-    [SerializeField] private Animator portraitAnimator;
-    [SerializeField] private GameObject continueIcon; 
+    //[SerializeField] private TextMeshProUGUI displayNameText;
+    //[SerializeField] private Animator portraitAnimator;
+    //[SerializeField] private GameObject continueIcon; 
 
 
-    private Animator layoutAnimator; 
+    //private Animator layoutAnimator; 
 
     [Header("Choices UI")]
     [SerializeField] private GameObject [] choices;
@@ -33,15 +35,15 @@ public class BarteringManager : MonoBehaviour
 
     public bool dialogueIsPlaying { get; private set; }
 
-    private Coroutine displayLineCoroutine;
+    //private Coroutine displayLineCoroutine;
 
     private static BarteringManager instance;
 
-    private const string SPEAKER_TAG = "nancy_pelosi";
-    private const string PORTRAIT_TAG = "portrait";
-    private const string LAYOUT_TAG = "layout";
+    //private const string SPEAKER_TAG = "nancy_pelosi";
+    //private const string PORTRAIT_TAG = "portrait";
+    //private const string LAYOUT_TAG = "layout";
 
-    private bool canContinueToNextLine = false;
+    //private bool canContinueToNextLine = false;
 
 
     private void Awake()
@@ -59,12 +61,14 @@ public class BarteringManager : MonoBehaviour
         return instance;
     }
 
+    
     private void Start()
     {
         dialogueIsPlaying = false;
-        dialoguePanel.SetActive(false);
+        dialoguePanel.SetActive(true);
 
-        layoutAnimator = dialoguePanel.GetComponent<Animator>();
+        
+        //layoutAnimator = dialoguePanel.GetComponent<Animator>();
         // get all of the choices text
         choicesText = new TextMeshProUGUI[choices.Length];
         int index = 0;
@@ -75,6 +79,8 @@ public class BarteringManager : MonoBehaviour
         }
     }
 
+
+
     private void Update()
     {
         // return right away if dialogue isn't playing
@@ -84,25 +90,29 @@ public class BarteringManager : MonoBehaviour
         }
         
         // handle continuing to the next line in the dialogue when submit is pressed
-        if (currentStory.currentChoices.Count == 0 && InputManager.GetInstance().GetSubmitPressed())
+        //if (currentStory.currentChoices.Count == 0 && InputManager.GetInstance().GetSubmitPressed())
+        if (InputManager.GetInstance().GetSubmitPressed())
         {
             ContinueStory();
         }
     }
+    
 
+    
     public void EnterDialogueMode(TextAsset inkJSON)
     {
         currentStory = new Story (inkJSON.text);
         dialogueIsPlaying = true;
         dialoguePanel.SetActive(true);
 
-        displayNameText.text = "????";
-        portraitAnimator.Play("default");
-        layoutAnimator.Play("right");
+        //displayNameText.text = "????";
+        //portraitAnimator.Play("default");
+        //layoutAnimator.Play("right");
 
 
         ContinueStory();
     }
+
 
     private IEnumerator ExitDialogueMode()
     {
@@ -113,31 +123,38 @@ public class BarteringManager : MonoBehaviour
         dialogueText.text = "";
     }
 
+    
+
     private void ContinueStory()
     { 
         if (currentStory.canContinue)
         {
+            /*
            if(displayLineCoroutine != null)
             {
                 StopCoroutine(displayLineCoroutine);
             }
 
            // displayLineCoroutine = StartCoroutine(DisplayLine(currentStory.Continue()));
+           */
 
-
-            //dialogueText.text = currentStory.Continue();
+            // set text for the current dialogue line
+            dialogueText.text = currentStory.Continue();
          //   StartCoroutine(DisplayLine(currentStory.Continue()));
             //display choices, if any, for this dialogue line
-
             DisplayChoices();
             //handle tags 
-            HandleTags(currentStory.currentTags);
+            //HandleTags(currentStory.currentTags);
+
         }
         else
         {
             StartCoroutine(ExitDialogueMode());
         }
     }
+
+
+    /*
 
     private IEnumerable DisplayLine(string line)
     {
@@ -181,6 +198,9 @@ public class BarteringManager : MonoBehaviour
 
         canContinueToNextLine = true;
     }
+    */
+
+    /*
 
     private void HideChoices()
     {
@@ -190,6 +210,9 @@ public class BarteringManager : MonoBehaviour
         }
     }
 
+    */
+
+    /*
     private void HandleTags(List<string> currentTags)
     {
         foreach (string  tag  in currentTags)
@@ -225,6 +248,10 @@ public class BarteringManager : MonoBehaviour
             }
         }
     }
+
+    */
+
+    
     private void DisplayChoices()
     {
         List<Choice> currentChoices = currentStory.currentChoices;
@@ -252,6 +279,9 @@ public class BarteringManager : MonoBehaviour
 
         StartCoroutine(SelectFirstChoice());
     }
+    
+
+    
 
     private IEnumerator SelectFirstChoice()
     {
@@ -262,12 +292,13 @@ public class BarteringManager : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(choices[0].gameObject);
     }
 
+
+
     public void MakeChoice (int choiceIndex)
     {
         currentStory.ChooseChoiceIndex(choiceIndex);
         InputManager.GetInstance().RegisterSubmitPressed();
         ContinueStory();
     }
-}
 
-*/
+}

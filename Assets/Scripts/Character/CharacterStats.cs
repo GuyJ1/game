@@ -43,12 +43,14 @@ public class StatModifier
     public string id = ""; //Optional ID to identify this modifier after it's applied
     public Sprite statusIcon;
 
-    public StatModifier(StatType type, OpType op, int duration, float value, float chance) {
+    public StatModifier(StatType type, OpType op, int duration, float value, float chance, string id = "", Sprite statusIcon = null) {
         this.type = type;
         this.op = op;
         this.duration = duration;
         this.value = value;
         this.chance = chance;
+        this.id = id;
+        this.statusIcon = statusIcon;
     }
 
     public StatModifier(StatType type, OpType op, int duration, float value, float chance, string id) : this(type, op, duration, value, chance) {
@@ -62,7 +64,7 @@ public class StatModifier
     }
 
     public StatModifier clone() {
-        return new StatModifier(type, op, duration, value, chance, id);
+        return new StatModifier(type, op, duration, value, chance, id, statusIcon);
     }
 }
 
