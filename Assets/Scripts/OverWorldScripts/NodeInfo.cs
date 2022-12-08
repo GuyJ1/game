@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+
 public class NodeInfo : MonoBehaviour
 {
     
@@ -16,6 +18,16 @@ public class NodeInfo : MonoBehaviour
     public GameObject node;
     public static string sceneName;
     public string goToScene;
+    public GameObject LoadingScreen;
+    public Image LoadingBarFill;
+    public static bool startLoading;
+    public GameObject goldBox;
+    public TextMeshProUGUI goldBoxText;
+    public GameObject boozeBox;
+    public TextMeshProUGUI boozeBoxText;
+    public GameObject moraleBox;
+    public TextMeshProUGUI moraleBoxText;
+    //public GameObject LoadScreen;
     //public static bool displayTextBox;
     private struct Information{
         int Gold;
@@ -31,7 +43,13 @@ public class NodeInfo : MonoBehaviour
         sceneName = goToScene;
         node = this.gameObject;
         textBox=textnode.GetComponent<TextMeshProUGUI>();
-        
+        goldBox = GameObject.Find("Gold");
+        goldBoxText = goldBox.GetComponent<TextMeshProUGUI>();
+        boozeBox = GameObject.Find("Booze");
+        boozeBoxText = boozeBox.GetComponent<TextMeshProUGUI>();
+        moraleBox = GameObject.Find("Morale");
+        moraleBoxText = moraleBox.GetComponent<TextMeshProUGUI>();
+        //LoadScreen = GameObject.Find("LoadScreen");
     }
     public void showTextBox()
     {
@@ -71,7 +89,9 @@ public class NodeInfo : MonoBehaviour
     {
         if (sceneName != "")
         {
-            SceneManager.LoadScene(sceneName);
+            //SceneManager.LoadScene(sceneName);
+            //new LoadScene(sceneName);
+            startLoading = true;
         }
     }
 
@@ -85,6 +105,44 @@ public class NodeInfo : MonoBehaviour
                 this.showTextBox();
             }
         }
-
+        if (startLoading == true)
+        {
+            startLoading = false; 
+            LoadScene(sceneName);
+        }
     }
+
+    public void LoadScene(string sceneId)
+    {
+
+        StartCoroutine(LoadSceneAsync(sceneId));
+    }
+
+    IEnumerator LoadSceneAsync(string sceneId)
+    {
+        string ogText1 = goldBoxText.text;
+        string ogText2 = boozeBoxText.text;
+        string ogText3 = moraleBoxText.text;
+
+
+        goldBoxText.text = "";
+        boozeBoxText.text = "";
+        moraleBoxText.text = "";
+        //LoadScreen.SetActive(true);
+        LoadingScreen.SetActive(true);
+        AsyncOperation operation = SceneManager.LoadSceneAsync(sceneId);
+
+
+        while (!operation.isDone)
+        {
+            float progressValue = Mathf.Clamp01(operation.progress / 0.9f);
+            LoadingBarFill.fillAmount = progressValue;
+
+            yield return null;
+        }
+
+
+       
+    }
+
 }
