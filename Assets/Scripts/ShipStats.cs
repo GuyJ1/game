@@ -31,7 +31,7 @@ public class ShipStats : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        
     }
 
     // HP changed (either by taking damage (negative) or repairing (positive))

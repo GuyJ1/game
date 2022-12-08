@@ -561,9 +561,10 @@ public class GridBehavior : MonoBehaviour
     // character can take from a given tile position
     // @arg: pos          - the root tile position
     // @arg: range        - how many tiles the character can move
+    // @arg: passThrough  - makes every tile valid
     // @ret: PathTreeNode - the constructed tree
     // --------------------------------------------------------------
-    public PathTreeNode GetAllPathsFromTile(GameObject tile, int range)
+    public PathTreeNode GetAllPathsFromTile(GameObject tile, int range, bool passThrough = false)
     {
         var startTile = tile.GetComponent<TileScript>();
         // Create root node
@@ -610,25 +611,25 @@ public class GridBehavior : MonoBehaviour
             // Add neighboring tiles to queue if in range
             if (tempNode.tileRange > 0)
             {
-                if (ValidHighlightTile(upTile, isPlayer))
+                if (ValidHighlightTile(upTile, isPlayer, passThrough))
                 {
                     tempNode.up = new PathTreeNode(tempNode, upTile, tempNode.tileRange-1);
                     queue.Enqueue(tempNode.up);
                 }
 
-                if (ValidHighlightTile(downTile, isPlayer))
+                if (passThrough || ValidHighlightTile(downTile, isPlayer, passThrough))
                 {
                     tempNode.down = new PathTreeNode(tempNode, downTile, tempNode.tileRange-1);
                     queue.Enqueue(tempNode.down);
                 }
 
-                if (ValidHighlightTile(leftTile, isPlayer))
+                if (passThrough || ValidHighlightTile(leftTile, isPlayer, passThrough))
                 {
                     tempNode.left = new PathTreeNode(tempNode, leftTile, tempNode.tileRange-1);
                     queue.Enqueue(tempNode.left);
                 }
 
-                if (ValidHighlightTile(rightTile, isPlayer))
+                if (passThrough || ValidHighlightTile(rightTile, isPlayer, passThrough))
                 {
                     tempNode.right = new PathTreeNode(tempNode, rightTile, tempNode.tileRange-1);
                     queue.Enqueue(tempNode.right);
@@ -643,9 +644,10 @@ public class GridBehavior : MonoBehaviour
     // @desc: Tests whether a tile can be highlighted
     // @arg: tileToCheck - the tile to check
     // @arg: isPlayer    - whether the character is on the player crew
+    // @arg: passThrough - makes every tile valid (but still can't be null)
     // @ret: bool        - whether the tile can be highlighted
     // --------------------------------------------------------------
-    private bool ValidHighlightTile(GameObject tileToCheck, bool isPlayer)
+    private bool ValidHighlightTile(GameObject tileToCheck, bool isPlayer, bool passThrough = false)
     {
         bool valid = false;
 
@@ -656,13 +658,20 @@ public class GridBehavior : MonoBehaviour
             var tileScript = tileToCheck.GetComponent<TileScript>();
 
             // Check if already highlighted
-            if (tileScript.highlighted == false && tileScript.passable)
+            if (tileScript.highlighted == false)
             {
-                if(tileScript.hasCharacter)
+                // Conditions to make a tile valid
+                if (passThrough == false && tileScript.hasCharacter && tileScript.passable)
                 {
-                    if(tileScript.characterOn.GetComponent<CharacterStats>().isPlayer() == isPlayer) valid = true;
+                    if (tileScript.characterOn.GetComponent<CharacterStats>().isPlayer() == isPlayer)
+                    {
+                        valid = true;
+                    }
                 }
-                else valid = true;
+                else
+                {
+                    valid = true;
+                }
             }
         }
 
