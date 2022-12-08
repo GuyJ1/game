@@ -658,10 +658,10 @@ public class GridBehavior : MonoBehaviour
             var tileScript = tileToCheck.GetComponent<TileScript>();
 
             // Check if already highlighted
-            if (tileScript.highlighted == false)
+            if (tileScript.highlighted == false && tileScript.passable)
             {
                 // Conditions to make a tile valid
-                if (passThrough == false && tileScript.hasCharacter && tileScript.passable)
+                if (passThrough == false && tileScript.hasCharacter)
                 {
                     if (tileScript.characterOn.GetComponent<CharacterStats>().isPlayer() == isPlayer)
                     {
