@@ -28,7 +28,7 @@ public class BattleEngine : MonoBehaviour
     public GameObject buttonPrefab;
 
     public List<GameObject> grids = new List<GameObject>(); //All grids
-    public GameObject playerCrew, enemyCrew;
+    public GameObject playerCrew, enemyCrew, playerShip, enemyShip; //Crews & ships
     public List<GameObject> units = new List<GameObject>(); //All units
     public PathTreeNode gridPaths;
     public bool active = false; //Activation flag to be set by other systems
@@ -82,8 +82,8 @@ public class BattleEngine : MonoBehaviour
     void Start() 
     {
         // Temporary assignment of ships, crews should be passed in somewhere since they're permanent
-        playerCrew.GetComponent<CrewSystem>().ship = GameObject.Find("PlayerShip");
-        enemyCrew.GetComponent<CrewSystem>().ship = GameObject.Find("PlayerShip");
+        playerCrew.GetComponent<CrewSystem>().ship = playerShip;
+        enemyCrew.GetComponent<CrewSystem>().ship = enemyShip;
 
         // Get Camera
         cam = Camera.main;
