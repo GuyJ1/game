@@ -560,6 +560,9 @@ public class Ability : ScriptableObject
 
         if(user.determineHIT(baseACC)){
 
+            GameObject hitParticle = Instantiate(targetEffect);
+            hitParticle.transform.position = target.transform.position;
+
             //effect
 
             foreach(StatModifier modifier in targetModifiers) {
@@ -573,6 +576,9 @@ public class Ability : ScriptableObject
 
     // +6 DEF +4 LCK to target for 2 turns
     void PromiseOfCoin(CharacterStats user, CharacterStats target){
+
+            GameObject hitParticle = Instantiate(targetEffect);
+            hitParticle.transform.position = target.transform.position;
 
             //effect
 
@@ -591,6 +597,9 @@ public class Ability : ScriptableObject
     // +3 DEX (10% chance)
     // +3 LCK (1% chance)
     void OnTheHouse(CharacterStats user, CharacterStats target){
+
+        GameObject hitParticle = Instantiate(targetEffect);
+        hitParticle.transform.position = target.transform.position;
 
         //effect
 
