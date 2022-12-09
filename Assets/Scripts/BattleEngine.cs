@@ -488,8 +488,12 @@ public class BattleEngine : MonoBehaviour
         }
     }
 
-    public void pickNewTurn() {
-        startTurn();
+    public void pickNewTurn() 
+    {
+        if(active)
+        {
+            startTurn();
+        }
     }
 
     public void updateTurnOrder() {
