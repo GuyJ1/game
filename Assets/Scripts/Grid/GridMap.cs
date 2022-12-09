@@ -84,9 +84,23 @@ public class GridMap
 
     // ------- Grid Two -------
     public const uint GridTwoWidth = 8;
-    public const uint GridTwoHeight = 25;
+    public const uint GridTwoHeight = 39;
     public static bool[,] GridTwoPassableFlags = 
     {
+        {true , false, false, false, false, false, false, true },
+        {true , false, false, false, false, false, false, true },
+        {true , false, false, false, false, false, false, true },
+        {true , false, false, false, false, false, false, true },
+        {true , false, false, false, false, false, false, true },
+        {false, false, false, false, false, false, false, false},
+        {false, false, false, true , true , false, false, false},
+        {false, false, false, true , true , false, false, false},
+        {false, false, false, false, false, false, false, false},
+        {false, false, false, false, false, false, false, false},
+        {false, false, false, false, false, false, false, false},
+        {false, false, false, true , true , false, false, false},
+        {false, false, true , true , true , true , false, false},
+        {false, false, false, false, false, false, false, false},
         {false, false, false, false, false, false, false, false},
         {false, false, false, false, false, false, false, false},
         {false, false, false, false, false, false, false, false},
@@ -117,6 +131,20 @@ public class GridMap
 
     public static float[,] GridTwoHeightOffsets = 
     {
+        {-0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f },
+        {-0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f },
+        {-0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f },
+        {-0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f },
+        {-0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f },
+        {-0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f },
+        {-0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f },
+        {-0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f },
+        {-0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f },
+        {-0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f },
+        {-0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f },
+        {-0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f, -0.2f },
+        {-1.0f, -1.0f, -2.3f, -2.3f, -2.3f, -2.3f, -1.0f, -1.0f },
+        {-1.5f, -1.5f, -2.3f, -2.3f, -2.3f, -2.3f, -1.5f, -1.5f },
         {-2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f },
         {-2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f },
         {-2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f, -2.3f },

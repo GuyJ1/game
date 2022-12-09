@@ -566,6 +566,9 @@ public class GridBehavior : MonoBehaviour
     // --------------------------------------------------------------
     public PathTreeNode GetAllPathsFromTile(GameObject tile, int range, bool passThrough = false)
     {
+        // Reset highlights beforehand
+        ResetAllHighlights();
+
         var startTile = tile.GetComponent<TileScript>();
         // Create root node
         PathTreeNode root = new PathTreeNode();
@@ -676,6 +679,29 @@ public class GridBehavior : MonoBehaviour
         }
 
         return valid;
+    }
+
+    // Unhighlights all highlighted tiles in the grid
+    public void ResetAllHighlights()
+    {
+        GameObject currentTile;
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                // Get data from tile at current pos
+                currentTile = GetTileAtPos(new Vector2Int(x,y));
+                var currentTileScript = currentTile.GetComponent<TileScript>();
+
+                // Check if the tile is highlighted
+                if (currentTileScript.highlighted)
+                {
+                    // Reset highlighting
+                    currentTile.GetComponent<Renderer>().material = unselected;
+                    currentTileScript.highlighted = false;
+                }
+            }
+        }
     }
 
     public List<GameObject> GetAllTiles() {
