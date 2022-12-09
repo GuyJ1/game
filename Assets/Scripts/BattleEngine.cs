@@ -1124,7 +1124,6 @@ public class BattleEngine : MonoBehaviour
 
         //Get the grid script
         var gridScript = grid.GetComponent<GridBehavior>();
-        PathTreeNode tempPathTree = null;
 
         //Initialize variables based on the current character
         var activeChar = activeUnit.GetComponent<CharacterStats>();
@@ -1139,6 +1138,8 @@ public class BattleEngine : MonoBehaviour
         {
             //This is a temporary list of Vectors, used for storing the results of the targetAcquisitionTree to be added to the abilityTargetsLists lists
             List<TileScript> tempTiles = new List<TileScript>();
+
+            PathTreeNode tempPathTree = new PathTreeNode();
 
             Debug.Log("####Testing ability " + selectedAbility.displayName + " (friendly: " + selectedAbility.friendly.ToString() + ")"
             + " with range " + selectedAbility.range 
@@ -1180,6 +1181,12 @@ public class BattleEngine : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(0.1f);
 
+        Vector2Int testMove = activeUnitPos;
+        testMove.x = testMove.x + 1;
+        testMove.y = testMove.y + 1;
+
+        moveUnit(testMove, false);
+
         //while(!Input.GetKeyDown(KeyCode.Space)) yield return null;
         endTurn();
     }
@@ -1190,7 +1197,7 @@ public class BattleEngine : MonoBehaviour
         // Get data from tile
         var tileScript = root.myTile.GetComponent<TileScript>();
 
-        if(tileScript.hasCharacter)
+        if(tileScript.characterOn != null)
         {
             Debug.Log("****Acquiring targets. Character at: " + tileScript.position.x + ", " + tileScript.position.y
             + " || List redundancy: " + (!returnList.Contains(tileScript)).ToString()
@@ -1200,7 +1207,7 @@ public class BattleEngine : MonoBehaviour
         }
 
         //If there's a character on the tile, the list doesn't already have this tile, and the target is valid
-        if(tileScript.hasCharacter && !returnList.Contains(tileScript) && tileScript.characterOn.GetComponent<CharacterStats>().isPlayer() == validTarget)
+        if(tileScript.characterOn != null && !returnList.Contains(tileScript) && tileScript.characterOn.GetComponent<CharacterStats>().isPlayer() == validTarget)
         {
             //add this tile to the list of possible targets
             returnList.Add(tileScript);
@@ -1210,12 +1217,31 @@ public class BattleEngine : MonoBehaviour
             + " with isPlayer " + tileScript.characterOn.GetComponent<CharacterStats>().isPlayer() + "////");
         }
 
+        // //If there's a character on the tile, the list doesn't already have this tile, and the target is valid
+        // if(tileScript.characterOn != null && tileScript.characterOn.GetComponent<CharacterStats>().isPlayer() == validTarget)
+        // {
+        //     // if(returnList.Contains(tileScript) == false)
+        //     // {
+
+        //     // }
+
+        //     //add this tile to the list of possible targets
+        //     returnList.Add(tileScript);
+
+        //     Debug.Log("////Adding target on grid " + tileScript.position.x + ", " + tileScript.position.y 
+        //     + " with character class " + tileScript.characterOn.GetComponent<CharacterStats>().classname.ToString() 
+        //     + " with isPlayer " + tileScript.characterOn.GetComponent<CharacterStats>().isPlayer() + "////");
+        // }
+
+
         //recurse through all tiles
         if(root.up != null) targetAcquisitionTree(root.up, returnList, validTarget);
         if(root.down != null) targetAcquisitionTree(root.down, returnList, validTarget);
         if(root.left != null) targetAcquisitionTree(root.left, returnList, validTarget);
         if(root.right != null) targetAcquisitionTree(root.right, returnList, validTarget);
     }
+
+
 
     //public void resolve
 
