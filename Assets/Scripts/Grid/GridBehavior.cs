@@ -534,12 +534,12 @@ public class GridBehavior : MonoBehaviour
             }
             else
             {
-                Debug.Log("PathCharacterOnTile: Error! source tile does not have a character");
+                Debug.Log("MoveTowardsTile: Error! source tile does not have a character");
             }
         }
         else
         {
-            Debug.Log("PathCharacterOnTile: Error! tile source or dest position is out of range");
+            Debug.Log("MoveTowardsTile: Error! tile source or dest position is out of range");
         }
         
         return moveSuccess;

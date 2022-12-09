@@ -1126,6 +1126,8 @@ public class BattleEngine : MonoBehaviour
         int chosenAbility = 0;
         int chosenTarget = 0;
 
+
+
         TileScript actionTarget = null;
 
         //Get the grid script
@@ -1135,7 +1137,7 @@ public class BattleEngine : MonoBehaviour
         var activeChar = activeUnit.GetComponent<CharacterStats>();
         //This is a list of lists of Vectors, used for storing the positions of possible targets for each ability.
         List<List<TileScript>> abilityTargetsLists = new List<List<TileScript>>();
-        
+
         // Debug.Log("@@@@Current character class: " + activeChar.classname.ToString() 
         // + " || character at: " + activeUnitTile.GetComponent<TileScript>().position.x + ", " + activeUnitTile.GetComponent<TileScript>().position.y + "@@@@");
 
@@ -1252,9 +1254,13 @@ public class BattleEngine : MonoBehaviour
 
         //     Debug.Log("AI: Range is : " + (activeChar.getMovement() + activeChar.abilities[chosenAbility].range)
         //     + " || Active Character is at (" + activeUnitPos.x + ", " + activeUnitPos.y 
-        //     + ") || target is at (" + tempTileScript.position.x + ", " + tempTileScript.position.y + ")");
-
+        //     + ") || target is at (" + tempTileScript.position.x + ", " + tempTileScript.position.y + ")"
+        //     + " || Count is " + tempStack.Count);
         // }
+
+        // Debug.Log("AI: Attempting move from (" + activeUnitPos.x + ", " + activeUnitPos.y + ")");
+        // var dummy = gridScript.MoveTowardsTile(activeUnitPos, actionTarget.position, true, activeChar.getMovement());
+        // Debug.Log("AI: Move attempted. New position is (" + activeUnitPos.x + ", " + activeUnitPos.y + ")");
 
         //while(!Input.GetKeyDown(KeyCode.Space)) yield return null;
         yield return new WaitForSecondsRealtime(0.1f);
