@@ -763,16 +763,16 @@ public class Ability : ScriptableObject
     //attack the enemy 5 times, with each attack having 1/5 the power of a normal attack
     void ShootingStar(CharacterStats user, CharacterStats target){
 
-        if(user.weapon != null && user.weapon.shiningStar){
+        /* if(user.weapon != null && user.weapon.shiningStar){ */
 
-            GameObject hitParticle = Instantiate(selfEffect);
-            hitParticle.transform.position = target.transform.position;
+            GameObject hitParticle = Instantiate(targetEffect, target.transform);
 
-            totalDMG = user.Attack(target, 1, 0, 20, 20) / 5;
+            totalDMG = (user.Attack(target, 2, 0, 0, 15) / 5) + baseDMG;
             target.adjustHP(-totalDMG, false);
 
-            
+        /* 
         }
+        
         else{
 
             GameObject hitParticle = Instantiate(targetEffect, target.transform);
@@ -782,7 +782,8 @@ public class Ability : ScriptableObject
             target.adjustHP(-totalDMG, false);
 
             
-        }  
+        }
+        */
 
     }
 
