@@ -1115,12 +1115,18 @@ public class BattleEngine : MonoBehaviour
     {
         //Debug.Log("AI: AI Turn began");
 
-        StartCoroutine(simpleWaiter());
+        StartCoroutine(aiTurnWaiter());
     }
 
-    IEnumerator simpleWaiter()
+    IEnumerator aiTurnWaiter()
     {
         //Debug.Log("AI: AI simple waiting");
+
+        
+        int chosenAbility = 0;
+        int chosenTarget = 0;
+
+        TileScript actionTarget = null;
 
         //Get the grid script
         var gridScript = grid.GetComponent<GridBehavior>();
@@ -1130,8 +1136,8 @@ public class BattleEngine : MonoBehaviour
         //This is a list of lists of Vectors, used for storing the positions of possible targets for each ability.
         List<List<TileScript>> abilityTargetsLists = new List<List<TileScript>>();
         
-        Debug.Log("@@@@Current character class: " + activeChar.classname.ToString() 
-        + " || character at: " + activeUnitTile.GetComponent<TileScript>().position.x + ", " + activeUnitTile.GetComponent<TileScript>().position.y + "@@@@");
+        // Debug.Log("@@@@Current character class: " + activeChar.classname.ToString() 
+        // + " || character at: " + activeUnitTile.GetComponent<TileScript>().position.x + ", " + activeUnitTile.GetComponent<TileScript>().position.y + "@@@@");
 
         //Iterate through the abilities of the character. For each ability, we'll keep a list of possible targets
         foreach(Ability selectedAbility in activeChar.abilities)
@@ -1141,10 +1147,10 @@ public class BattleEngine : MonoBehaviour
 
             PathTreeNode tempPathTree = new PathTreeNode();
 
-            Debug.Log("####Testing ability " + selectedAbility.displayName + " (friendly: " + selectedAbility.friendly.ToString() + ")"
-            + " with range " + selectedAbility.range 
-            + ". Character movement range " + activeChar.getMovement() 
-            + ", Total Range " + (activeChar.getMovement() + selectedAbility.range) + "####");
+            // Debug.Log("####Testing ability " + selectedAbility.displayName + " (friendly: " + selectedAbility.friendly.ToString() + ")"
+            // + " with range " + selectedAbility.range 
+            // + ". Character movement range " + activeChar.getMovement() 
+            // + ", Total Range " + (activeChar.getMovement() + selectedAbility.range) + "####");
 
             //Retrieve the pathtreenode of the total range for this ability (character movement + ability range)
             tempPathTree = gridScript.GetAllPathsFromTile(activeUnitTile, (activeChar.getMovement() + selectedAbility.range), true);
@@ -1154,7 +1160,6 @@ public class BattleEngine : MonoBehaviour
             {
                 //Debug.Log("Ability is friendly");
 
-
                 targetAcquisitionTree(tempPathTree, tempTiles, false);
 
                 abilityTargetsLists.Add(tempTiles);
@@ -1163,8 +1168,6 @@ public class BattleEngine : MonoBehaviour
             else if(selectedAbility.friendly == false)
             {
                 //Debug.Log("Ability is not friendly");
-                //Retrieve the pathtreenode of the total range for this ability (character movement + ability range)
-                //tempPathTree = gridScript.GetAllPathsFromTile(activeUnitTile, (activeChar.getMovement() + selectedAbility.range), true);
 
                 targetAcquisitionTree(tempPathTree, tempTiles, true);
 
@@ -1172,20 +1175,67 @@ public class BattleEngine : MonoBehaviour
             }
         }
 
-        Debug.Log("AI: abilityTargetsLists size: " + abilityTargetsLists.Count);
-        
-        foreach(List<TileScript> targetList in abilityTargetsLists)
+        //Check the list of targets, as there's a possibility the AI has no targets
+        foreach(List<TileScript> subList in abilityTargetsLists)
         {
-            Debug.Log("AI: List of size " + targetList.Count);
+            //If there's at least a single target available for any ability
+            if(subList.Count > 0)
+            {
+                //Leave this loop
+                break;
+            }
+            //If there are no targets available
+            else
+            {
+                //End the turn for now
+                endTurn();
+            }
         }
+
+        //Choose a random ability from the possible abilities
+        Debug.Log("AI: Choosing abilities between 0 and " + (abilityTargetsLists.Count - 1));
+        chosenAbility = Random.Range(0, (abilityTargetsLists.Count - 1));
+        Debug.Log("AI: Chosen ability is ability " + chosenAbility + ", which is " + activeChar.abilities[chosenAbility].displayName);
+
+        //If the random ability has no targets, choose again
+        if(abilityTargetsLists[chosenAbility].Count == 0)
+        {
+            while(abilityTargetsLists[chosenAbility].Count == 0)
+            {
+                Debug.Log("AI: Chosen Ability has no targets. Reselecting...");
+                Debug.Log("AI: Choosing abilities between 0 and " + (abilityTargetsLists.Count - 1));
+                chosenAbility = Random.Range(0, (abilityTargetsLists.Count - 1));
+                Debug.Log("AI: Chosen ability is ability " + chosenAbility + ", which is " + activeChar.abilities[chosenAbility].displayName);
+            }
+        }
+
+        //Go into the chosen ability list, and choose a target for that ability
+        Debug.Log("AI: Choosing targets between 0 and " + (abilityTargetsLists.Count - 1));
+        chosenTarget = Random.Range(0, (abilityTargetsLists[chosenAbility].Count - 1));
+        Debug.Log("AI: Chosen target is number " + chosenTarget 
+        + " which is class " + abilityTargetsLists[chosenAbility][chosenTarget].characterOn.GetComponent<CharacterStats>().classname.ToString());
+
+        //Set the final target based on the random selections
+        actionTarget = abilityTargetsLists[chosenAbility][chosenTarget];
+        Debug.Log("AI: Final target is " + actionTarget.characterOn.GetComponent<CharacterStats>().classname.ToString() 
+        + " at (" + actionTarget.position.x + ", " + actionTarget.position.y + ")");
+
+        //Debug.Log("AI: ");
+
+        // Debug.Log("AI: abilityTargetsLists size: " + abilityTargetsLists.Count);
+        
+        // foreach(List<TileScript> targetList in abilityTargetsLists)
+        // {
+        //     Debug.Log("AI: List of size " + targetList.Count);
+        // }
 
         yield return new WaitForSecondsRealtime(0.1f);
 
-        Vector2Int testMove = activeUnitPos;
-        testMove.x = testMove.x + 1;
-        testMove.y = testMove.y + 1;
+        // Vector2Int testMove = activeUnitPos;
+        // testMove.x = testMove.x + 1;
+        // testMove.y = testMove.y + 1;
 
-        moveUnit(testMove, false);
+        // moveUnit(testMove, false);
 
         //while(!Input.GetKeyDown(KeyCode.Space)) yield return null;
         endTurn();
@@ -1197,14 +1247,14 @@ public class BattleEngine : MonoBehaviour
         // Get data from tile
         var tileScript = root.myTile.GetComponent<TileScript>();
 
-        if(tileScript.characterOn != null)
-        {
-            Debug.Log("****Acquiring targets. Character at: " + tileScript.position.x + ", " + tileScript.position.y
-            + " || List redundancy: " + (!returnList.Contains(tileScript)).ToString()
-            + " || Character isPlayer: " + tileScript.characterOn.GetComponent<CharacterStats>().isPlayer().ToString() 
-            + " || validTarget passed in: " + validTarget
-            + " || target is fully valid: " + (tileScript.characterOn.GetComponent<CharacterStats>().isPlayer() == validTarget).ToString() + "****");
-        }
+        // if(tileScript.characterOn != null)
+        // {
+        //     Debug.Log("****Acquiring targets. Character at: " + tileScript.position.x + ", " + tileScript.position.y
+        //     + " || List redundancy: " + (!returnList.Contains(tileScript)).ToString()
+        //     + " || Character isPlayer: " + tileScript.characterOn.GetComponent<CharacterStats>().isPlayer().ToString() 
+        //     + " || validTarget passed in: " + validTarget
+        //     + " || target is fully valid: " + (tileScript.characterOn.GetComponent<CharacterStats>().isPlayer() == validTarget).ToString() + "****");
+        // }
 
         //If there's a character on the tile, the list doesn't already have this tile, and the target is valid
         if(tileScript.characterOn != null && !returnList.Contains(tileScript) && tileScript.characterOn.GetComponent<CharacterStats>().isPlayer() == validTarget)
@@ -1212,43 +1262,23 @@ public class BattleEngine : MonoBehaviour
             //add this tile to the list of possible targets
             returnList.Add(tileScript);
 
-            Debug.Log("////Adding target on grid " + tileScript.position.x + ", " + tileScript.position.y 
-            + " with character class " + tileScript.characterOn.GetComponent<CharacterStats>().classname.ToString() 
-            + " with isPlayer " + tileScript.characterOn.GetComponent<CharacterStats>().isPlayer() + "////");
+            // Debug.Log("////Adding target on grid " + tileScript.position.x + ", " + tileScript.position.y 
+            // + " with character class " + tileScript.characterOn.GetComponent<CharacterStats>().classname.ToString() 
+            // + " with isPlayer " + tileScript.characterOn.GetComponent<CharacterStats>().isPlayer() + "////");
         }
 
-        // //If there's a character on the tile, the list doesn't already have this tile, and the target is valid
-        // if(tileScript.characterOn != null && tileScript.characterOn.GetComponent<CharacterStats>().isPlayer() == validTarget)
-        // {
-        //     // if(returnList.Contains(tileScript) == false)
-        //     // {
-
-        //     // }
-
-        //     //add this tile to the list of possible targets
-        //     returnList.Add(tileScript);
-
-        //     Debug.Log("////Adding target on grid " + tileScript.position.x + ", " + tileScript.position.y 
-        //     + " with character class " + tileScript.characterOn.GetComponent<CharacterStats>().classname.ToString() 
-        //     + " with isPlayer " + tileScript.characterOn.GetComponent<CharacterStats>().isPlayer() + "////");
-        // }
-
-
-        //recurse through all tiles
+        //recurse through all tiles in the tree
         if(root.up != null) targetAcquisitionTree(root.up, returnList, validTarget);
         if(root.down != null) targetAcquisitionTree(root.down, returnList, validTarget);
         if(root.left != null) targetAcquisitionTree(root.left, returnList, validTarget);
         if(root.right != null) targetAcquisitionTree(root.right, returnList, validTarget);
     }
 
-
-
-    //public void resolve
-
-    public bool sharedAlliance(GameObject unit)
+    public void resolveAction(List<List<TileScript>> targetsLists, Ability returnAbility, TileScript returnTile)
     {
-        //A unit is an ally if it shares the
-        return (unit.GetComponent<CharacterStats>().crew.GetComponent<CrewSystem>().isPlayer == activeUnit.GetComponent<CharacterStats>().crew.GetComponent<CrewSystem>().isPlayer);
+
+        //returnAbility = 
+
     }
 
 }
