@@ -33,11 +33,12 @@ public class CannonObject : GridObject
         mFlash.transform.position = muzzle.position;
     }
 
-    public GameObject fireCannonball()
+    public GameObject fireCannonball(bool fromEnemy)
     {
         // ----- Cannonball Spawning -----
         GameObject newCannonball = Instantiate(cannonball);
         newCannonball.GetComponent<CannonballCollision>().damage = shotDamage;
+        newCannonball.GetComponent<CannonballCollision>().isEnemyOwned = fromEnemy;
         return fireObject(newCannonball);
     }
 
@@ -65,7 +66,7 @@ public class CannonObject : GridObject
     new public GameObject InteractPrimary(GameObject user)
     {
         Debug.Log("Fire Cannonball!");
-        return fireCannonball();
+        return fireCannonball(!user.GetComponent<CharacterStats>().isPlayer());
     }
 
     // Trigger this object's secondary behavior when interacted with by a character, return created object to track with camera

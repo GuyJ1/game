@@ -31,6 +31,10 @@ PrefabInstance:
       propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[0].m_Value.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7603426937659417462, guid: a335c85a2b5870e4299a8598ca53df11, type: 3}
+      propertyPath: m_audioClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 85375a9b80a395d4ebb6730c34d65507, type: 3}
     - target: {fileID: 7612325201190417804, guid: a335c85a2b5870e4299a8598ca53df11, type: 3}
       propertyPath: m_RootOrder
       value: 0

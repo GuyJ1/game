@@ -23,14 +23,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 440977491389660818}
-  m_LocalRotation: {x: 0, y: 0.10452846, z: -0.9945219, w: 0}
+  m_LocalRotation: {x: -0, y: -0.1253333, z: -0.9921148, w: 0}
   m_LocalPosition: {x: 0, y: 1.189, z: 2.3760972}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7373556696859533218}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 12, y: 0, z: -180}
+  m_LocalEulerAnglesHint: {x: -14.4, y: 0, z: -180}
 --- !u!1 &3062333837081549251
 GameObject:
   m_ObjectHideFlags: 0
@@ -181,11 +181,11 @@ MonoBehaviour:
   interactionType: 2
   displayNamePrimary: Fire Cannon
   displayNameSecondary: Fire Self
-  shotSpeed: 20
+  shotSpeed: 15
   shotDamage: 40
   shotRandomness: 5
   cannonball: {fileID: 2631466561471378240, guid: f29794cba0ec6194b8a0aa2d02281b21, type: 3}
-  muzzleFlash: {fileID: 1743301284569550, guid: ad2ab49d0a2a17148bd51c93d977bdbc, type: 3}
+  muzzleFlash: {fileID: 1337198075554910, guid: 25c7aa9ad705fe143a4d71c1c8deb7d4, type: 3}
   muzzle: {fileID: 3979886640798620047}
 --- !u!1001 &717215629195139168
 PrefabInstance:

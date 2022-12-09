@@ -638,7 +638,7 @@ public class BattleEngine : MonoBehaviour
 
         // Unselect currently selected character
         if(charSelected) {
-            var selectedGrid = grid.GetComponent<GridBehavior>();
+            var selectedGrid = this.selectedGrid.GetComponent<GridBehavior>();
             Debug.Log("Unselecting character on " + selectedCharPos.x + " " + selectedCharPos.y);
             selectedGrid.grid[selectedCharPos.x, selectedCharPos.y].GetComponent<Renderer>().material = isTileActive(selectedCharPos) ? selectedGrid.activeUnselected : selectedGrid.unselected;
         }
@@ -1122,6 +1122,27 @@ public class BattleEngine : MonoBehaviour
                 actionButtons.Add(button);
                 count++;
             }
+        }
+
+        //Setup travel button
+        var activeUnitTileScript = activeUnitTile.GetComponent<TileScript>();
+        if(activeUnitTileScript.hasGridLink)
+        {
+            GameObject actionButton = Instantiate(buttonPrefab, canvas.transform);
+            actionButton.transform.GetComponent<RectTransform>().anchoredPosition += new Vector2(70, -90 - 25 * count);
+            Button button = actionButton.GetComponent<Button>();
+
+            button.onClick.AddListener(() => { //Listen to setup ability when clicked
+                gridTiles.MoveUnitToGrid(activeUnitTile);
+                acted = true;
+                update();
+            });
+
+            var tmp = actionButton.GetComponentInChildren<TMPro.TextMeshProUGUI>();
+            if(!button.interactable) tmp.color = new Color(0.4f, 0.4f, 0.4f, 1.0f);
+            tmp.text = "Travel";
+            actionButtons.Add(button);
+            count++;
         }
     }
 

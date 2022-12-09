@@ -15,7 +15,7 @@ MonoBehaviour:
   friendly: 0
   requiresTarget: 1
   free: 1
-  baseDMG: 60
+  baseDMG: 30
   baseHP: 0
   baseACC: 10
   costAP: 1
