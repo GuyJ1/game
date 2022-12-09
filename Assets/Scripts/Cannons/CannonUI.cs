@@ -81,7 +81,7 @@ public class CannonUI : MonoBehaviour
         if (battleScript.active)
         {
             // Fire Cannon
-            currCannon.transform.GetChild(0).GetComponent<CannonObject>().fireCannonball();
+            //currCannon.transform.GetChild(0).GetComponent<CannonObject>().fireCannonball();
 
             // Sleep Battle Engine for a Moment
             battleScript.StartCoroutine(battleScript.PauseBattleEngine(battleSleepTime, true));
