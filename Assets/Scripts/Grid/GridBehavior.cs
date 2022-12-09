@@ -477,6 +477,7 @@ public class GridBehavior : MonoBehaviour
         GameObject charToMove = null;
         bool moveSuccess = false;
 
+
         // Check whether tiles are in range
         if (TilePosInRange(sourcePos) && TilePosInRange(destPos))
         {
@@ -487,6 +488,9 @@ public class GridBehavior : MonoBehaviour
             // Get tile on dest position
             GameObject destTile = grid[destPos.x, destPos.y];
             var destTileScript = destTile.GetComponent<TileScript>();
+
+            // Make a new path tree
+            sourceTileScipt.pathRef = GetAllPathsFromTile(sourceTile, maxRange, true);
 
             // Get character on source tile
             if (sourceTileScipt.hasCharacter && !destTileScript.hasCharacter && destTileScript.passable)
@@ -501,7 +505,7 @@ public class GridBehavior : MonoBehaviour
                     Stack<PathTreeNode> PathTowardsDest = destTileScript.pathRef.PathToRoot();
 
                     // Cut down stack to max range
-                    while (PathTowardsDest.Count > maxRange)
+                    while (PathTowardsDest.Count-1 > maxRange)
                     {
                         destTile = PathTowardsDest.Pop().myTile;
                     }
@@ -523,7 +527,7 @@ public class GridBehavior : MonoBehaviour
                     destTileScript.hasCharacter = true;
                     destTileScript.characterOn = charToMove;
 
-                    charToMove.GetComponent<CharacterStats>().gridPosition = destPos;
+                    charToMove.GetComponent<CharacterStats>().gridPosition = destTileScript.position;
 
                     moveSuccess = true;
                 }
