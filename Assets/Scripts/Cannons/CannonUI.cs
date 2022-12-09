@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+//DEPRECATED
 public class CannonUI : MonoBehaviour
 {
     [SerializeField] public BattleEngine battleScript;
@@ -80,7 +81,7 @@ public class CannonUI : MonoBehaviour
         if (battleScript.active)
         {
             // Fire Cannon
-            currCannon.transform.GetChild(0).GetComponent<CannonControl>().fireCannonball();
+            currCannon.transform.GetChild(0).GetComponent<CannonObject>().fireCannonball();
 
             // Sleep Battle Engine for a Moment
             battleScript.StartCoroutine(battleScript.PauseBattleEngine(battleSleepTime, true));
@@ -92,7 +93,7 @@ public class CannonUI : MonoBehaviour
         if (battleScript.active)
         {
             // Fire Effect
-            var cannonScript = currCannon.transform.GetChild(0).GetComponent<CannonControl>();
+            var cannonScript = currCannon.transform.GetChild(0).GetComponent<CannonObject>();
 
             // Fire Active Character
             Transform modelTrans = battleScript.activeUnit.transform.GetChild(0);

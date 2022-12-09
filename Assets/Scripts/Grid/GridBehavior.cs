@@ -843,4 +843,33 @@ public class GridBehavior : MonoBehaviour
 
         return charaterAtPos;
     }
+
+    // Return list of all interactable grid objects from the active unit position
+    public List<GameObject> GetInteractableTileObjects(Vector2Int pos)
+    {
+        List<GameObject> tileObjects = new List<GameObject>();
+        TileScript tile = GetTileAtPos(pos).GetComponent<TileScript>();
+        if(tile.hasObject) tileObjects.Add(tile.objectOn);
+        if(GetTileNorth(pos) != null)
+        {
+            tile = GetTileNorth(pos).GetComponent<TileScript>();
+            if(tile != null && tile.hasObject && !tile.objectOn.GetComponent<GridObject>().overlapCharacter) tileObjects.Add(tile.objectOn);
+        }
+        if(GetTileSouth(pos) != null)
+        {
+            tile = GetTileSouth(pos).GetComponent<TileScript>();
+            if(tile != null && tile.hasObject && !tile.objectOn.GetComponent<GridObject>().overlapCharacter) tileObjects.Add(tile.objectOn);
+        }
+        if(GetTileWest(pos) != null)
+        {
+            tile = GetTileWest(pos).GetComponent<TileScript>();
+            if(tile != null && tile.hasObject && !tile.objectOn.GetComponent<GridObject>().overlapCharacter) tileObjects.Add(tile.objectOn);
+        }
+        if(GetTileEast(pos) != null)
+        {
+            tile = GetTileEast(pos).GetComponent<TileScript>();
+            if(tile != null && tile.hasObject && !tile.objectOn.GetComponent<GridObject>().overlapCharacter) tileObjects.Add(tile.objectOn);
+        }
+        return tileObjects;
+    }
 }
