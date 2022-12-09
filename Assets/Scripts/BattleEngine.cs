@@ -1193,7 +1193,10 @@ public class BattleEngine : MonoBehaviour
         }
 
         //Choose a random ability from the possible abilities
-        Debug.Log("AI: Choosing abilities between 0 and " + (abilityTargetsLists.Count - 1));
+        Debug.Log("AI: " +  activeChar.classname.ToString()
+        + " on (" + activeUnitPos.x + ", " + activeUnitPos.y
+        + ") is choosing abilities between 0 and " + (abilityTargetsLists.Count - 1));
+        
         chosenAbility = Random.Range(0, (abilityTargetsLists.Count - 1));
         Debug.Log("AI: Chosen ability is ability " + chosenAbility + ", which is " + activeChar.abilities[chosenAbility].displayName);
 
@@ -1210,8 +1213,12 @@ public class BattleEngine : MonoBehaviour
         }
 
         //Go into the chosen ability list, and choose a target for that ability
-        Debug.Log("AI: Choosing targets between 0 and " + (abilityTargetsLists.Count - 1));
+        Debug.Log("AI: " +  activeChar.classname.ToString()
+        + " on (" + activeUnitPos.x + ", " + activeUnitPos.y
+        + ") is choosing targets between 0 and " + (abilityTargetsLists[chosenAbility].Count - 1));
+
         chosenTarget = Random.Range(0, (abilityTargetsLists[chosenAbility].Count - 1));
+
         Debug.Log("AI: Chosen target is number " + chosenTarget 
         + " which is class " + abilityTargetsLists[chosenAbility][chosenTarget].characterOn.GetComponent<CharacterStats>().classname.ToString());
 
@@ -1220,24 +1227,43 @@ public class BattleEngine : MonoBehaviour
         Debug.Log("AI: Final target is " + actionTarget.characterOn.GetComponent<CharacterStats>().classname.ToString() 
         + " at (" + actionTarget.position.x + ", " + actionTarget.position.y + ")");
 
-        //Debug.Log("AI: ");
+        //Determine if the neighbors of the final target are empty
+        //actionTarget.
 
-        // Debug.Log("AI: abilityTargetsLists size: " + abilityTargetsLists.Count);
+        //Move towards the final target
+        // Debug.Log("AI: Attempting move to target");
+        // var dummy = gridScript.PathCharacterOnTile(activeUnitPos, actionTarget.position, false);
+        // Debug.Log("AI: Move was successful: " + dummy.ToString());
         
-        // foreach(List<TileScript> targetList in abilityTargetsLists)
-        // {
-        //     Debug.Log("AI: List of size " + targetList.Count);
-        // }
+        if(actionTarget.characterOn == activeUnit)
+        {
+            Debug.Log("AI: Self-target turn, ending");
+            endTurn();
+        }
 
-        yield return new WaitForSecondsRealtime(0.1f);
+        Stack<PathTreeNode> tempStack = new Stack<PathTreeNode>();
+        actionTarget.pathRef.PathToRootOnStack(tempStack);
 
-        // Vector2Int testMove = activeUnitPos;
+        while(tempStack.Count > 0)
+        {
+            PathTreeNode temp = tempStack.Pop();
+            var tempTileScript = temp.myTile.GetComponent<TileScript>();
+            //Debug.Log("Did this work? (" + tempTileScript.position.x + ", " + tempTileScript.position.y + ")");
+
+            Debug.Log("AI: Range is : " + (activeChar.getMovement() + activeChar.abilities[chosenAbility].range)
+            + " || Active Character is at (" + activeUnitPos.x + ", " + activeUnitPos.y 
+            + ") || target is at (" + tempTileScript.position.x + ", " + tempTileScript.position.y + ")");
+
+        }
+
+        // Vector2Int testMove = actionTarget;
         // testMove.x = testMove.x + 1;
         // testMove.y = testMove.y + 1;
 
         // moveUnit(testMove, false);
 
         //while(!Input.GetKeyDown(KeyCode.Space)) yield return null;
+        yield return new WaitForSecondsRealtime(0.1f);
         endTurn();
     }
     
