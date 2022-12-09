@@ -466,6 +466,82 @@ public class GridBehavior : MonoBehaviour
     }
 
     // --------------------------------------------------------------
+    // @desc: Move a character along an automatically generated path
+    // @arg: sourcePos - logical grid position with a character on it
+    // @arg: destPos   - logical grid position to move the character to
+    // @arg: maxRange  - the maximum range the character can move
+    // @ret: bool      - whether the move is successful or not
+    // --------------------------------------------------------------
+    public bool MoveTowardsTile(Vector2Int sourcePos, Vector2Int destPos, bool onlyHighlighted, int maxRange)
+    {
+        GameObject charToMove = null;
+        bool moveSuccess = false;
+
+        // Check whether tiles are in range
+        if (TilePosInRange(sourcePos) && TilePosInRange(destPos))
+        {
+            // Get tile on source position
+            GameObject sourceTile = grid[sourcePos.x, sourcePos.y];
+            var sourceTileScipt = sourceTile.GetComponent<TileScript>();
+
+            // Get tile on dest position
+            GameObject destTile = grid[destPos.x, destPos.y];
+            var destTileScript = destTile.GetComponent<TileScript>();
+
+            // Get character on source tile
+            if (sourceTileScipt.hasCharacter && !destTileScript.hasCharacter && destTileScript.passable)
+            {
+                // Only move to highlighted tiles
+                if (!onlyHighlighted || destTileScript.highlighted)
+                {
+                    Debug.Log("Moving character to tile " + destPos.x + " " + destPos.y);
+                    charToMove = sourceTileScipt.characterOn;
+
+                    // Get a stack of tiles towards the destination
+                    Stack<PathTreeNode> PathTowardsDest = destTileScript.pathRef.PathToRoot();
+
+                    // Cut down stack to max range
+                    while (PathTowardsDest.Count > maxRange)
+                    {
+                        destTile = PathTowardsDest.Pop().myTile;
+                    }
+
+                    // Get the data from the new destination tile
+                    destTileScript = destTile.GetComponent<TileScript>();
+
+                    // Move character to the new destination, instead
+                    destTileScript.pathRef.PathToRootOnStack(charToMove.GetComponent<FollowPath>().pathToFollow);
+
+                    // Move camera to destPos
+                    cam.GetComponent<CameraControl>().SetCameraFollow(charToMove);
+
+                    // Set source tile data
+                    sourceTileScipt.hasCharacter = false;
+                    sourceTileScipt.characterOn = null;
+
+                    // Set destination tile data
+                    destTileScript.hasCharacter = true;
+                    destTileScript.characterOn = charToMove;
+
+                    charToMove.GetComponent<CharacterStats>().gridPosition = destPos;
+
+                    moveSuccess = true;
+                }
+            }
+            else
+            {
+                Debug.Log("PathCharacterOnTile: Error! source tile does not have a character");
+            }
+        }
+        else
+        {
+            Debug.Log("PathCharacterOnTile: Error! tile source or dest position is out of range");
+        }
+        
+        return moveSuccess;
+    }
+
+    // --------------------------------------------------------------
     // @desc: Makes a tile impassible
     // @arg: GameObject - tile to make impassible
     // --------------------------------------------------------------
