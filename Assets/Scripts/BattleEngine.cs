@@ -674,18 +674,30 @@ public class BattleEngine : MonoBehaviour
     //Try to use the selected ability at the specified position on the grid. Returns true if action succeeds. Will not affect game state if simulate is true.
     public bool actUnit(Vector2Int tilePos, bool simulate) 
     {
-        if(moving || acted || selectedAbility == null || activeUnit.GetComponent<CharacterStats>().AP < selectedAbility.costAP) return false;
+        Debug.Log("Moving: " + moving.ToString()
+        + " || Acted: " + acted.ToString()
+        + " || Selected Ability: " + selectedAbility.displayName 
+        + " || activeUnit AP: " + activeUnit.GetComponent<CharacterStats>().AP
+        + " || Selected Ability Cost: " + selectedAbility.costAP);
+
+        if(moving || acted || selectedAbility == null || activeUnit.GetComponent<CharacterStats>().AP < selectedAbility.costAP)
+        {
+            return false;
+        }
+        
         var gridTiles = grid.GetComponent<GridBehavior>();
         var tileScript = gridTiles.GetTileAtPos(tilePos).GetComponent<TileScript>();
         int dist = Mathf.Abs(activeUnitPos.x - tilePos.x) + Mathf.Abs(activeUnitPos.y - tilePos.y); //Take Manhattan distance
         if(dist > selectedAbility.range) return false;
+        Debug.Log("Past Manhattan distance");
         GameObject selectedCharacter = null;
         if(selectedAbility.requiresTarget) 
         { 
+            Debug.Log("Selected Target Check");
             //Check for valid target
             if(!tileScript.hasCharacter) return false;
-            if(selectedAbility.friendly && !isAllyUnit(gridTiles.GetCharacterAtPos(tilePos))) return false;
-            if(!selectedAbility.friendly && isAllyUnit(gridTiles.GetCharacterAtPos(tilePos))) return false;
+            if(selectedAbility.friendly && !allianceChecker(gridTiles.GetCharacterAtPos(tilePos))) return false;
+            if(!selectedAbility.friendly && allianceChecker(gridTiles.GetCharacterAtPos(tilePos))) return false;
             selectedCharacter = tileScript.characterOn;
         }
         if(simulate) return true;
@@ -702,8 +714,8 @@ public class BattleEngine : MonoBehaviour
             var selTileScript = selTile.GetComponent<TileScript>();
             if(selTileScript.hasCharacter)
             {
-                if(selectedAbility.friendly && !isAllyUnit(gridTiles.GetCharacterAtPos(selPos))) continue;
-                if(!selectedAbility.friendly && isAllyUnit(gridTiles.GetCharacterAtPos(selPos))) continue;
+                if(selectedAbility.friendly && !allianceChecker(gridTiles.GetCharacterAtPos(selPos))) continue;
+                if(!selectedAbility.friendly && allianceChecker(gridTiles.GetCharacterAtPos(selPos))) continue;
                 characters.Add(selTileScript.characterOn);
             }
         }
@@ -1164,12 +1176,11 @@ public class BattleEngine : MonoBehaviour
     {
         //Debug.Log("AI: AI simple waiting");
 
-        
+        //Initalize variables for choosing random actions later
         int chosenAbility = 0;
         int chosenTarget = 0;
 
-
-
+        //Initialize the target of the AI action variable
         TileScript actionTarget = null;
 
         //Get the grid script
@@ -1177,6 +1188,8 @@ public class BattleEngine : MonoBehaviour
 
         //Initialize variables based on the current character
         var activeChar = activeUnit.GetComponent<CharacterStats>();
+        List<Ability> allAbilities = activeChar.getBattleAbilities();
+
         //This is a list of lists of Vectors, used for storing the positions of possible targets for each ability.
         List<List<TileScript>> abilityTargetsLists = new List<List<TileScript>>();
 
@@ -1184,7 +1197,7 @@ public class BattleEngine : MonoBehaviour
         // + " || character at: " + activeUnitTile.GetComponent<TileScript>().position.x + ", " + activeUnitTile.GetComponent<TileScript>().position.y + "@@@@");
 
         //Iterate through the abilities of the character. For each ability, we'll keep a list of possible targets
-        foreach(Ability selectedAbility in activeChar.abilities)
+        foreach(Ability selectedAbility in allAbilities)
         {
             //This is a temporary list of Vectors, used for storing the results of the targetAcquisitionTree to be added to the abilityTargetsLists lists
             List<TileScript> tempTiles = new List<TileScript>();
@@ -1232,7 +1245,9 @@ public class BattleEngine : MonoBehaviour
             else
             {
                 //End the turn for now
+                yield return new WaitForSecondsRealtime(2);
                 endTurn();
+                yield break;
             }
         }
 
@@ -1241,8 +1256,12 @@ public class BattleEngine : MonoBehaviour
         + " on (" + activeUnitPos.x + ", " + activeUnitPos.y
         + ") is choosing abilities between 0 and " + (abilityTargetsLists.Count - 1));
         
-        chosenAbility = Random.Range(0, (abilityTargetsLists.Count - 1));
-        Debug.Log("AI: Chosen ability is ability " + chosenAbility + ", which is " + activeChar.abilities[chosenAbility].displayName);
+        //chosenAbility = Random.Range(0, (abilityTargetsLists.Count - 1));
+        chosenAbility = 0;
+        Debug.Log("AI: Chosen ability is ability " + chosenAbility + ", which is " + allAbilities[chosenAbility].displayName);
+
+        //Set the BattleEngine's selected ability to the randomly chosen ability
+        selectedAbility = allAbilities[chosenAbility];
 
         //If the random ability has no targets, choose again
         if(abilityTargetsLists[chosenAbility].Count == 0)
@@ -1252,7 +1271,7 @@ public class BattleEngine : MonoBehaviour
                 Debug.Log("AI: Chosen Ability has no targets. Reselecting...");
                 Debug.Log("AI: Choosing abilities between 0 and " + (abilityTargetsLists.Count - 1));
                 chosenAbility = Random.Range(0, (abilityTargetsLists.Count - 1));
-                Debug.Log("AI: Chosen ability is ability " + chosenAbility + ", which is " + activeChar.abilities[chosenAbility].displayName);
+                Debug.Log("AI: Chosen ability is ability " + chosenAbility + ", which is " + allAbilities[chosenAbility].displayName);
             }
         }
 
@@ -1270,46 +1289,60 @@ public class BattleEngine : MonoBehaviour
         actionTarget = abilityTargetsLists[chosenAbility][chosenTarget];
         Debug.Log("AI: Final target is " + actionTarget.characterOn.GetComponent<CharacterStats>().classname.ToString() 
         + " at (" + actionTarget.position.x + ", " + actionTarget.position.y + ")");
-
-        //Determine if the neighbors of the final target are empty
-        //actionTarget.
-
-        //Move towards the final target
-        // Debug.Log("AI: Attempting move to target");
-        // var dummy = gridScript.PathCharacterOnTile(activeUnitPos, actionTarget.position, false);
-        // Debug.Log("AI: Move was successful: " + dummy.ToString());
         
+        //If the character is self-targeting
         if(actionTarget.characterOn == activeUnit)
         {
+            //End the turn and break out of the subroutine
             Debug.Log("AI: Self-target turn, ending");
+            yield return new WaitForSecondsRealtime(2);
             endTurn();
+            yield break;
         }
 
-        // Stack<PathTreeNode> tempStack = new Stack<PathTreeNode>();
-        // actionTarget.pathRef.PathToRootOnStack(tempStack);
+        //Initialize a temporary PathTreeNode for approaching the target
+        List<PathTreeNode> tempPathList = actionTarget.pathRef.PathToRootList();
 
-        // while(tempStack.Count > 0)
-        // {
-        //     PathTreeNode temp = tempStack.Pop();
-        //     var tempTileScript = temp.myTile.GetComponent<TileScript>();
-        //     //Debug.Log("Did this work? (" + tempTileScript.position.x + ", " + tempTileScript.position.y + ")");
+        //Index for logging
+        int logIndex = 0;
 
-        //     Debug.Log("AI: Range is : " + (activeChar.getMovement() + activeChar.abilities[chosenAbility].range)
-        //     + " || Active Character is at (" + activeUnitPos.x + ", " + activeUnitPos.y 
-        //     + ") || target is at (" + tempTileScript.position.x + ", " + tempTileScript.position.y + ")"
-        //     + " || Count is " + tempStack.Count);
-        // }
+        //Log the path to the target
+        foreach(PathTreeNode listNode in tempPathList)
+        {
+            var tempTileScript = listNode.myTile.GetComponent<TileScript>();
 
-        // Debug.Log("AI: Attempting move from (" + activeUnitPos.x + ", " + activeUnitPos.y + ")");
-        // var dummy = gridScript.MoveTowardsTile(activeUnitPos, actionTarget.position, true, activeChar.getMovement());
-        // Debug.Log("AI: Move attempted. New position is (" + activeUnitPos.x + ", " + activeUnitPos.y + ")");
+            logIndex++;
+
+            Debug.Log("AI: Range is : " + (activeChar.getMovement() + allAbilities[chosenAbility].range)
+            + " || Active Character is at (" + activeUnitPos.x + ", " + activeUnitPos.y 
+            + ") || target is at (" + tempTileScript.position.x + ", " + tempTileScript.position.y + ")"
+            + " || Count is " + logIndex);
+        }
+
+        //Initialize the TileScript that is directly adjacent to the target, where we will be trying to head towards
+        TileScript adjacentTileScript = tempPathList[1].myTile.GetComponent<TileScript>();
+        Debug.Log("AI: adjacentTileScript: (" + adjacentTileScript.position.x + ", " + adjacentTileScript.position.y + ")");
+
+        //Head towards the tile adjacent to the target
+        Debug.Log("AI: Attempting move from (" + activeUnitPos.x + ", " + activeUnitPos.y + ")");
+        var dummy = gridScript.MoveTowardsTile(activeUnitPos, adjacentTileScript.position, true, activeChar.getMovement());
+        
+
+        //Update activeUnitPos to new gridPosition
+        activeUnitPos = activeChar.gridPosition;
+        Debug.Log("AI: Move attempted. New position is (" + activeUnitPos.x + ", " + activeUnitPos.y + ")");
+        moving = false;
+
+        //Attempt to use the ability on the target now that we've moved closer.
+        Debug.Log("AI: Attempting to use ability " + selectedAbility.displayName 
+        +  " from (" + activeUnitPos.x + ", " + activeUnitPos.y + ")");
+        Debug.Log("AI: Ability was used: " + aiActUnit(actionTarget.position, false).ToString());
 
         //while(!Input.GetKeyDown(KeyCode.Space)) yield return null;
-        yield return new WaitForSecondsRealtime(0.1f);
+        yield return new WaitForSecondsRealtime(2);
         endTurn();
     }
     
-
     public void targetAcquisitionTree(PathTreeNode root, List<TileScript> returnList, bool validTarget) 
     {
         // Get data from tile
@@ -1342,11 +1375,150 @@ public class BattleEngine : MonoBehaviour
         if(root.right != null) targetAcquisitionTree(root.right, returnList, validTarget);
     }
 
-    public void resolveAction(List<List<TileScript>> targetsLists, Ability returnAbility, TileScript returnTile)
+    public bool allianceChecker(GameObject unit) 
     {
+        return unit.GetComponent<CharacterStats>().isPlayer() == activeUnit.GetComponent<CharacterStats>().isPlayer();
+    }
 
-        //returnAbility = 
+    //Try to use the selected ability at the specified position on the grid. Returns true if action succeeds. Will not affect game state if simulate is true.
+    public bool aiActUnit(Vector2Int tilePos, bool simulate) 
+    {
+        Debug.Log("Moving: " + moving.ToString()
+        + " || Acted: " + acted.ToString()
+        + " || Selected Ability: " + selectedAbility.displayName 
+        + " || activeUnit AP: " + activeUnit.GetComponent<CharacterStats>().AP
+        + " || Selected Ability Cost: " + selectedAbility.costAP);
 
+        // if(moving || acted || selectedAbility == null || activeUnit.GetComponent<CharacterStats>().AP < selectedAbility.costAP)
+        // {
+        //     return false;
+        // }
+        
+        var gridTiles = grid.GetComponent<GridBehavior>();
+        var tileScript = gridTiles.GetTileAtPos(tilePos).GetComponent<TileScript>();
+
+        int dist = Mathf.Abs(activeUnitPos.x - tilePos.x) + Mathf.Abs(activeUnitPos.y - tilePos.y); //Take Manhattan distance
+
+        if(dist > selectedAbility.range)
+        {
+            return false;  
+        } 
+
+        Debug.Log("Past Manhattan distance");
+
+        GameObject selectedCharacter = null;
+
+        if(selectedAbility.requiresTarget) 
+        { 
+            // Debug.Log("Selected Target Check");
+            // //Check for valid target
+            // if(!tileScript.hasCharacter)
+            // { 
+            //     return false;
+            // }
+            // if(selectedAbility.friendly && !allianceChecker(gridTiles.GetCharacterAtPos(tilePos)))
+            // {
+            //     return false;
+            // } 
+            // if(!selectedAbility.friendly && allianceChecker(gridTiles.GetCharacterAtPos(tilePos)))
+            // {
+            //     return false;
+            // }
+
+            selectedCharacter = tileScript.characterOn;
+        }
+
+
+        if(simulate) return true;
+
+        int xDist = activeUnitPos.x - tilePos.x;
+        int yDist = activeUnitPos.y - tilePos.y;
+
+        List<GameObject> characters = new List<GameObject>();
+
+        //Select characters based on ability shape
+        foreach(Vector2Int pos in selectedAbility.getRelativeShape(xDist, yDist))
+        {
+            Vector2Int selPos = new Vector2Int(tilePos.x + pos.x, tilePos.y + pos.y);
+            var selTile = gridTiles.GetTileAtPos(selPos);
+            if(selTile == null) continue;
+            var selTileScript = selTile.GetComponent<TileScript>();
+            if(selTileScript.hasCharacter)
+            {
+                if(selectedAbility.friendly && !allianceChecker(gridTiles.GetCharacterAtPos(selPos)))
+                {
+                    continue;
+                }
+                if(!selectedAbility.friendly && allianceChecker(gridTiles.GetCharacterAtPos(selPos)))
+                {
+                    continue;   
+                } 
+                characters.Add(selTileScript.characterOn);
+            }
+        }
+
+        if(!selectedAbility.free)
+        {
+            acted = true;
+        }
+        activeUnit.GetComponent<CharacterStats>().addAP(-selectedAbility.costAP);
+        usedAbilities.Add(selectedAbility);
+
+        StartCoroutine(aiEndActUnit(selectedCharacter == null ? tilePos : selectedCharacter.GetComponent<CharacterStats>().gridPosition, characters, xDist, yDist));
+        return true;
+    }
+
+    IEnumerator aiEndActUnit(Vector2Int tilePos, List<GameObject> characters, int xDist, int yDist) {
+        disableCoins();
+        foreach(GameObject unit in aliveUnits)
+        {
+            if(unit != activeUnit && !characters.Contains(unit)) 
+            {
+                unit.GetComponent<CharacterStats>().hideBars();
+            }
+        }
+        foreach(Button button in actionButtons)
+        {
+            button.interactable = false;
+            button.gameObject.GetComponentInChildren<TMPro.TextMeshProUGUI>().color = new Color(0.4f, 0.4f, 0.4f, 1.0f);
+        }
+        if(tilePos != activeUnitPos) yield return new WaitWhile(() => !activeUnit.GetComponent<CharacterStats>().rotateTowards(grid.GetComponent<GridBehavior>().GetTileAtPos(tilePos).transform.position)); //Wait for rotation first
+
+        var gridTiles = grid.GetComponent<GridBehavior>();
+        //Pull and knockback
+        // if(selectedAbility.knockback != 0)
+        // {
+        //     foreach(GameObject character in characters) selectedAbility.applyKnockback(character.GetComponent<CharacterStats>(), gridTiles, xDist, yDist);
+        // }
+        // //Self movement
+        // Vector2Int newPos = selectedAbility.applySelfMovement(activeUnit.GetComponent<CharacterStats>(), gridTiles, xDist, yDist);
+        // if(newPos != activeUnitPos)
+        // {
+        //     activeUnitPos = newPos;
+        //     activeUnitTile = gridTiles.GetTileAtPos(newPos);
+        //     gridTiles.grid[selectedCharPos.x, selectedCharPos.y].GetComponent<Renderer>().material = isTileActive(selectedCharPos) ? gridTiles.activeUnselected : gridTiles.unselected;
+        //     selectedCharPos = newPos;
+        // }
+        ResetAllHighlights();
+        //if(!acted) highlightActionTiles(newPos, selectedAbility.range);
+        for(int i = 0; i < selectedAbility.totalHits; i++)
+        {
+            selectedAbility.affectCharacters(activeUnit, characters, i);
+            yield return new WaitForSecondsRealtime(0.6f);
+        }
+
+        //AI: Forward the target(s) to AI handler for enqueue. Currently only forwards one character - for refactoring later
+        //if(characters.Count > 0) playerTarget = characters[0];
+
+        // ----- Combo Attacks ------
+        if(tryComboAttack(activeUnitPos, tilePos, false)) yield return new WaitForSecondsRealtime(0.6f);
+        // --------------------------
+
+        foreach(GameObject unit in aliveUnits) unit.GetComponent<CharacterStats>().showBars();
+        //enableCoins();
+
+        update();
+        yield break;
     }
 
 }

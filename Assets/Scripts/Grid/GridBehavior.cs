@@ -530,6 +530,7 @@ public class GridBehavior : MonoBehaviour
                     destTileScript.hasCharacter = true;
                     destTileScript.characterOn = charToMove;
 
+                    Debug.Log("gridPosition update");
                     charToMove.GetComponent<CharacterStats>().gridPosition = destTileScript.position;
 
                     moveSuccess = true;
