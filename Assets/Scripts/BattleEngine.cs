@@ -1241,26 +1241,20 @@ public class BattleEngine : MonoBehaviour
             endTurn();
         }
 
-        Stack<PathTreeNode> tempStack = new Stack<PathTreeNode>();
-        actionTarget.pathRef.PathToRootOnStack(tempStack);
+        // Stack<PathTreeNode> tempStack = new Stack<PathTreeNode>();
+        // actionTarget.pathRef.PathToRootOnStack(tempStack);
 
-        while(tempStack.Count > 0)
-        {
-            PathTreeNode temp = tempStack.Pop();
-            var tempTileScript = temp.myTile.GetComponent<TileScript>();
-            //Debug.Log("Did this work? (" + tempTileScript.position.x + ", " + tempTileScript.position.y + ")");
+        // while(tempStack.Count > 0)
+        // {
+        //     PathTreeNode temp = tempStack.Pop();
+        //     var tempTileScript = temp.myTile.GetComponent<TileScript>();
+        //     //Debug.Log("Did this work? (" + tempTileScript.position.x + ", " + tempTileScript.position.y + ")");
 
-            Debug.Log("AI: Range is : " + (activeChar.getMovement() + activeChar.abilities[chosenAbility].range)
-            + " || Active Character is at (" + activeUnitPos.x + ", " + activeUnitPos.y 
-            + ") || target is at (" + tempTileScript.position.x + ", " + tempTileScript.position.y + ")");
+        //     Debug.Log("AI: Range is : " + (activeChar.getMovement() + activeChar.abilities[chosenAbility].range)
+        //     + " || Active Character is at (" + activeUnitPos.x + ", " + activeUnitPos.y 
+        //     + ") || target is at (" + tempTileScript.position.x + ", " + tempTileScript.position.y + ")");
 
-        }
-
-        // Vector2Int testMove = actionTarget;
-        // testMove.x = testMove.x + 1;
-        // testMove.y = testMove.y + 1;
-
-        // moveUnit(testMove, false);
+        // }
 
         //while(!Input.GetKeyDown(KeyCode.Space)) yield return null;
         yield return new WaitForSecondsRealtime(0.1f);
