@@ -849,27 +849,45 @@ public class GridBehavior : MonoBehaviour
     {
         List<GameObject> tileObjects = new List<GameObject>();
         TileScript tile = GetTileAtPos(pos).GetComponent<TileScript>();
-        if(tile.hasObject) tileObjects.Add(tile.objectOn);
+        if(tile.hasObject && !tile.hasGridLink && tile.objectOn != null) tileObjects.Add(tile.objectOn);
         if(GetTileNorth(pos) != null)
         {
             tile = GetTileNorth(pos).GetComponent<TileScript>();
-            if(tile != null && tile.hasObject && !tile.objectOn.GetComponent<GridObject>().overlapCharacter) tileObjects.Add(tile.objectOn);
+            if(tile != null && tile.hasObject && !tile.hasGridLink && tile.objectOn != null && !tile.objectOn.GetComponent<GridObject>().overlapCharacter) tileObjects.Add(tile.objectOn);
         }
         if(GetTileSouth(pos) != null)
         {
             tile = GetTileSouth(pos).GetComponent<TileScript>();
-            if(tile != null && tile.hasObject && !tile.objectOn.GetComponent<GridObject>().overlapCharacter) tileObjects.Add(tile.objectOn);
+            if(tile != null && tile.hasObject && !tile.hasGridLink && tile.objectOn != null && !tile.objectOn.GetComponent<GridObject>().overlapCharacter) tileObjects.Add(tile.objectOn);
         }
         if(GetTileWest(pos) != null)
         {
             tile = GetTileWest(pos).GetComponent<TileScript>();
-            if(tile != null && tile.hasObject && !tile.objectOn.GetComponent<GridObject>().overlapCharacter) tileObjects.Add(tile.objectOn);
+            if(tile != null && tile.hasObject && !tile.hasGridLink && tile.objectOn != null && !tile.objectOn.GetComponent<GridObject>().overlapCharacter) tileObjects.Add(tile.objectOn);
         }
         if(GetTileEast(pos) != null)
         {
             tile = GetTileEast(pos).GetComponent<TileScript>();
-            if(tile != null && tile.hasObject && !tile.objectOn.GetComponent<GridObject>().overlapCharacter) tileObjects.Add(tile.objectOn);
+            if(tile != null && tile.hasObject && !tile.hasGridLink && tile.objectOn != null && !tile.objectOn.GetComponent<GridObject>().overlapCharacter) tileObjects.Add(tile.objectOn);
         }
         return tileObjects;
+    }
+
+    public void MoveUnitToGrid(GameObject unitTile)
+    {
+        TileScript unitTileScript = unitTile.GetComponent<TileScript>();
+        // ----- Move the active character to the other grid -----
+        Debug.Log("Moving character to another grid");
+
+        // Add character to target grid
+        unitTileScript.targetGrid.SpawnCharacter(unitTileScript.characterOn, unitTileScript.targetTile.position, false);
+
+        // Camera culling
+        unitTileScript.characterOn.layer = unitTileScript.targetGrid.gridLayer;
+        cam.gameObject.GetComponent<CameraControl>().SetLayerMode((CameraControl.LAYERMODE)unitTileScript.characterOn.layer);
+
+        // Remove character from current grid
+        unitTileScript.characterOn = null;
+        unitTileScript.hasCharacter = false;
     }
 }

@@ -4260,8 +4260,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 666dd6aa235b6514fb7cbd27ec742748, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HP: 500
-  HPMAX: 500
+  HP: 200
+  HPMAX: 200
   isEnemy: 0
   shipSinkAnim: {fileID: 7343101886867493423}
   myMoveScript: {fileID: 4228262429549364959}
