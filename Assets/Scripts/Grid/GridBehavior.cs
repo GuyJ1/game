@@ -490,7 +490,7 @@ public class GridBehavior : MonoBehaviour
             var destTileScript = destTile.GetComponent<TileScript>();
 
             // Make a new path tree
-            sourceTileScipt.pathRef = GetAllPathsFromTile(sourceTile, maxRange, true);
+            //sourceTileScipt.pathRef = GetAllPathsFromTile(sourceTile, maxRange+1, true);
 
             // Get character on source tile
             if (sourceTileScipt.hasCharacter && !destTileScript.hasCharacter && destTileScript.passable)
@@ -501,14 +501,17 @@ public class GridBehavior : MonoBehaviour
                     Debug.Log("Moving character to tile " + destPos.x + " " + destPos.y);
                     charToMove = sourceTileScipt.characterOn;
 
-                    // Get a stack of tiles towards the destination
-                    Stack<PathTreeNode> PathTowardsDest = destTileScript.pathRef.PathToRoot();
+                    // Get a list of tiles towards the destination
+                    List<PathTreeNode> PathTowardsDest = destTileScript.pathRef.PathToRootList();
 
                     // Cut down stack to max range
                     while (PathTowardsDest.Count-1 > maxRange)
                     {
-                        destTile = PathTowardsDest.Pop().myTile;
+                        PathTowardsDest.RemoveAt(0);
                     }
+
+                    // Destination tile is the first element in the list
+                    destTile = PathTowardsDest[0].myTile;
 
                     // Get the data from the new destination tile
                     destTileScript = destTile.GetComponent<TileScript>();
@@ -839,5 +842,34 @@ public class GridBehavior : MonoBehaviour
         }
 
         return charaterAtPos;
+    }
+
+    // Return list of all interactable grid objects from the active unit position
+    public List<GameObject> GetInteractableTileObjects(Vector2Int pos)
+    {
+        List<GameObject> tileObjects = new List<GameObject>();
+        TileScript tile = GetTileAtPos(pos).GetComponent<TileScript>();
+        if(tile.hasObject) tileObjects.Add(tile.objectOn);
+        if(GetTileNorth(pos) != null)
+        {
+            tile = GetTileNorth(pos).GetComponent<TileScript>();
+            if(tile != null && tile.hasObject && !tile.objectOn.GetComponent<GridObject>().overlapCharacter) tileObjects.Add(tile.objectOn);
+        }
+        if(GetTileSouth(pos) != null)
+        {
+            tile = GetTileSouth(pos).GetComponent<TileScript>();
+            if(tile != null && tile.hasObject && !tile.objectOn.GetComponent<GridObject>().overlapCharacter) tileObjects.Add(tile.objectOn);
+        }
+        if(GetTileWest(pos) != null)
+        {
+            tile = GetTileWest(pos).GetComponent<TileScript>();
+            if(tile != null && tile.hasObject && !tile.objectOn.GetComponent<GridObject>().overlapCharacter) tileObjects.Add(tile.objectOn);
+        }
+        if(GetTileEast(pos) != null)
+        {
+            tile = GetTileEast(pos).GetComponent<TileScript>();
+            if(tile != null && tile.hasObject && !tile.objectOn.GetComponent<GridObject>().overlapCharacter) tileObjects.Add(tile.objectOn);
+        }
+        return tileObjects;
     }
 }

@@ -65,6 +65,30 @@ public class PathTreeNode
         return path;
     }
 
+    // Get path to root as a list
+    public List<PathTreeNode> PathToRootList()
+    {
+        List<PathTreeNode> path = new List<PathTreeNode>(); // Create path list
+        PathTreeNode currentNode = this; // Set current node to this node
+
+        // Push Self
+        path.Add(this);
+
+        // Do this until the root is found
+        while (currentNode.parent != null)
+        {
+            // Add the current node's parent to path
+            path.Add(currentNode.parent);
+
+            //Debug.Log("Adding tile at position " + currentNode.myTile.transform.position.ToString() + " to path");
+
+            // Go to parent
+            currentNode = currentNode.parent;
+        }
+        
+        return path;
+    }
+
     // Puts a path of nodes, to the root, onto a stack
     public void PathToRootOnStack(Stack<PathTreeNode> stack)
     {

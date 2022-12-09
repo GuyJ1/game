@@ -469,7 +469,7 @@ public class BattleEngine : MonoBehaviour
         if (interactable)
         {
             moving = false;
-            //actionCoin.Select();
+            selectCoin(actionCoin, actionCoinAnimator, true);
             showActionsList();
             actionButtons[0].onClick.Invoke();
             setupAction(activeUnitTile);
@@ -483,7 +483,7 @@ public class BattleEngine : MonoBehaviour
         {
             hideActionsList();
             moving = true;
-            //moveCoin.Select();
+            selectCoin(moveCoin, moveCoinAnimator, true);
             setupMove(activeUnitTile);
         }
     }
@@ -1053,9 +1053,9 @@ public class BattleEngine : MonoBehaviour
         var activeChar = activeUnit.GetComponent<CharacterStats>();
         //Setup action buttons
         foreach(Ability ability in activeChar.getBattleAbilities()) {
-            GameObject actionCoin = Instantiate(buttonPrefab, canvas.transform);
-            actionCoin.transform.GetComponent<RectTransform>().anchoredPosition += new Vector2(70, -90 - 25 * count);
-            Button button = actionCoin.GetComponent<Button>();
+            GameObject actionButton = Instantiate(buttonPrefab, canvas.transform);
+            actionButton.transform.GetComponent<RectTransform>().anchoredPosition += new Vector2(70, -90 - 25 * count);
+            Button button = actionButton.GetComponent<Button>();
 
             button.onClick.AddListener(() => { //Listen to setup ability when clicked
                 selectedAbility = ability;
@@ -1063,11 +1063,53 @@ public class BattleEngine : MonoBehaviour
             });
 
             button.interactable = !usedAbilities.Contains(ability) && activeUnit.GetComponent<CharacterStats>().AP >= ability.costAP; //Only allow ability selection if it wasn't used already and AP is available
-            var tmp = actionCoin.GetComponentInChildren<TMPro.TextMeshProUGUI>();
+            var tmp = actionButton.GetComponentInChildren<TMPro.TextMeshProUGUI>();
             if(!button.interactable) tmp.color = new Color(0.4f, 0.4f, 0.4f, 1.0f);
             tmp.text = ability.displayName; //Set button name to ability name
             actionButtons.Add(button);
             count++;
+        }
+
+        //Setup interaction buttons
+        var gridTiles = grid.GetComponent<GridBehavior>();
+        List<GameObject> tileObjects = gridTiles.GetInteractableTileObjects(activeUnitPos);
+        Debug.Log("Adding actions for " + tileObjects.Count + " grid objects...");
+        foreach(GameObject tileObject in tileObjects)
+        {
+            var gridObject = tileObject.GetComponent<CannonObject>();
+            if(gridObject.interactionType == GridObject.InteractionType.NONE) continue;
+            bool single = gridObject.interactionType != GridObject.InteractionType.DOUBLE;
+            for(int i = 0; i < (single ? 1 : 2); i++)
+            {
+                GameObject actionButton = Instantiate(buttonPrefab, canvas.transform);
+                actionButton.transform.GetComponent<RectTransform>().anchoredPosition += new Vector2(70, -90 - 25 * count);
+                Button button = actionButton.GetComponent<Button>();
+
+                if(i == 0)
+                {
+                    button.onClick.AddListener(() => { //Listen to setup ability when clicked
+                        GameObject trackedObject = gridObject.InteractPrimary(activeUnit);
+                        if(trackedObject != null) cam.GetComponent<CameraControl>().SetCameraFollow(trackedObject);
+                        acted = true;
+                        StartCoroutine(PauseBattleEngine(1f, true));
+                    });
+                }
+                else
+                {
+                    button.onClick.AddListener(() => { //Listen to setup ability when clicked
+                        GameObject trackedObject = gridObject.InteractSecondary(activeUnit);
+                        if(trackedObject != null) cam.GetComponent<CameraControl>().SetCameraFollow(trackedObject);
+                        acted = true;
+                        StartCoroutine(PauseBattleEngine(1f, true));
+                    });
+                }
+
+                var tmp = actionButton.GetComponentInChildren<TMPro.TextMeshProUGUI>();
+                if(!button.interactable) tmp.color = new Color(0.4f, 0.4f, 0.4f, 1.0f);
+                tmp.text = i == 0 ? gridObject.displayNamePrimary : gridObject.displayNameSecondary; //Set button name
+                actionButtons.Add(button);
+                count++;
+            }
         }
     }
 
