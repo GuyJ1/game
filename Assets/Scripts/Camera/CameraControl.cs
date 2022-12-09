@@ -12,7 +12,7 @@ public class CameraControl : MonoBehaviour
     private Vector3 offset;
 
     // Position or object camera is looking at
-    private GameObject objectFollowing = null;
+    [SerializeField] public GameObject objectFollowing = null;
     private Vector3 target;
 
     // If this camera is being controlled by the player
