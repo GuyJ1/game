@@ -1113,14 +1113,14 @@ public class BattleEngine : MonoBehaviour
 
     public void doAITurn() 
     {
-        Debug.Log("AI: AI Turn began");
+        //Debug.Log("AI: AI Turn began");
 
         StartCoroutine(simpleWaiter());
     }
 
     IEnumerator simpleWaiter()
     {
-        Debug.Log("AI: AI simple waiting");
+        //Debug.Log("AI: AI simple waiting");
 
         //Get the grid script
         var gridScript = grid.GetComponent<GridBehavior>();
@@ -1131,7 +1131,7 @@ public class BattleEngine : MonoBehaviour
         //This is a list of lists of Vectors, used for storing the positions of possible targets for each ability.
         List<List<TileScript>> abilityTargetsLists = new List<List<TileScript>>();
         
-        Debug.Log("@@@@Current character isPlayer: " + activeChar.isPlayer().ToString() 
+        Debug.Log("@@@@Current character class: " + activeChar.classname.ToString() 
         + " || character at: " + activeUnitTile.GetComponent<TileScript>().position.x + ", " + activeUnitTile.GetComponent<TileScript>().position.y + "@@@@");
 
         //Iterate through the abilities of the character. For each ability, we'll keep a list of possible targets
@@ -1145,23 +1145,25 @@ public class BattleEngine : MonoBehaviour
             + ". Character movement range " + activeChar.getMovement() 
             + ", Total Range " + (activeChar.getMovement() + selectedAbility.range) + "####");
 
+            //Retrieve the pathtreenode of the total range for this ability (character movement + ability range)
+            tempPathTree = gridScript.GetAllPathsFromTile(activeUnitTile, (activeChar.getMovement() + selectedAbility.range), true);
+
             //If the ability that is currently selected is marked for use on friendlies, that means for enemies it is supposed to be used for their opponents.
-            if(selectedAbility.friendly)
+            if(selectedAbility.friendly == true)
             {
-                Debug.Log("Ability is friendly");
-                //Retrieve the pathtreenode of the total range for this ability (character movement + ability range)
-                tempPathTree = gridScript.GetAllPathsFromTile(activeUnitTile, (activeChar.getMovement() + selectedAbility.range));
+                //Debug.Log("Ability is friendly");
+
 
                 targetAcquisitionTree(tempPathTree, tempTiles, false);
 
                 abilityTargetsLists.Add(tempTiles);
             }
             //Otherwise, the ability is one that targets enemies, or in this case is a 'friendly' ability
-            else if(!selectedAbility.friendly)
+            else if(selectedAbility.friendly == false)
             {
-                Debug.Log("Ability is not friendly");
+                //Debug.Log("Ability is not friendly");
                 //Retrieve the pathtreenode of the total range for this ability (character movement + ability range)
-                tempPathTree = gridScript.GetAllPathsFromTile(activeUnitTile, (activeChar.getMovement() + selectedAbility.range));
+                //tempPathTree = gridScript.GetAllPathsFromTile(activeUnitTile, (activeChar.getMovement() + selectedAbility.range), true);
 
                 targetAcquisitionTree(tempPathTree, tempTiles, true);
 
@@ -1173,7 +1175,7 @@ public class BattleEngine : MonoBehaviour
         
         foreach(List<TileScript> targetList in abilityTargetsLists)
         {
-            Debug.Log("AI: List of size" + targetList.Count);
+            Debug.Log("AI: List of size " + targetList.Count);
         }
 
         yield return new WaitForSecondsRealtime(0.1f);
@@ -1214,6 +1216,8 @@ public class BattleEngine : MonoBehaviour
         if(root.left != null) targetAcquisitionTree(root.left, returnList, validTarget);
         if(root.right != null) targetAcquisitionTree(root.right, returnList, validTarget);
     }
+
+    //public void resolve
 
     public bool sharedAlliance(GameObject unit)
     {
