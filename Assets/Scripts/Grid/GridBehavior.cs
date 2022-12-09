@@ -56,8 +56,8 @@ public class GridBehavior : MonoBehaviour
         // Create links
         if (cabinGrid != null)
         {
-            CreateLinkTile(new Vector2Int(4,0), new Vector2Int(4,0), cabinGrid);
-            CreateLinkTile(new Vector2Int(3,0), new Vector2Int(3,0), cabinGrid);
+            CreateLinkTile(new Vector2Int(3,25), new Vector2Int(3,9), cabinGrid);
+            CreateLinkTile(new Vector2Int(4,25), new Vector2Int(4,9), cabinGrid);
         }
     }
 

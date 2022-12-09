@@ -174,6 +174,60 @@ public class GridMap
 
     // ------------------------
 
+    // ------- Grid Three -------
+    public const uint GridThreeWidth = 8;
+    public const uint GridThreeHeight = 20;
+    public static bool[,] GridThreePassableFlags = 
+    {
+        {false, false, false, false, false, false, false, false},
+        {false, false, false, false, false, false, false, false},
+        {false, false, false, false, false, false, false, false},
+        {false, false, false, false, false, false, false, false},
+        {false, false, false, false, false, false, false, false},
+        {false, false, false, true , true , false, false, false},
+        {false, false, false, true , true , false, false, false},
+        {false, false, false, false, false, false, false, false},
+        {false, false, false, false, false, false, false, false},
+        {false, false, false, false, false, false, false, false},
+        {false, false, false, true , true , false, false, false},
+        {false, false, false, true , true , false, false, false},
+        {false, false, false, true , true , false, false, false},
+        {false, false, false, false, false, false, false, false},
+        {false, false, false, false, false, false, false, false},
+        {false, false, false, false, false, false, false, false},
+        {false, false, false, false, false, false, false, false},
+        {false, false, false, false, false, false, false, false},
+        {false, false, false, true , true , false, false, false},
+        {false, false, false, true , true , false, false, false},
+
+    };
+
+    public static float[,] GridThreeHeightOffsets = 
+    {
+        { 0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f },
+        { 0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f },
+        { 0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f },
+        { 0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f },
+        { 0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f },
+        { 0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f },
+        { 0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f },
+        { 0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f },
+        { 0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f },
+        { 0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f },
+        { 0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f },
+        { 0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f },
+        { 0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f },
+        { 0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f },
+        { 0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f },
+        { 0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f },
+        { 0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f },
+        { 0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f },
+        { 0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f },
+        { 0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f },
+    };
+
+    // ------------------------
+
     // Constructors
     public GridMap() {}
     public GridMap(int gridNumber) {gridSelected = gridNumber;}
@@ -191,6 +245,9 @@ public class GridMap
                 break;
             case 2:
                 gridSelected = 2;
+                break;
+            case 3:
+                gridSelected = 3;
                 break;
             default:
                 Debug.Log("SelectGrid(): Error! Grid number is out of range. Selecting default grid instead");
@@ -214,6 +271,9 @@ public class GridMap
                 break;
             case 2:
                 widthToReturn = GridTwoWidth;
+                break;
+            case 3:
+                widthToReturn = GridThreeWidth;
                 break;
             default:
                 Debug.Log("GetGridWidth(): Error! Cannot find selected grid");
@@ -239,6 +299,9 @@ public class GridMap
             case 2:
                 heightToReturn = GridTwoHeight;
                 break;
+            case 3:
+                heightToReturn = GridThreeHeight;
+                break;
             default:
                 Debug.Log("GetGridHeight(): Error! Cannot find selected grid");
                 break;
@@ -263,6 +326,9 @@ public class GridMap
             case 2:
                 flagAtPos = GridTwoPassableFlags[pos.y, pos.x];
                 break;
+            case 3:
+                flagAtPos = GridThreePassableFlags[pos.y, pos.x];
+                break;
             default:
                 Debug.Log("GetFlagAtPos(): Error! Cannot find selected grid");
                 break;
@@ -286,6 +352,9 @@ public class GridMap
                 break;
             case 2:
                 offsetAtPos = GridTwoHeightOffsets[pos.y, pos.x];
+                break;
+            case 3:
+                offsetAtPos = GridThreeHeightOffsets[pos.y, pos.x];
                 break;
             default:
                 Debug.Log("GetHeightOffsetAtPos(): Error! Cannot find selected grid");
