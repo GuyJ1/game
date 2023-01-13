@@ -15,8 +15,8 @@ EditorBuildSettings:
     path: Assets/Scenes/Overworld.unity
     guid: 5c1b01e7c36e7f542aebc031f475933e
   - enabled: 1
-    path: Assets/Scenes/TestScenes/Bartering_Test.unity
-    guid: 4c87cd67f2889334890d1496dd1b85a8
+    path: Assets/Scenes/Bartering.unity
+    guid: 832b0ae4177c4504586ae1f6b7276350
   - enabled: 1
     path: Assets/Scenes/TestScenes/TitleMenuScene.unity
     guid: 84b5706c9851f684c993523af98ed7ea

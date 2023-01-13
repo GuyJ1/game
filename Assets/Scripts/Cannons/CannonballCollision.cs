@@ -31,8 +31,10 @@ public class CannonballCollision : MonoBehaviour
     void OnCollisionEnter(Collision other)
     {
         string colTag = other.gameObject.tag;
+        string parTag = other.transform.parent.gameObject.tag;
 
-        if (colTag == "Ship")
+        // If the colliding object is a ship or it's parent is a ship
+        if ((colTag == "Ship") || (parTag == "Ship"))
         {
             // Spawn Explosion
             GameObject explosion = Instantiate(ExplosionEffect);
@@ -43,10 +45,18 @@ public class CannonballCollision : MonoBehaviour
             Transform otherShip = other.gameObject.transform.parent;
             var otherShipStats = otherShip.GetComponent<ShipStats>();
 
+            // Go up in the hierarchy if needed
+            if (otherShipStats == null)
+            {
+                otherShip = otherShip.gameObject.transform.parent;
+                otherShipStats = otherShip.GetComponent<ShipStats>();
+            }
+
             // Adjust HP of colliding ship if applicable
             if (isEnemyOwned != otherShipStats.isEnemy)
             {
                 otherShipStats.adjustHP(-damage);
+                damage = 0;
             }
         }
     }
